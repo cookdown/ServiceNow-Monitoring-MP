@@ -1,0 +1,214 @@
+﻿<ManagementPackFragment SchemaVersion="2.0" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <TypeDefinitions>
+    <MonitorTypes>
+      <UnitMonitorType ID="CookdownCommunity.ServiceNow.Monitoring.HttpsTCPPortTest.TimeOut" Accessibility="Public">
+        <MonitorTypeStates>
+          <MonitorTypeState ID="TimeOutFailure" NoDetection="false" />
+          <MonitorTypeState ID="NoTimeOutFailure" NoDetection="false" />
+        </MonitorTypeStates>
+        <Configuration />
+        <MonitorImplementation>
+          <MemberModules>
+            <DataSource ID="DS1" TypeID="CookdownCommunity.ServiceNow.Monitoring.TCPPortCheckDataSource">
+              <InstanceUrlBase>$Target/Property[Type="CookdownCommunity.ServiceNow.Monitoring.WatcherNode"]/InstanceUrlBase$</InstanceUrlBase>
+            </DataSource>
+            <ConditionDetection ID="CDTimeOutFailure" TypeID="System!System.ExpressionFilter">
+              <Expression>
+                <SimpleExpression>
+                  <ValueExpression>
+                    <XPathQuery Type="UnsignedInteger">StatusCode</XPathQuery>
+                  </ValueExpression>
+                  <Operator>Equal</Operator>
+                  <ValueExpression>
+                    <Value Type="UnsignedInteger">2147952460</Value>
+                  </ValueExpression>
+                </SimpleExpression>
+              </Expression>
+            </ConditionDetection>
+            <ConditionDetection ID="CDNoTimeOutFailure" TypeID="System!System.ExpressionFilter">
+              <Expression>
+                <SimpleExpression>
+                  <ValueExpression>
+                    <XPathQuery Type="UnsignedInteger">StatusCode</XPathQuery>
+                  </ValueExpression>
+                  <Operator>NotEqual</Operator>
+                  <ValueExpression>
+                    <Value Type="UnsignedInteger">2147952460</Value>
+                  </ValueExpression>
+                </SimpleExpression>
+              </Expression>
+            </ConditionDetection>
+          </MemberModules>
+          <RegularDetections>
+            <RegularDetection MonitorTypeStateID="TimeOutFailure">
+              <Node ID="CDTimeOutFailure">
+                <Node ID="DS1" />
+              </Node>
+            </RegularDetection>
+            <RegularDetection MonitorTypeStateID="NoTimeOutFailure">
+              <Node ID="CDNoTimeOutFailure">
+                <Node ID="DS1" />
+              </Node>
+            </RegularDetection>
+          </RegularDetections>
+        </MonitorImplementation>
+      </UnitMonitorType>
+      <UnitMonitorType ID="CookdownCommunity.ServiceNow.Monitoring.HttpsTCPPortTest.ConnectionRefused" Accessibility="Public">
+        <MonitorTypeStates>
+          <MonitorTypeState ID="ConnectionRefusedFailure" NoDetection="false" />
+          <MonitorTypeState ID="NoConnectionRefusedFailure" NoDetection="false" />
+        </MonitorTypeStates>
+        <Configuration />
+        <MonitorImplementation>
+          <MemberModules>
+            <DataSource ID="DS1" TypeID="CookdownCommunity.ServiceNow.Monitoring.TCPPortCheckDataSource">
+              <InstanceUrlBase>$Target/Property[Type="CookdownCommunity.ServiceNow.Monitoring.WatcherNode"]/InstanceUrlBase$</InstanceUrlBase>
+            </DataSource>
+            <ConditionDetection ID="CDConnectionRefusedFailure" TypeID="System!System.ExpressionFilter">
+              <Expression>
+                <SimpleExpression>
+                  <ValueExpression>
+                    <XPathQuery Type="UnsignedInteger">StatusCode</XPathQuery>
+                  </ValueExpression>
+                  <Operator>Equal</Operator>
+                  <ValueExpression>
+                    <Value Type="UnsignedInteger">2147952461</Value>
+                  </ValueExpression>
+                </SimpleExpression>
+              </Expression>
+            </ConditionDetection>
+            <ConditionDetection ID="CDNoConnectionRefusedFailure" TypeID="System!System.ExpressionFilter">
+              <Expression>
+                <SimpleExpression>
+                  <ValueExpression>
+                    <XPathQuery Type="UnsignedInteger">StatusCode</XPathQuery>
+                  </ValueExpression>
+                  <Operator>NotEqual</Operator>
+                  <ValueExpression>
+                    <Value Type="UnsignedInteger">2147952461</Value>
+                  </ValueExpression>
+                </SimpleExpression>
+              </Expression>
+            </ConditionDetection>
+          </MemberModules>
+          <RegularDetections>
+            <RegularDetection MonitorTypeStateID="ConnectionRefusedFailure">
+              <Node ID="CDConnectionRefusedFailure">
+                <Node ID="DS1" />
+              </Node>
+            </RegularDetection>
+            <RegularDetection MonitorTypeStateID="NoConnectionRefusedFailure">
+              <Node ID="CDNoConnectionRefusedFailure">
+                <Node ID="DS1" />
+              </Node>
+            </RegularDetection>
+          </RegularDetections>
+        </MonitorImplementation>
+      </UnitMonitorType>
+      <UnitMonitorType ID="CookdownCommunity.ServiceNow.Monitoring.HttpsTCPPortTest.DNSResolution" Accessibility="Public">
+        <MonitorTypeStates>
+          <MonitorTypeState ID="DNSResolutionFailure" NoDetection="false" />
+          <MonitorTypeState ID="NoDNSResolutionFailure" NoDetection="false" />
+        </MonitorTypeStates>
+        <Configuration />
+        <MonitorImplementation>
+          <MemberModules>
+            <DataSource ID="DS1" TypeID="CookdownCommunity.ServiceNow.Monitoring.TCPPortCheckDataSource">
+              <InstanceUrlBase>$Target/Property[Type="CookdownCommunity.ServiceNow.Monitoring.WatcherNode"]/InstanceUrlBase$</InstanceUrlBase>
+            </DataSource>
+            <ConditionDetection ID="CDDNSResolutionFailure" TypeID="System!System.ExpressionFilter">
+              <Expression>
+                <SimpleExpression>
+                  <ValueExpression>
+                    <XPathQuery Type="UnsignedInteger">StatusCode</XPathQuery>
+                  </ValueExpression>
+                  <Operator>Equal</Operator>
+                  <ValueExpression>
+                    <Value Type="UnsignedInteger">2147953401</Value>
+                  </ValueExpression>
+                </SimpleExpression>
+              </Expression>
+            </ConditionDetection>
+            <ConditionDetection ID="CDNoDNSResolutionFailure" TypeID="System!System.ExpressionFilter">
+              <Expression>
+                <SimpleExpression>
+                  <ValueExpression>
+                    <XPathQuery Type="UnsignedInteger">StatusCode</XPathQuery>
+                  </ValueExpression>
+                  <Operator>NotEqual</Operator>
+                  <ValueExpression>
+                    <Value Type="UnsignedInteger">2147953401</Value>
+                  </ValueExpression>
+                </SimpleExpression>
+              </Expression>
+            </ConditionDetection>
+          </MemberModules>
+          <RegularDetections>
+            <RegularDetection MonitorTypeStateID="DNSResolutionFailure">
+              <Node ID="CDDNSResolutionFailure">
+                <Node ID="DS1" />
+              </Node>
+            </RegularDetection>
+            <RegularDetection MonitorTypeStateID="NoDNSResolutionFailure">
+              <Node ID="CDNoDNSResolutionFailure">
+                <Node ID="DS1" />
+              </Node>
+            </RegularDetection>
+          </RegularDetections>
+        </MonitorImplementation>
+      </UnitMonitorType>
+      <UnitMonitorType ID="CookdownCommunity.ServiceNow.Monitoring.HttpsTCPPortTest.HostUnreachable" Accessibility="Public">
+        <MonitorTypeStates>
+          <MonitorTypeState ID="HostUnreachableFailure" NoDetection="false" />
+          <MonitorTypeState ID="NoHostUnreachableFailure" NoDetection="false" />
+        </MonitorTypeStates>
+        <Configuration />
+        <MonitorImplementation>
+          <MemberModules>
+            <DataSource ID="DS1" TypeID="CookdownCommunity.ServiceNow.Monitoring.TCPPortCheckDataSource">
+              <InstanceUrlBase>$Target/Property[Type="CookdownCommunity.ServiceNow.Monitoring.WatcherNode"]/InstanceUrlBase$</InstanceUrlBase>
+            </DataSource>
+            <ConditionDetection ID="CDHostUnreachableFailure" TypeID="System!System.ExpressionFilter">
+              <Expression>
+                <SimpleExpression>
+                  <ValueExpression>
+                    <XPathQuery Type="UnsignedInteger">StatusCode</XPathQuery>
+                  </ValueExpression>
+                  <Operator>Equal</Operator>
+                  <ValueExpression>
+                    <Value Type="UnsignedInteger">2147952465</Value>
+                  </ValueExpression>
+                </SimpleExpression>
+              </Expression>
+            </ConditionDetection>
+            <ConditionDetection ID="CDNoHostUnreachableFailure" TypeID="System!System.ExpressionFilter">
+              <Expression>
+                <SimpleExpression>
+                  <ValueExpression>
+                    <XPathQuery Type="UnsignedInteger">StatusCode</XPathQuery>
+                  </ValueExpression>
+                  <Operator>NotEqual</Operator>
+                  <ValueExpression>
+                    <Value Type="UnsignedInteger">2147952465</Value>
+                  </ValueExpression>
+                </SimpleExpression>
+              </Expression>
+            </ConditionDetection>
+          </MemberModules>
+          <RegularDetections>
+            <RegularDetection MonitorTypeStateID="HostUnreachableFailure">
+              <Node ID="CDHostUnreachableFailure">
+                <Node ID="DS1" />
+              </Node>
+            </RegularDetection>
+            <RegularDetection MonitorTypeStateID="NoHostUnreachableFailure">
+              <Node ID="CDNoHostUnreachableFailure">
+                <Node ID="DS1" />
+              </Node>
+            </RegularDetection>
+          </RegularDetections>
+        </MonitorImplementation>
+      </UnitMonitorType>
+    </MonitorTypes>
+  </TypeDefinitions>
+</ManagementPackFragment>

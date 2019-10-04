@@ -1,0 +1,135 @@
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <ProjectGuid>{d0293661-4b8d-401b-b9b6-805b4131c39e}</ProjectGuid>
+    <RootNamespace>CookdownCommunity.ServiceNow.Monitoring</RootNamespace>
+    <Name>CookdownCommunity.ServiceNow.Monitoring</Name>
+    <ManagementPackName>CookdownCommunity.ServiceNow.Monitoring</ManagementPackName>
+    <Version>1.0.0.0</Version>
+    <MpFrameworkVersion>v7.0.2</MpFrameworkVersion>
+    <MpFrameworkProfile>OM</MpFrameworkProfile>
+    <ProductVersion>1.1.0.0</ProductVersion>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>bin\Debug\</OutputPath>
+    <GenerateSealed>True</GenerateSealed>
+    <Company>Cookdown Ltd.</Company>
+    <Copyright>Copyright (c) Cookdown All rights reserved.</Copyright>
+    <DelaySigning>False</DelaySigning>
+    <AssemblyOriginatorKeyFile>..\CookdownCommunity.ManagementPacks.snk</AssemblyOriginatorKeyFile>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
+    <DebugSymbols>false</DebugSymbols>
+    <OutputPath>bin\Release\</OutputPath>
+    <DelaySigning>False</DelaySigning>
+    <Company>Cookdown Ltd.</Company>
+    <Copyright>Copyright (c) Cookdown All rights reserved.</Copyright>
+    <DelaySign>false</DelaySign>
+    <AssemblyOriginatorKeyFile>..\CookdownCommunity.ManagementPacks.snk</AssemblyOriginatorKeyFile>
+    <GenerateSealed>True</GenerateSealed>
+  </PropertyGroup>
+  <ItemGroup>
+    <ManagementPackReference Include="Microsoft.SystemCenter.DataWarehouse.Library">
+      <HintPath>C:\Program Files (x86)\System Center Visual Studio Authoring Extensions\References\OM2012R2\Microsoft.SystemCenter.DataWarehouse.Library.mp</HintPath>
+      <Alias>MSDL</Alias>
+      <MinVersion>7.1.10226.0</MinVersion>
+    </ManagementPackReference>
+    <ManagementPackReference Include="Microsoft.SystemCenter.Library">
+      <Alias>SC</Alias>
+      <PackageToBundle>false</PackageToBundle>
+    </ManagementPackReference>
+    <ManagementPackReference Include="Microsoft.SystemCenter.SyntheticTransactions.Library">
+      <HintPath>C:\Program Files (x86)\System Center Visual Studio Authoring Extensions\References\OM2012R2\Microsoft.SystemCenter.SyntheticTransactions.Library.mp</HintPath>
+      <Alias>MSSL</Alias>
+      <MinVersion>7.1.10226.0</MinVersion>
+      <PackageToBundle>False</PackageToBundle>
+    </ManagementPackReference>
+    <ManagementPackReference Include="Microsoft.Windows.Library">
+      <Alias>Windows</Alias>
+      <PackageToBundle>false</PackageToBundle>
+    </ManagementPackReference>
+    <ManagementPackReference Include="System.Health.Library">
+      <Alias>Health</Alias>
+      <PackageToBundle>false</PackageToBundle>
+    </ManagementPackReference>
+    <ManagementPackReference Include="System.Library">
+      <Alias>System</Alias>
+      <PackageToBundle>false</PackageToBundle>
+    </ManagementPackReference>
+    <ManagementPackReference Include="Microsoft.SystemCenter.Visualization.Library">
+      <Alias>Visualization</Alias>
+      <PackageToBundle>false</PackageToBundle>
+    </ManagementPackReference>
+    <ManagementPackReference Include="System.Performance.Library">
+      <HintPath>C:\Program Files (x86)\System Center Visual Studio Authoring Extensions\References\OM2012R2\System.Performance.Library.mp</HintPath>
+      <Alias>Perf</Alias>
+      <MinVersion>7.0.8433.0</MinVersion>
+      <PackageToBundle>False</PackageToBundle>
+    </ManagementPackReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Classes" />
+    <Folder Include="Discoveries" />
+    <Folder Include="Monitors" />
+    <Folder Include="Rules" />
+    <Folder Include="Modules" />
+    <Folder Include="Scripts" />
+    <Folder Include="Relationships" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Classes\ServiceNowInstance.mpx">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Classes\ServiceNowNode.mpx">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Classes\WatcherNode.mpx">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Discoveries\DiscoverWatchersAndInstances.mpx">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Modules\TCPPortCheckModule.mpx">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Monitors\InstanceDependencyMonitors.mpx">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Monitors\TCPPortUnitMonitorTypes.mpx">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Monitors\WatcherNodeUnitMonitors.mpx">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Rules\InstancePerformanceRules.mpx">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Rules\NodePerformanceRules.mpx">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Rules\WatcherNodePerformanceRules.mpx">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Modules\FetchStatusDataSource.mpx">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Modules\SnowPerformanceDataSource.mpx">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Relationships\ComputerHostsWatcher.mpx">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Relationships\InstanceContainsWatchers.mpx">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Relationships\InstanceHostsNodes.mpx">
+      <SubType>Code</SubType>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Scripts\DiscoverServiceNowMonitoring.ps1" />
+    <EmbeddedResource Include="Scripts\ServiceNowStatusProbe.ps1" />
+  </ItemGroup>
+  <Import Project="$(MSBuildExtensionsPath)\Microsoft\VSAC\Microsoft.SystemCenter.OperationsManager.targets" />
+</Project>

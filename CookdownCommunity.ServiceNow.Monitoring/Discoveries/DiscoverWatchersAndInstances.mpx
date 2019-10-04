@@ -1,0 +1,80 @@
+﻿<ManagementPackFragment SchemaVersion="2.0" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <TypeDefinitions>
+    <ModuleTypes>
+      <DataSourceModuleType ID="CookdownCommunity.ServiceNow.Monitoring.DiscoverServiceNow" Accessibility="Internal">
+        <Configuration>
+          <xsd:element name="SourceID" type="xsd:string" xmlns:xsd="http://www.w3.org/2001/XMLSchema" />
+          <xsd:element name="ManagedEntityID" type="xsd:string" xmlns:xsd="http://www.w3.org/2001/XMLSchema" />
+          <xsd:element name="LocationName" type="xsd:string" xmlns:xsd="http://www.w3.org/2001/XMLSchema" />
+          <xsd:element name="InstanceUrls" type="xsd:string" xmlns:xsd="http://www.w3.org/2001/XMLSchema" />
+          <xsd:element name="ComputerName" type="xsd:string" xmlns:xsd="http://www.w3.org/2001/XMLSchema" />
+        </Configuration>
+        <OverrideableParameters>
+          <OverrideableParameter ID="LocationName" Selector="$Config/LocationName$" ParameterType="string"/>
+          <OverrideableParameter ID="InstanceUrls" Selector="$Config/InstanceUrls$" ParameterType="string"/>
+        </OverrideableParameters>
+        <ModuleImplementation>
+          <Composite>
+            <MemberModules>
+              <DataSource ID="PSDisco"  TypeID="Windows!Microsoft.Windows.TimedPowerShell.DiscoveryProvider">
+                <IntervalSeconds>43200</IntervalSeconds>
+                <SyncTime/>
+                <ScriptName>DiscoverServiceNowMonitoring.ps1</ScriptName>
+                <ScriptBody>$IncludeFileContent/Scripts/DiscoverServiceNowMonitoring.ps1$</ScriptBody>
+                <Parameters>
+                  <Parameter>
+                    <Name>sourceID</Name>
+                    <Value>$Config/SourceID$</Value>
+                  </Parameter>
+                  <Parameter>
+                    <Name>managedEntityID</Name>
+                    <Value>$Config/ManagedEntityID$</Value>
+                  </Parameter>
+                  <Parameter>
+                    <Name>location</Name>
+                    <Value>$Config/LocationName$</Value>
+                  </Parameter>
+                  <Parameter>
+                    <Name>instanceUrls</Name>
+                    <Value>$Config/InstanceUrls$</Value>
+                  </Parameter>
+                  <Parameter>
+                    <Name>computerName</Name>
+                    <Value>$Config/ComputerName$</Value>
+                  </Parameter>
+                </Parameters>
+                <TimeoutSeconds>600</TimeoutSeconds>
+              </DataSource>
+            </MemberModules>
+            <Composition>
+              <Node ID="PSDisco"/>
+            </Composition>
+          </Composite>
+        </ModuleImplementation>
+        <OutputType>System!System.Discovery.Data</OutputType>
+      </DataSourceModuleType>
+    </ModuleTypes>
+  </TypeDefinitions>
+  <Monitoring>
+    <Discoveries>
+      <Discovery ID="CookdownCommunity.ServiceNow.Monitoring.DiscoveryWatchersAndInstances" Enabled="false" Target="Windows!Microsoft.Windows.Computer" Remotable="false">
+        <Category>Discovery</Category>
+        <DiscoveryTypes>
+          <DiscoveryClass TypeID="CookdownCommunity.ServiceNow.Monitoring.ServiceNowInstance"/>
+          <DiscoveryClass TypeID="CookdownCommunity.ServiceNow.Monitoring.ServiceNowNode"/>
+          <DiscoveryClass TypeID="CookdownCommunity.ServiceNow.Monitoring.WatcherNode"/>
+          <DiscoveryRelationship TypeID="CookdownCommunity.ServiceNow.Monitoring.InstanceHostsNodes"/>
+          <DiscoveryRelationship TypeID="CookdownCommunity.ServiceNow.Monitoring.ComputerHostsWatcher"/>
+          <DiscoveryRelationship TypeID="CookdownCommunity.ServiceNow.Monitoring.InstanceContainsWatchers"/>
+        </DiscoveryTypes>
+        <DataSource ID="DiscoverSnow" TypeID="CookdownCommunity.ServiceNow.Monitoring.DiscoverServiceNow">
+          <SourceID>$MPElement$</SourceID>
+          <ManagedEntityID>$Target/Id$</ManagedEntityID>
+          <LocationName></LocationName>
+          <InstanceUrls></InstanceUrls>
+          <ComputerName>$Target/Property[Type="Windows!Microsoft.Windows.Computer"]/PrincipalName$</ComputerName>
+        </DataSource>
+      </Discovery>
+    </Discoveries>
+  </Monitoring>
+</ManagementPackFragment>

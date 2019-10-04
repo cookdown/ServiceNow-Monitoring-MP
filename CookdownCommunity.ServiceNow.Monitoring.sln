@@ -1,0 +1,29 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 15
+VisualStudioVersion = 15.0.28307.489
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{D4B43EB3-688B-4EEE-86BD-088F0B28ABB3}") = "CookdownCommunity.ServiceNow.Monitoring", "CookdownCommunity.ServiceNow.Monitoring\CookdownCommunity.ServiceNow.Monitoring.mpproj", "{D0293661-4B8D-401B-B9B6-805B4131C39E}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Debug|x86 = Debug|x86
+		Release|Any CPU = Release|Any CPU
+		Release|x86 = Release|x86
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{D0293661-4B8D-401B-B9B6-805B4131C39E}.Debug|Any CPU.ActiveCfg = Debug|x86
+		{D0293661-4B8D-401B-B9B6-805B4131C39E}.Debug|x86.ActiveCfg = Debug|x86
+		{D0293661-4B8D-401B-B9B6-805B4131C39E}.Debug|x86.Build.0 = Debug|x86
+		{D0293661-4B8D-401B-B9B6-805B4131C39E}.Release|Any CPU.ActiveCfg = Release|x86
+		{D0293661-4B8D-401B-B9B6-805B4131C39E}.Release|x86.ActiveCfg = Release|x86
+		{D0293661-4B8D-401B-B9B6-805B4131C39E}.Release|x86.Build.0 = Release|x86
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {08F6B835-3B34-444E-949F-7BE59BE6358D}
+	EndGlobalSection
+EndGlobal
