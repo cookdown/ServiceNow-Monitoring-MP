@@ -5,7 +5,7 @@
     <RootNamespace>CookdownCommunity.ServiceNow.Monitoring</RootNamespace>
     <Name>CookdownCommunity.ServiceNow.Monitoring</Name>
     <ManagementPackName>CookdownCommunity.ServiceNow.Monitoring</ManagementPackName>
-    <Version>1.0.0.0</Version>
+    <Version>1.0.0.1</Version>
     <MpFrameworkVersion>v7.0.2</MpFrameworkVersion>
     <MpFrameworkProfile>OM</MpFrameworkProfile>
     <ProductVersion>1.1.0.0</ProductVersion>
@@ -90,10 +90,20 @@
     <Compile Include="Discoveries\DiscoverWatchersAndInstances.mpx">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="ManagementPack.mpx">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="Modules\TCPPortCheckModule.mpx">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Monitors\InstanceDependencyMonitors.mpx">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Monitors\PerformanceMonitors.mptg.mpx">
+      <SubType>Code</SubType>
+      <DependentUpon>Monitors\PerformanceMonitors.mptg</DependentUpon>
+    </Compile>
+    <Compile Include="Monitors\ServiceNowNodeMonitorTypes.mpx">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Monitors\TCPPortUnitMonitorTypes.mpx">
@@ -126,10 +136,19 @@
     <Compile Include="Relationships\InstanceHostsNodes.mpx">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="SecureReferences.mpx">
+      <SubType>Code</SubType>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Scripts\DiscoverServiceNowMonitoring.ps1" />
     <EmbeddedResource Include="Scripts\ServiceNowStatusProbe.ps1" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Monitors\PerformanceMonitors.mptg">
+      <SubType>Content</SubType>
+      <Generator>FragmentGenerator</Generator>
+    </Content>
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Microsoft\VSAC\Microsoft.SystemCenter.OperationsManager.targets" />
 </Project>

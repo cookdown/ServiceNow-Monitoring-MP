@@ -1,12 +1,17 @@
 ﻿<ManagementPackFragment SchemaVersion="2.0" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
   <Monitoring>
     <Monitors>
-      <DependencyMonitor ID="CookdownCommunity.ServiceNow.Monitoring.ServiceNowPerformance" Accessibility="Internal" Enabled="true" Target="CookdownCommunity.ServiceNow.Monitoring.ServiceNowInstance" ParentMonitorID="Health!System.Health.AvailabilityState" Remotable="true" Priority="Normal" RelationshipType="CookdownCommunity.ServiceNow.Monitoring.InstanceContainsWatchers" MemberMonitor="Health!System.Health.PerformanceState">
+      <DependencyMonitor ID="CookdownCommunity.ServiceNow.Monitoring.ServiceNowPerformance" Accessibility="Internal" Enabled="true" Target="CookdownCommunity.ServiceNow.Monitoring.ServiceNowInstance" ParentMonitorID="Health!System.Health.PerformanceState" Remotable="true" Priority="Normal" RelationshipType="CookdownCommunity.ServiceNow.Monitoring.InstanceContainsWatchers" MemberMonitor="Health!System.Health.PerformanceState">
         <Category>AvailabilityHealth</Category>
         <Algorithm>WorstOf</Algorithm>
         <MemberUnAvailable>Warning</MemberUnAvailable>
       </DependencyMonitor>
       <DependencyMonitor ID="CookdownCommunity.ServiceNow.Monitoring.ServiceNowAvailabilty" Accessibility="Internal" Enabled="true" Target="CookdownCommunity.ServiceNow.Monitoring.ServiceNowInstance" ParentMonitorID="Health!System.Health.AvailabilityState" Remotable="true" Priority="Normal" RelationshipType="CookdownCommunity.ServiceNow.Monitoring.InstanceContainsWatchers" MemberMonitor="Health!System.Health.AvailabilityState">
+        <Category>AvailabilityHealth</Category>
+        <Algorithm>WorstOf</Algorithm>
+        <MemberUnAvailable>Error</MemberUnAvailable>
+      </DependencyMonitor>
+      <DependencyMonitor ID="CookdownCommunity.ServiceNow.Monitoring.ServiceNowNodePerformance" Accessibility="Internal" Enabled="true" Target="CookdownCommunity.ServiceNow.Monitoring.ServiceNowInstance" ParentMonitorID="Health!System.Health.PerformanceState" Remotable="true" Priority="Normal" RelationshipType="CookdownCommunity.ServiceNow.Monitoring.InstanceHostsNodes" MemberMonitor="Health!System.Health.PerformanceState">
         <Category>AvailabilityHealth</Category>
         <Algorithm>WorstOf</Algorithm>
         <MemberUnAvailable>Error</MemberUnAvailable>
@@ -17,11 +22,15 @@
     <LanguagePack ID="ENU" IsDefault="true">
       <DisplayStrings>
         <DisplayString ElementID="CookdownCommunity.ServiceNow.Monitoring.ServiceNowPerformance">
-          <Name>ServiceNow Remote Performace</Name>
+          <Name>Remote Performace</Name>
+          <Description>Description for new dependency monitor.</Description>
+        </DisplayString>
+        <DisplayString ElementID="CookdownCommunity.ServiceNow.Monitoring.ServiceNowNodePerformance">
+          <Name>Node Performace</Name>
           <Description>Description for new dependency monitor.</Description>
         </DisplayString>
         <DisplayString ElementID="CookdownCommunity.ServiceNow.Monitoring.ServiceNowAvailabilty">
-          <Name>ServiceNow Remote Availability</Name>
+          <Name>Remote Availability</Name>
           <Description>Description for new dependency monitor.</Description>
         </DisplayString>
       </DisplayStrings>

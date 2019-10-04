@@ -3,7 +3,7 @@
   <Manifest>
     <Identity>
       <ID>CookdownCommunity.ServiceNow.Monitoring</ID>
-      <Version>1.0.0.1</Version>
+      <Version>1.0.0.6</Version>
     </Identity>
     <Name>CookdownCommunity.ServiceNow.Monitoring</Name>
     <References>
@@ -86,6 +86,9 @@
         </RelationshipType>
       </RelationshipTypes>
     </EntityTypes>
+    <SecureReferences>
+      <SecureReference ID="CookdownCommunity.ServiceNow.Monitoring.APIProbeAccount" Accessibility="Public" Context="System!System.Entity" />
+    </SecureReferences>
     <ModuleTypes>
       <DataSourceModuleType ID="CookdownCommunity.ServiceNow.Monitoring.DiscoverServiceNow" Accessibility="Internal">
         <Configuration>
@@ -107,10 +110,7 @@
                 <SyncTime />
                 <ScriptName>DiscoverServiceNowMonitoring.ps1</ScriptName>
                 <ScriptBody><![CDATA[#Bring in our parameters
-param($sourceID, $managedEntityID, $location, $instanceUrls, $computerName)#, $snowUserName, $snowPassword)
-
-$snowUserName = "nathan.foreman"
-$snowPassword = "Natha12n"
+param($sourceID, $managedEntityID, $location, $instanceUrls, $computerName, $snowUserName, $snowPassword)
 
 Function CreateHeaders
 {
@@ -247,6 +247,14 @@ $discoveryData]]></ScriptBody>
                   <Parameter>
                     <Name>computerName</Name>
                     <Value>$Config/ComputerName$</Value>
+                  </Parameter>
+                  <Parameter>
+                    <Name>snowUserName</Name>
+                    <Value>$RunAs[Name="CookdownCommunity.ServiceNow.Monitoring.APIProbeAccount"]/UserName$</Value>
+                  </Parameter>
+                  <Parameter>
+                    <Name>snowPassword</Name>
+                    <Value>$RunAs[Name="CookdownCommunity.ServiceNow.Monitoring.APIProbeAccount"]/Password$</Value>
                   </Parameter>
                 </Parameters>
                 <TimeoutSeconds>600</TimeoutSeconds>
@@ -507,8 +515,8 @@ catch
             <MemberModules>
               <DataSource ID="RunPowerShell" TypeID="CookdownCommunity.ServiceNow.Monitoring.FetchStatusDataSource">
                 <InstanceURL>$Config/InstanceURL$</InstanceURL>
-                <SnowUsername>nathan.foreman</SnowUsername>
-                <SnowPassword>Natha12n</SnowPassword>
+                <SnowUsername>$RunAs[Name="CookdownCommunity.ServiceNow.Monitoring.APIProbeAccount"]/UserName$</SnowUsername>
+                <SnowPassword>$RunAs[Name="CookdownCommunity.ServiceNow.Monitoring.APIProbeAccount"]/Password$</SnowPassword>
               </DataSource>
               <ConditionDetection ID="Filter" TypeID="System!System.ExpressionFilter">
                 <Expression>
@@ -580,6 +588,70 @@ catch
       </DataSourceModuleType>
     </ModuleTypes>
     <MonitorTypes>
+      <UnitMonitorType ID="CookdownCommunity.ServiceNow.Monitoring.PerformanceThreshold" Accessibility="Internal">
+        <MonitorTypeStates>
+          <MonitorTypeState ID="UnderThreshold" NoDetection="false" />
+          <MonitorTypeState ID="OverThreshold" NoDetection="false" />
+        </MonitorTypeStates>
+        <Configuration>
+          <xsd:element name="InstanceURL" type="xsd:string" xmlns:xsd="http://www.w3.org/2001/XMLSchema" />
+          <xsd:element name="Object" type="xsd:string" xmlns:xsd="http://www.w3.org/2001/XMLSchema" />
+          <xsd:element name="Counter" type="xsd:string" xmlns:xsd="http://www.w3.org/2001/XMLSchema" />
+          <xsd:element name="NodeId" type="xsd:string" xmlns:xsd="http://www.w3.org/2001/XMLSchema" />
+          <xsd:element name="Threshold" type="xsd:string" xmlns:xsd="http://www.w3.org/2001/XMLSchema" />
+        </Configuration>
+        <OverrideableParameters>
+          <OverrideableParameter ID="Threshold" Selector="$Config/Threshold$" ParameterType="string" />
+        </OverrideableParameters>
+        <MonitorImplementation>
+          <MemberModules>
+            <DataSource ID="DataSource" TypeID="CookdownCommunity.ServiceNow.Monitoring.SnowPerformanceDataSource">
+              <InstanceURL>$Config/InstanceURL$</InstanceURL>
+              <Object>$Config/Object$</Object>
+              <Counter>$Config/Counter$</Counter>
+              <NodeId>$Config/NodeId$</NodeId>
+            </DataSource>
+            <ConditionDetection ID="UnderThresholdFilter" TypeID="System!System.ExpressionFilter">
+              <Expression>
+                <SimpleExpression>
+                  <ValueExpression>
+                    <XPathQuery Type="Double">Value</XPathQuery>
+                  </ValueExpression>
+                  <Operator>LessEqual</Operator>
+                  <ValueExpression>
+                    <Value Type="Double">$Config/Threshold$</Value>
+                  </ValueExpression>
+                </SimpleExpression>
+              </Expression>
+            </ConditionDetection>
+            <ConditionDetection ID="OverThresholdFilter" TypeID="System!System.ExpressionFilter">
+              <Expression>
+                <SimpleExpression>
+                  <ValueExpression>
+                    <XPathQuery Type="Double">Value</XPathQuery>
+                  </ValueExpression>
+                  <Operator>Greater</Operator>
+                  <ValueExpression>
+                    <Value Type="Double">$Config/Threshold$</Value>
+                  </ValueExpression>
+                </SimpleExpression>
+              </Expression>
+            </ConditionDetection>
+          </MemberModules>
+          <RegularDetections>
+            <RegularDetection MonitorTypeStateID="UnderThreshold">
+              <Node ID="UnderThresholdFilter">
+                <Node ID="DataSource" />
+              </Node>
+            </RegularDetection>
+            <RegularDetection MonitorTypeStateID="OverThreshold">
+              <Node ID="OverThresholdFilter">
+                <Node ID="DataSource" />
+              </Node>
+            </RegularDetection>
+          </RegularDetections>
+        </MonitorImplementation>
+      </UnitMonitorType>
       <UnitMonitorType ID="CookdownCommunity.ServiceNow.Monitoring.HttpsTCPPortTest.TimeOut" Accessibility="Public">
         <MonitorTypeStates>
           <MonitorTypeState ID="TimeOutFailure" NoDetection="false" />
@@ -1387,6 +1459,54 @@ catch
       </Rule>
     </Rules>
     <Monitors>
+      <UnitMonitor ID="CookdownCommunity.ServiceNow.Monitoring.InstanceFetchTime" Accessibility="Internal" Enabled="true" Target="CookdownCommunity.ServiceNow.Monitoring.ServiceNowInstance" ParentMonitorID="Health!System.Health.PerformanceState" Remotable="true" Priority="Normal" TypeID="CookdownCommunity.ServiceNow.Monitoring.PerformanceThreshold" ConfirmDelivery="false">
+        <Category>AvailabilityHealth</Category>
+        <OperationalStates>
+          <OperationalState ID="UnderThreshold" MonitorTypeStateID="UnderThreshold" HealthState="Success" />
+          <OperationalState ID="OverThreshold" MonitorTypeStateID="OverThreshold" HealthState="Warning" />
+        </OperationalStates>
+        <Configuration>
+          <InstanceURL>$Target/Property[Type="CookdownCommunity.ServiceNow.Monitoring.ServiceNowInstance"]/URL$</InstanceURL>
+          <Object>Connection</Object>
+          <Counter>Fetch Time (MS)</Counter>
+          <NodeId>NONE</NodeId>
+          <Threshold>3500</Threshold>
+        </Configuration>
+      </UnitMonitor>
+      <UnitMonitor ID="CookdownCommunity.ServiceNow.Monitoring.NodeMemoryUtilization" Accessibility="Internal" Enabled="true" Target="CookdownCommunity.ServiceNow.Monitoring.ServiceNowNode" ParentMonitorID="Health!System.Health.PerformanceState" Remotable="true" Priority="Normal" TypeID="CookdownCommunity.ServiceNow.Monitoring.PerformanceThreshold" ConfirmDelivery="false">
+        <Category>AvailabilityHealth</Category>
+        <AlertSettings AlertMessage="CookdownCommunity.ServiceNow.Monitoring.NodeMemoryUtilization.AlertMessage">
+          <AlertOnState>Error</AlertOnState>
+          <AutoResolve>true</AutoResolve>
+          <AlertPriority>Normal</AlertPriority>
+          <AlertSeverity>MatchMonitorHealth</AlertSeverity>
+        </AlertSettings>
+        <OperationalStates>
+          <OperationalState ID="UnderThreshold" MonitorTypeStateID="UnderThreshold" HealthState="Success" />
+          <OperationalState ID="OverThreshold" MonitorTypeStateID="OverThreshold" HealthState="Error" />
+        </OperationalStates>
+        <Configuration>
+          <InstanceURL>$Target/Host/Property[Type="CookdownCommunity.ServiceNow.Monitoring.ServiceNowInstance"]/URL$</InstanceURL>
+          <Object>Memory</Object>
+          <Counter>Percent Free</Counter>
+          <NodeId>$Target/Property[Type="CookdownCommunity.ServiceNow.Monitoring.ServiceNowNode"]/NodeId$</NodeId>
+          <Threshold>90</Threshold>
+        </Configuration>
+      </UnitMonitor>
+      <UnitMonitor ID="CookdownCommunity.ServiceNow.Monitoring.NodeScheduleQueue" Accessibility="Internal" Enabled="true" Target="CookdownCommunity.ServiceNow.Monitoring.ServiceNowNode" ParentMonitorID="Health!System.Health.PerformanceState" Remotable="true" Priority="Normal" TypeID="CookdownCommunity.ServiceNow.Monitoring.PerformanceThreshold" ConfirmDelivery="false">
+        <Category>AvailabilityHealth</Category>
+        <OperationalStates>
+          <OperationalState ID="UnderThreshold" MonitorTypeStateID="UnderThreshold" HealthState="Success" />
+          <OperationalState ID="OverThreshold" MonitorTypeStateID="OverThreshold" HealthState="Warning" />
+        </OperationalStates>
+        <Configuration>
+          <InstanceURL>$Target/Host/Property[Type="CookdownCommunity.ServiceNow.Monitoring.ServiceNowInstance"]/URL$</InstanceURL>
+          <Object>Scheduler</Object>
+          <Counter>Queue Length</Counter>
+          <NodeId>$Target/Property[Type="CookdownCommunity.ServiceNow.Monitoring.ServiceNowNode"]/NodeId$</NodeId>
+          <Threshold>3</Threshold>
+        </Configuration>
+      </UnitMonitor>
       <UnitMonitor ID="CookdownCommunity.ServiceNow.Monitoring.HttpsTCPPortTest.TimeOutMonitor" Accessibility="Public" Enabled="true" Target="CookdownCommunity.ServiceNow.Monitoring.WatcherNode" ParentMonitorID="Health!System.Health.AvailabilityState" Remotable="true" Priority="Normal" TypeID="CookdownCommunity.ServiceNow.Monitoring.HttpsTCPPortTest.TimeOut" ConfirmDelivery="false">
         <Category>PerformanceHealth</Category>
         <AlertSettings AlertMessage="CookdownCommunity.ServiceNow.Monitoring.HttpsTCPPortTest.TimeOutMonitor.AlertMessage">
@@ -1443,7 +1563,7 @@ catch
         </OperationalStates>
         <Configuration />
       </UnitMonitor>
-      <DependencyMonitor ID="CookdownCommunity.ServiceNow.Monitoring.ServiceNowPerformance" Accessibility="Internal" Enabled="true" Target="CookdownCommunity.ServiceNow.Monitoring.ServiceNowInstance" ParentMonitorID="Health!System.Health.AvailabilityState" Remotable="true" Priority="Normal" RelationshipType="CookdownCommunity.ServiceNow.Monitoring.InstanceContainsWatchers" MemberMonitor="Health!System.Health.PerformanceState">
+      <DependencyMonitor ID="CookdownCommunity.ServiceNow.Monitoring.ServiceNowPerformance" Accessibility="Internal" Enabled="true" Target="CookdownCommunity.ServiceNow.Monitoring.ServiceNowInstance" ParentMonitorID="Health!System.Health.PerformanceState" Remotable="true" Priority="Normal" RelationshipType="CookdownCommunity.ServiceNow.Monitoring.InstanceContainsWatchers" MemberMonitor="Health!System.Health.PerformanceState">
         <Category>AvailabilityHealth</Category>
         <Algorithm>WorstOf</Algorithm>
         <MemberUnAvailable>Warning</MemberUnAvailable>
@@ -1453,10 +1573,16 @@ catch
         <Algorithm>WorstOf</Algorithm>
         <MemberUnAvailable>Error</MemberUnAvailable>
       </DependencyMonitor>
+      <DependencyMonitor ID="CookdownCommunity.ServiceNow.Monitoring.ServiceNowNodePerformance" Accessibility="Internal" Enabled="true" Target="CookdownCommunity.ServiceNow.Monitoring.ServiceNowInstance" ParentMonitorID="Health!System.Health.PerformanceState" Remotable="true" Priority="Normal" RelationshipType="CookdownCommunity.ServiceNow.Monitoring.InstanceHostsNodes" MemberMonitor="Health!System.Health.PerformanceState">
+        <Category>AvailabilityHealth</Category>
+        <Algorithm>WorstOf</Algorithm>
+        <MemberUnAvailable>Error</MemberUnAvailable>
+      </DependencyMonitor>
     </Monitors>
   </Monitoring>
   <Presentation>
     <StringResources>
+      <StringResource ID="CookdownCommunity.ServiceNow.Monitoring.NodeMemoryUtilization.AlertMessage" />
       <StringResource ID="CookdownCommunity.ServiceNow.Monitoring.HttpsTCPPortTest.TimeOutMonitor.AlertMessage" />
       <StringResource ID="CookdownCommunity.ServiceNow.Monitoring.HttpsTCPPortTest.ConnectionRefusedMonitor.AlertMessage" />
       <StringResource ID="CookdownCommunity.ServiceNow.Monitoring.HttpsTCPPortTest.HostUnreachableMonitor.AlertMessage" />
@@ -1529,13 +1655,61 @@ catch
         <DisplayString ElementID="CookdownCommunity.ServiceNow.Monitoring.WatcherNode" SubElementID="InstanceUrlBase">
           <Name>Tested Base URL</Name>
         </DisplayString>
+        <DisplayString ElementID="CookdownCommunity.ServiceNow.Monitoring">
+          <Name>Cookdown Community ServiceNow Monitoring</Name>
+          <Description>Cookdown open-source ServiceNow monitoring management pack, find updates and documentation from https://go.cookdown.com/servicenow-monitoring-mp</Description>
+        </DisplayString>
         <DisplayString ElementID="CookdownCommunity.ServiceNow.Monitoring.ServiceNowPerformance">
-          <Name>ServiceNow Remote Performace</Name>
+          <Name>Remote Performace</Name>
+          <Description>Description for new dependency monitor.</Description>
+        </DisplayString>
+        <DisplayString ElementID="CookdownCommunity.ServiceNow.Monitoring.ServiceNowNodePerformance">
+          <Name>Node Performace</Name>
           <Description>Description for new dependency monitor.</Description>
         </DisplayString>
         <DisplayString ElementID="CookdownCommunity.ServiceNow.Monitoring.ServiceNowAvailabilty">
-          <Name>ServiceNow Remote Availability</Name>
+          <Name>Remote Availability</Name>
           <Description>Description for new dependency monitor.</Description>
+        </DisplayString>
+        <DisplayString ElementID="CookdownCommunity.ServiceNow.Monitoring.InstanceFetchTime">
+          <Name>Instance Data Fetch Time</Name>
+          <Description>Monitors the speed at which ServiceNow responds to our queries for data.</Description>
+        </DisplayString>
+        <DisplayString ElementID="CookdownCommunity.ServiceNow.Monitoring.InstanceFetchTime" SubElementID="UnderThreshold">
+          <Name>Fetch OK</Name>
+          <Description>Fetch OK</Description>
+        </DisplayString>
+        <DisplayString ElementID="CookdownCommunity.ServiceNow.Monitoring.InstanceFetchTime" SubElementID="OverThreshold">
+          <Name>Fetch Slow</Name>
+          <Description>Fetch Slow</Description>
+        </DisplayString>
+        <DisplayString ElementID="CookdownCommunity.ServiceNow.Monitoring.NodeMemoryUtilization">
+          <Name>Node Memory Utilization</Name>
+          <Description>Monitors the percent memory usage on the ServiceNow nodes</Description>
+        </DisplayString>
+        <DisplayString ElementID="CookdownCommunity.ServiceNow.Monitoring.NodeMemoryUtilization.AlertMessage">
+          <Name>Memory usage high on ServiceNow Node</Name>
+          <Description>The usage of memory on this Node if high.</Description>
+        </DisplayString>
+        <DisplayString ElementID="CookdownCommunity.ServiceNow.Monitoring.NodeMemoryUtilization" SubElementID="UnderThreshold">
+          <Name>Memory OK</Name>
+          <Description>Memory OK</Description>
+        </DisplayString>
+        <DisplayString ElementID="CookdownCommunity.ServiceNow.Monitoring.NodeMemoryUtilization" SubElementID="OverThreshold">
+          <Name>Memory High</Name>
+          <Description>Memory High</Description>
+        </DisplayString>
+        <DisplayString ElementID="CookdownCommunity.ServiceNow.Monitoring.NodeScheduleQueue">
+          <Name>Scheduler Queue Length</Name>
+          <Description>Monitors the Scheduler Queue length on ServiceNow nodes</Description>
+        </DisplayString>
+        <DisplayString ElementID="CookdownCommunity.ServiceNow.Monitoring.NodeScheduleQueue" SubElementID="UnderThreshold">
+          <Name>Queue OK</Name>
+          <Description>Queue OK</Description>
+        </DisplayString>
+        <DisplayString ElementID="CookdownCommunity.ServiceNow.Monitoring.NodeScheduleQueue" SubElementID="OverThreshold">
+          <Name>Queue Long</Name>
+          <Description>Queue Long</Description>
         </DisplayString>
         <DisplayString ElementID="CookdownCommunity.ServiceNow.Monitoring.HttpsTCPPortTest.TimeOutMonitor">
           <Name>Connection Timeout</Name>
@@ -1768,6 +1942,10 @@ catch
         <DisplayString ElementID="CookdownCommunity.ServiceNow.Monitoring.InstanceHostsNodes">
           <Name>Instance Hosts Nodes</Name>
           <Description></Description>
+        </DisplayString>
+        <DisplayString ElementID="CookdownCommunity.ServiceNow.Monitoring.APIProbeAccount">
+          <Name>Cookdown: ServiceNow Monitoring API Probe Account</Name>
+          <Description>This account is used for pulling data from ServiceNow in discoveries as well as performance workflows</Description>
         </DisplayString>
       </DisplayStrings>
       <KnowledgeArticles>

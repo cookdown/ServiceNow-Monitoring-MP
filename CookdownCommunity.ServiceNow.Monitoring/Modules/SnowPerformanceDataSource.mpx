@@ -13,8 +13,8 @@
             <MemberModules>
               <DataSource ID="RunPowerShell" TypeID="CookdownCommunity.ServiceNow.Monitoring.FetchStatusDataSource">
                 <InstanceURL>$Config/InstanceURL$</InstanceURL>
-                <SnowUsername>nathan.foreman</SnowUsername>
-                <SnowPassword>Natha12n</SnowPassword>
+                <SnowUsername>$RunAs[Name="CookdownCommunity.ServiceNow.Monitoring.APIProbeAccount"]/UserName$</SnowUsername>
+                <SnowPassword>$RunAs[Name="CookdownCommunity.ServiceNow.Monitoring.APIProbeAccount"]/Password$</SnowPassword>
               </DataSource>
               <ConditionDetection ID="Filter" TypeID="System!System.ExpressionFilter">
                 <Expression>

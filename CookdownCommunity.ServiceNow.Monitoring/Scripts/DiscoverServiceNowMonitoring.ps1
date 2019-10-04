@@ -1,8 +1,5 @@
 ﻿#Bring in our parameters
-param($sourceID, $managedEntityID, $location, $instanceUrls, $computerName)#, $snowUserName, $snowPassword)
-
-$snowUserName = "nathan.foreman"
-$snowPassword = "Natha12n"
+param($sourceID, $managedEntityID, $location, $instanceUrls, $computerName, $snowUserName, $snowPassword)
 
 Function CreateHeaders
 {

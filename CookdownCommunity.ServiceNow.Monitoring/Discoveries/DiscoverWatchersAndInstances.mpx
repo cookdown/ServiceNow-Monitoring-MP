@@ -42,6 +42,14 @@
                     <Name>computerName</Name>
                     <Value>$Config/ComputerName$</Value>
                   </Parameter>
+                  <Parameter>
+                    <Name>snowUserName</Name>
+                    <Value>$RunAs[Name="CookdownCommunity.ServiceNow.Monitoring.APIProbeAccount"]/UserName$</Value>
+                  </Parameter>
+                  <Parameter>
+                    <Name>snowPassword</Name>
+                    <Value>$RunAs[Name="CookdownCommunity.ServiceNow.Monitoring.APIProbeAccount"]/Password$</Value>
+                  </Parameter>
                 </Parameters>
                 <TimeoutSeconds>600</TimeoutSeconds>
               </DataSource>

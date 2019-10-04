@@ -1,0 +1,70 @@
+﻿<ManagementPackFragment SchemaVersion="2.0" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <TypeDefinitions>
+    <MonitorTypes>
+      <UnitMonitorType ID="CookdownCommunity.ServiceNow.Monitoring.PerformanceThreshold" Accessibility="Internal">
+        <MonitorTypeStates>
+          <MonitorTypeState ID="UnderThreshold" NoDetection="false" />
+          <MonitorTypeState ID="OverThreshold" NoDetection="false" />
+        </MonitorTypeStates>
+        <Configuration>
+          <xsd:element name="InstanceURL" type="xsd:string" xmlns:xsd="http://www.w3.org/2001/XMLSchema"/>
+          <xsd:element name="Object" type="xsd:string" xmlns:xsd="http://www.w3.org/2001/XMLSchema"/>
+          <xsd:element name="Counter" type="xsd:string" xmlns:xsd="http://www.w3.org/2001/XMLSchema"/>
+          <xsd:element name="NodeId" type="xsd:string" xmlns:xsd="http://www.w3.org/2001/XMLSchema"/>
+          <xsd:element name="Threshold" type="xsd:string" xmlns:xsd="http://www.w3.org/2001/XMLSchema"/>
+        </Configuration>
+        <OverrideableParameters>
+          <OverrideableParameter ID="Threshold" Selector="$Config/Threshold$" ParameterType="string" />
+        </OverrideableParameters>
+        <MonitorImplementation>
+          <MemberModules>
+            <DataSource ID="DataSource" TypeID="CookdownCommunity.ServiceNow.Monitoring.SnowPerformanceDataSource">
+              <InstanceURL>$Config/InstanceURL$</InstanceURL>
+              <Object>$Config/Object$</Object>
+              <Counter>$Config/Counter$</Counter>
+              <NodeId>$Config/NodeId$</NodeId>
+            </DataSource>
+          <ConditionDetection ID="UnderThresholdFilter" TypeID="System!System.ExpressionFilter">
+            <Expression>
+              <SimpleExpression>
+                <ValueExpression>
+                  <XPathQuery Type="Double">Value</XPathQuery>
+                </ValueExpression>
+                <Operator>LessEqual</Operator>
+                <ValueExpression>
+                  <Value Type="Double">$Config/Threshold$</Value>
+                </ValueExpression>
+              </SimpleExpression>
+            </Expression>
+          </ConditionDetection>
+          <ConditionDetection ID="OverThresholdFilter" TypeID="System!System.ExpressionFilter">
+            <Expression>
+              <SimpleExpression>
+                <ValueExpression>
+                  <XPathQuery Type="Double">Value</XPathQuery>
+                </ValueExpression>
+                <Operator>Greater</Operator>
+                <ValueExpression>
+                  <Value Type="Double">$Config/Threshold$</Value>
+                </ValueExpression>
+              </SimpleExpression>
+            </Expression>
+          </ConditionDetection>
+          </MemberModules>
+          <RegularDetections>
+            <RegularDetection MonitorTypeStateID="UnderThreshold">
+              <Node ID="UnderThresholdFilter">
+                <Node ID="DataSource" />
+              </Node>
+            </RegularDetection>
+            <RegularDetection MonitorTypeStateID="OverThreshold">
+              <Node ID="OverThresholdFilter">
+                <Node ID="DataSource" />
+              </Node>
+            </RegularDetection>
+          </RegularDetections>
+        </MonitorImplementation>
+      </UnitMonitorType>
+    </MonitorTypes>
+  </TypeDefinitions>
+</ManagementPackFragment>
