@@ -1,0 +1,17 @@
+﻿<ManagementPackFragment SchemaVersion="2.0" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <TypeDefinitions>
+    <SecureReferences>
+      <SecureReference ID="CookdownCommunity.ServiceNow.Monitoring.APIProbeAccount" Accessibility="Public" Context="System!System.Entity"/>
+    </SecureReferences>
+  </TypeDefinitions>
+  <LanguagePacks>
+    <LanguagePack ID="ENU" IsDefault="true">
+      <DisplayStrings>
+        <DisplayString ElementID="CookdownCommunity.ServiceNow.Monitoring.APIProbeAccount">
+          <Name>Cookdown: ServiceNow Monitoring API Probe Account</Name>
+          <Description>This account is used for pulling data from ServiceNow in discoveries as well as performance workflows</Description>
+        </DisplayString>
+      </DisplayStrings>
+    </LanguagePack>
+  </LanguagePacks>
+</ManagementPackFragment>

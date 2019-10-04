@@ -1,0 +1,34 @@
+﻿<ManagementPackFragment SchemaVersion="2.0" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <Monitoring>
+    <Rules>
+      <Rule ID="CookdownCommunity.ServiceNow.Monitoring.HttpsTCPPortTest.ConnectionTime" Enabled="true" Target="CookdownCommunity.ServiceNow.Monitoring.WatcherNode" ConfirmDelivery="false" Remotable="true" Priority="Normal" DiscardLevel="100">
+        <Category>PerformanceCollection</Category>
+        <DataSources>
+          <DataSource ID="DS1" TypeID="CookdownCommunity.ServiceNow.Monitoring.TCPPortCheckDataSource">
+            <InstanceUrlBase>$Target/Property[Type="CookdownCommunity.ServiceNow.Monitoring.WatcherNode"]/InstanceUrlBase$</InstanceUrlBase>
+          </DataSource>
+        </DataSources>
+        <ConditionDetection ID="PerfMapper" TypeID="Perf!System.Performance.DataGenericMapper">
+          <ObjectName>TCP Port Check</ObjectName>
+          <CounterName>Connection Time</CounterName>
+          <InstanceName>$Data/ServerName$:$Data/Port$</InstanceName>
+          <Value>$Data/ConnectionTime$</Value>
+        </ConditionDetection>
+        <WriteActions>
+          <WriteAction ID="CollectToDB" TypeID="SC!Microsoft.SystemCenter.CollectPerformanceData" />
+          <WriteAction ID="CollectToDW" TypeID="MSDL!Microsoft.SystemCenter.DataWarehouse.PublishPerformanceData" />
+        </WriteActions>
+      </Rule>
+    </Rules>
+  </Monitoring>
+  <LanguagePacks>
+    <LanguagePack ID="ENU" IsDefault="true">
+      <DisplayStrings>
+        <DisplayString ElementID="CookdownCommunity.ServiceNow.Monitoring.HttpsTCPPortTest.ConnectionTime">
+          <Name>Test  SNOW instance TCP Port Connection Time Performance Collection</Name>
+          <Description>This performance collection rule collects the time it takes to connect to cookdowndev.service-now.com on port 443.</Description>
+        </DisplayString>
+      </DisplayStrings>
+    </LanguagePack>
+  </LanguagePacks>
+</ManagementPackFragment>

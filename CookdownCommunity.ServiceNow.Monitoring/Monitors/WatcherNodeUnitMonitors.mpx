@@ -1,0 +1,327 @@
+﻿<ManagementPackFragment SchemaVersion="2.0" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <Monitoring>
+    <Monitors>
+      <UnitMonitor ID="CookdownCommunity.ServiceNow.Monitoring.HttpsTCPPortTest.TimeOutMonitor" Accessibility="Public" Enabled="true" Target="CookdownCommunity.ServiceNow.Monitoring.WatcherNode" ParentMonitorID="Health!System.Health.AvailabilityState" Remotable="true" Priority="Normal" TypeID="CookdownCommunity.ServiceNow.Monitoring.HttpsTCPPortTest.TimeOut" ConfirmDelivery="false">
+        <Category>PerformanceHealth</Category>
+        <AlertSettings AlertMessage="CookdownCommunity.ServiceNow.Monitoring.HttpsTCPPortTest.TimeOutMonitor.AlertMessage">
+          <AlertOnState>Error</AlertOnState>
+          <AutoResolve>true</AutoResolve>
+          <AlertPriority>Normal</AlertPriority>
+          <AlertSeverity>Error</AlertSeverity>
+        </AlertSettings>
+        <OperationalStates>
+          <OperationalState ID="OK" MonitorTypeStateID="NoTimeOutFailure" HealthState="Success" />
+          <OperationalState ID="Error" MonitorTypeStateID="TimeOutFailure" HealthState="Error" />
+        </OperationalStates>
+        <Configuration />
+      </UnitMonitor>
+      <UnitMonitor ID="CookdownCommunity.ServiceNow.Monitoring.HttpsTCPPortTest.ConnectionRefusedMonitor" Accessibility="Public" Enabled="true" Target="CookdownCommunity.ServiceNow.Monitoring.WatcherNode" ParentMonitorID="Health!System.Health.AvailabilityState" Remotable="true" Priority="Normal" TypeID="CookdownCommunity.ServiceNow.Monitoring.HttpsTCPPortTest.ConnectionRefused" ConfirmDelivery="false">
+        <Category>PerformanceHealth</Category>
+        <AlertSettings AlertMessage="CookdownCommunity.ServiceNow.Monitoring.HttpsTCPPortTest.ConnectionRefusedMonitor.AlertMessage">
+          <AlertOnState>Error</AlertOnState>
+          <AutoResolve>true</AutoResolve>
+          <AlertPriority>Normal</AlertPriority>
+          <AlertSeverity>Error</AlertSeverity>
+        </AlertSettings>
+        <OperationalStates>
+          <OperationalState ID="OK" MonitorTypeStateID="NoConnectionRefusedFailure" HealthState="Success" />
+          <OperationalState ID="Error" MonitorTypeStateID="ConnectionRefusedFailure" HealthState="Error" />
+        </OperationalStates>
+        <Configuration />
+      </UnitMonitor>
+      <UnitMonitor ID="CookdownCommunity.ServiceNow.Monitoring.HttpsTCPPortTest.HostUnreachableMonitor" Accessibility="Public" Enabled="true" Target="CookdownCommunity.ServiceNow.Monitoring.WatcherNode" ParentMonitorID="Health!System.Health.AvailabilityState" Remotable="true" Priority="Normal" TypeID="CookdownCommunity.ServiceNow.Monitoring.HttpsTCPPortTest.HostUnreachable" ConfirmDelivery="false">
+        <Category>PerformanceHealth</Category>
+        <AlertSettings AlertMessage="CookdownCommunity.ServiceNow.Monitoring.HttpsTCPPortTest.HostUnreachableMonitor.AlertMessage">
+          <AlertOnState>Error</AlertOnState>
+          <AutoResolve>true</AutoResolve>
+          <AlertPriority>Normal</AlertPriority>
+          <AlertSeverity>Error</AlertSeverity>
+        </AlertSettings>
+        <OperationalStates>
+          <OperationalState ID="OK" MonitorTypeStateID="NoHostUnreachableFailure" HealthState="Success" />
+          <OperationalState ID="Error" MonitorTypeStateID="HostUnreachableFailure" HealthState="Error" />
+        </OperationalStates>
+        <Configuration />
+      </UnitMonitor>
+      <UnitMonitor ID="CookdownCommunity.ServiceNow.Monitoring.HttpsTCPPortTest.DNSResolutionMonitor" Accessibility="Public" Enabled="true" Target="CookdownCommunity.ServiceNow.Monitoring.WatcherNode" ParentMonitorID="Health!System.Health.AvailabilityState" Remotable="true" Priority="Normal" TypeID="CookdownCommunity.ServiceNow.Monitoring.HttpsTCPPortTest.DNSResolution" ConfirmDelivery="false">
+        <Category>PerformanceHealth</Category>
+        <AlertSettings AlertMessage="CookdownCommunity.ServiceNow.Monitoring.HttpsTCPPortTest.DNSResolutionMonitor.AlertMessage">
+          <AlertOnState>Error</AlertOnState>
+          <AutoResolve>true</AutoResolve>
+          <AlertPriority>Normal</AlertPriority>
+          <AlertSeverity>Error</AlertSeverity>
+        </AlertSettings>
+        <OperationalStates>
+          <OperationalState ID="OK" MonitorTypeStateID="NoDNSResolutionFailure" HealthState="Success" />
+          <OperationalState ID="Error" MonitorTypeStateID="DNSResolutionFailure" HealthState="Error" />
+        </OperationalStates>
+        <Configuration />
+      </UnitMonitor>
+    </Monitors>
+  </Monitoring>
+  <Presentation>
+    <StringResources>
+      <StringResource ID="CookdownCommunity.ServiceNow.Monitoring.HttpsTCPPortTest.TimeOutMonitor.AlertMessage" />
+      <StringResource ID="CookdownCommunity.ServiceNow.Monitoring.HttpsTCPPortTest.ConnectionRefusedMonitor.AlertMessage" />
+      <StringResource ID="CookdownCommunity.ServiceNow.Monitoring.HttpsTCPPortTest.HostUnreachableMonitor.AlertMessage" />
+      <StringResource ID="CookdownCommunity.ServiceNow.Monitoring.HttpsTCPPortTest.DNSResolutionMonitor.AlertMessage" />
+    </StringResources>
+  </Presentation>
+  <LanguagePacks>
+    <LanguagePack ID="ENU" IsDefault="true">
+      <DisplayStrings>
+        <DisplayString ElementID="CookdownCommunity.ServiceNow.Monitoring.HttpsTCPPortTest.TimeOutMonitor">
+          <Name>Connection Timeout</Name>
+          <Description>A connection attempt failed because the connected party did not properly respond after a period of time, or established connection failed because connected host has failed to respond.</Description>
+        </DisplayString>
+        <DisplayString ElementID="CookdownCommunity.ServiceNow.Monitoring.HttpsTCPPortTest.TimeOutMonitor.AlertMessage">
+          <Name>Connection Timeout</Name>
+          <Description>A connection attempt failed because the connected party did not properly respond after a period of time, or established connection failed because connected host has failed to respond. ServerName: cookdowndev.service-now.com Port: 443</Description>
+        </DisplayString>
+        <DisplayString ElementID="CookdownCommunity.ServiceNow.Monitoring.HttpsTCPPortTest.DNSResolutionMonitor">
+          <Name>DNS Resolution Failure</Name>
+          <Description>Unable to resolve name to IP.</Description>
+        </DisplayString>
+        <DisplayString ElementID="CookdownCommunity.ServiceNow.Monitoring.HttpsTCPPortTest.DNSResolutionMonitor.AlertMessage">
+          <Name>DNS Resolution Failure</Name>
+          <Description>Unable to resolve name to IP. ServerName: cookdowndev.service-now.com Port: 443</Description>
+        </DisplayString>
+        <DisplayString ElementID="CookdownCommunity.ServiceNow.Monitoring.HttpsTCPPortTest.HostUnreachableMonitor">
+          <Name>Host Unreachable</Name>
+          <Description>A socket operation was attempted to an unreachable host.</Description>
+        </DisplayString>
+        <DisplayString ElementID="CookdownCommunity.ServiceNow.Monitoring.HttpsTCPPortTest.HostUnreachableMonitor.AlertMessage">
+          <Name>Host Unreachable</Name>
+          <Description>A socket operation was attempted to an unreachable host. ServerName: cookdowndev.service-now.com Port: 443</Description>
+        </DisplayString>
+        <DisplayString ElementID="CookdownCommunity.ServiceNow.Monitoring.HttpsTCPPortTest.ConnectionRefusedMonitor">
+          <Name>Connection Refused</Name>
+          <Description>No connection could be made because the target machine actively refused it.</Description>
+        </DisplayString>
+        <DisplayString ElementID="CookdownCommunity.ServiceNow.Monitoring.HttpsTCPPortTest.ConnectionRefusedMonitor.AlertMessage">
+          <Name>Connection Refused</Name>
+          <Description>No connection could be made because the target machine actively refused it. ServerName: cookdowndev.service-now.com Port: 443</Description>
+        </DisplayString>
+        <DisplayString ElementID="CookdownCommunity.ServiceNow.Monitoring.HttpsTCPPortTest.TimeOut">
+          <Name>Connection Timeout</Name>
+          <Description>This monitor type monitors for timeouts when attempting to connect to a port.</Description>
+        </DisplayString>
+        <DisplayString ElementID="CookdownCommunity.ServiceNow.Monitoring.HttpsTCPPortTest.TimeOut" SubElementID="TimeOutFailure">
+          <Name>Timeout Failure (Error)</Name>
+        </DisplayString>
+        <DisplayString ElementID="CookdownCommunity.ServiceNow.Monitoring.HttpsTCPPortTest.TimeOut" SubElementID="NoTimeOutFailure">
+          <Name>No Timeout (Success)</Name>
+        </DisplayString>
+        <DisplayString ElementID="CookdownCommunity.ServiceNow.Monitoring.HttpsTCPPortTest.ConnectionRefused">
+          <Name>Connection Refused</Name>
+          <Description>This monitor type monitors being forcibly closed when attempting to connect to a port.</Description>
+        </DisplayString>
+        <DisplayString ElementID="CookdownCommunity.ServiceNow.Monitoring.HttpsTCPPortTest.ConnectionRefused" SubElementID="ConnectionRefusedFailure">
+          <Name>Connection Refused (Error)</Name>
+        </DisplayString>
+        <DisplayString ElementID="CookdownCommunity.ServiceNow.Monitoring.HttpsTCPPortTest.ConnectionRefused" SubElementID="NoConnectionRefusedFailure">
+          <Name>Connection Accepted (Success)</Name>
+        </DisplayString>
+        <DisplayString ElementID="CookdownCommunity.ServiceNow.Monitoring.HttpsTCPPortTest.DNSResolution">
+          <Name>DNS Resolution Failure</Name>
+          <Description>This monitor type monitors any DNS resolution failure when attempting to connect to a port.</Description>
+        </DisplayString>
+        <DisplayString ElementID="CookdownCommunity.ServiceNow.Monitoring.HttpsTCPPortTest.DNSResolution" SubElementID="DNSResolutionFailure">
+          <Name>DNS Resolution Failure (Error)</Name>
+        </DisplayString>
+        <DisplayString ElementID="CookdownCommunity.ServiceNow.Monitoring.HttpsTCPPortTest.DNSResolution" SubElementID="NoDNSResolutionFailure">
+          <Name>DNS Resolution Completed (Success)</Name>
+        </DisplayString>
+        <DisplayString ElementID="CookdownCommunity.ServiceNow.Monitoring.HttpsTCPPortTest.HostUnreachable">
+          <Name>Host Unreachable</Name>
+          <Description>This monitor type monitors not being able to connect to a port.</Description>
+        </DisplayString>
+        <DisplayString ElementID="CookdownCommunity.ServiceNow.Monitoring.HttpsTCPPortTest.HostUnreachable" SubElementID="HostUnreachableFailure">
+          <Name>Host Unreachable (Error)</Name>
+        </DisplayString>
+        <DisplayString ElementID="CookdownCommunity.ServiceNow.Monitoring.HttpsTCPPortTest.HostUnreachable" SubElementID="NoHostUnreachableFailure">
+          <Name>Host Reachable (Success)</Name>
+        </DisplayString>
+      </DisplayStrings>
+      <KnowledgeArticles>
+        <KnowledgeArticle ElementID="CookdownCommunity.ServiceNow.Monitoring.HttpsTCPPortTest.TimeOutMonitor" Visible="true">
+          <MamlContent>
+            <section xmlns:maml="http://schemas.microsoft.com/maml/2004/10" xmlns="http://schemas.microsoft.com/maml/2004/10">
+              <maml:title>Summary</maml:title>
+              <maml:para>Connecting to the target part timed out.</maml:para>
+            </section>
+            <section xmlns:maml="http://schemas.microsoft.com/maml/2004/10" xmlns="http://schemas.microsoft.com/maml/2004/10">
+              <maml:title>Causes</maml:title>
+              <maml:para>This can happen for a few reasons:</maml:para>
+              <maml:para />
+              <maml:list>
+                <maml:listItem>
+                  <maml:para>The target computer is offline</maml:para>
+                </maml:listItem>
+                <maml:listItem>
+                  <maml:para>There is a firewall between the watcher node and the target IP or device</maml:para>
+                </maml:listItem>
+                <maml:listItem>
+                  <maml:para>IPSec is required between the watcher node and the target IP or device</maml:para>
+                </maml:listItem>
+                <maml:listItem>
+                  <maml:para>The target IP:Port is actually not available</maml:para>
+                </maml:listItem>
+              </maml:list>
+            </section>
+            <section xmlns:maml="http://schemas.microsoft.com/maml/2004/10" xmlns="http://schemas.microsoft.com/maml/2004/10">
+              <maml:title>Resolutions</maml:title>
+              <maml:para>Try the following troubleshooting steps to attempt to fix the problem</maml:para>
+              <maml:para />
+              <maml:list>
+                <maml:listItem>
+                  <maml:para>Ping the target computer to ensure it's on the network</maml:para>
+                </maml:listItem>
+                <maml:listItem>
+                  <maml:para>Telnet to the target IP:Port</maml:para>
+                  <maml:para />
+                  <maml:example>
+                    <maml:para>telnet x.x.x.x ####</maml:para>
+                  </maml:example>
+                  <maml:para />
+                  <maml:para>Where x.x.x.x. is the IP Address or device name and #### is the target port number.</maml:para>
+                </maml:listItem>
+              </maml:list>
+            </section>
+          </MamlContent>
+        </KnowledgeArticle>
+        <KnowledgeArticle ElementID="CookdownCommunity.ServiceNow.Monitoring.HttpsTCPPortTest.DNSResolutionMonitor" Visible="true">
+          <MamlContent>
+            <section xmlns:maml="http://schemas.microsoft.com/maml/2004/10" xmlns="http://schemas.microsoft.com/maml/2004/10">
+              <maml:title>Summary</maml:title>
+              <maml:para>Could not resolve the name supplied name through the watcher nodes Domain Name Service.</maml:para>
+            </section>
+            <section xmlns:maml="http://schemas.microsoft.com/maml/2004/10" xmlns="http://schemas.microsoft.com/maml/2004/10">
+              <maml:title>Causes</maml:title>
+              <maml:para>This can happen for a few reasons:</maml:para>
+              <maml:para />
+              <maml:list>
+                <maml:listItem>
+                  <maml:para>The DNS client side cache has a stale entry</maml:para>
+                </maml:listItem>
+                <maml:listItem>
+                  <maml:para>The DNS infrastructure not available</maml:para>
+                </maml:listItem>
+                <maml:listItem>
+                  <maml:para>The watcher node DNS settings are out of date or incorrect</maml:para>
+                </maml:listItem>
+                <maml:listItem>
+                  <maml:para>DNS has a stale entry for the supplied target name and is returning the wrong IP address</maml:para>
+                </maml:listItem>
+              </maml:list>
+            </section>
+            <section xmlns:maml="http://schemas.microsoft.com/maml/2004/10" xmlns="http://schemas.microsoft.com/maml/2004/10">
+              <maml:title>Resolutions</maml:title>
+              <maml:para>Try the following troubleshooting steps to attempt to fix the problem</maml:para>
+              <maml:para />
+              <maml:list>
+                <maml:listItem>
+                  <maml:para>On a Windows Computer, at the command line type:</maml:para>
+                  <maml:para>ipconfig /flushdns</maml:para>
+                  <maml:para />
+                  <maml:para>Then type:</maml:para>
+                  <maml:para>ipconfig /registerdns</maml:para>
+                  <maml:para />
+                </maml:listItem>
+                <maml:listItem>
+                  <maml:para>Check with your network or domain administrator if there is any problems with the DNS infrastructure that the watcher node is configured to use.</maml:para>
+                </maml:listItem>
+                <maml:listItem>
+                  <maml:para>Check the IP Address that is being returned to ensure it is returning the actual device name you expect.</maml:para>
+                  <maml:para>Do this by pinging by the device name you supplied in the wizard. Next take the IP Address and type ping -a [IPAddress]. For example, if the IP Address is 10.10.1.1:</maml:para>
+                  <maml:example>
+                    <maml:para>ping -a 10.10.1.1</maml:para>
+                  </maml:example>
+                  <maml:para />
+                  <maml:para>If the name returned is different than the name supplied in the wizard there are likely some name resolution issues related to having a misconfigured or stale DNS entry.</maml:para>
+                </maml:listItem>
+              </maml:list>
+            </section>
+          </MamlContent>
+        </KnowledgeArticle>
+        <KnowledgeArticle ElementID="CookdownCommunity.ServiceNow.Monitoring.HttpsTCPPortTest.HostUnreachableMonitor" Visible="true">
+          <MamlContent>
+            <section xmlns:maml="http://schemas.microsoft.com/maml/2004/10" xmlns="http://schemas.microsoft.com/maml/2004/10">
+              <maml:title>Summary</maml:title>
+              <maml:para>The target IP or device could not be reached</maml:para>
+            </section>
+            <section xmlns:maml="http://schemas.microsoft.com/maml/2004/10" xmlns="http://schemas.microsoft.com/maml/2004/10">
+              <maml:title>Causes</maml:title>
+              <maml:para>This can happen for a few reasons:</maml:para>
+              <maml:para />
+              <maml:list>
+                <maml:listItem>
+                  <maml:para>The target computer is offline</maml:para>
+                </maml:listItem>
+                <maml:listItem>
+                  <maml:para>The watcher node doesn't have the appropriate permissions</maml:para>
+                </maml:listItem>
+                <maml:listItem>
+                  <maml:para>There may be a firewall between the watcher node and the target device</maml:para>
+                </maml:listItem>
+              </maml:list>
+            </section>
+            <section xmlns:maml="http://schemas.microsoft.com/maml/2004/10" xmlns="http://schemas.microsoft.com/maml/2004/10">
+              <maml:title>Resolutions</maml:title>
+              <maml:para>Try the following troubleshooting steps to attempt to fix the problem</maml:para>
+              <maml:para />
+              <maml:list>
+                <maml:listItem>
+                  <maml:para>Ping the target computer to ensure it's on the network</maml:para>
+                </maml:listItem>
+                <maml:listItem>
+                  <maml:para>Ensure that the Run As account used by the watcher node has the appropriate permissions to the target data source</maml:para>
+                </maml:listItem>
+                <maml:listItem>
+                  <maml:para>Check if the Windows Firewall is enabled on either the target machine or the watcher node. If it is, create an exclusion for the application you are monitoring.</maml:para>
+                </maml:listItem>
+              </maml:list>
+            </section>
+          </MamlContent>
+        </KnowledgeArticle>
+        <KnowledgeArticle ElementID="CookdownCommunity.ServiceNow.Monitoring.HttpsTCPPortTest.ConnectionRefusedMonitor" Visible="true">
+          <MamlContent>
+            <section xmlns:maml="http://schemas.microsoft.com/maml/2004/10" xmlns="http://schemas.microsoft.com/maml/2004/10">
+              <maml:title>Summary</maml:title>
+              <maml:para>Connection is refused</maml:para>
+            </section>
+            <section xmlns:maml="http://schemas.microsoft.com/maml/2004/10" xmlns="http://schemas.microsoft.com/maml/2004/10">
+              <maml:title>Causes</maml:title>
+              <maml:para>This can happen for a few reasons:</maml:para>
+              <maml:para />
+              <maml:list>
+                <maml:listItem>
+                  <maml:para>The watcher node doesn't have the appropriate permissions</maml:para>
+                </maml:listItem>
+              </maml:list>
+            </section>
+            <section xmlns:maml="http://schemas.microsoft.com/maml/2004/10" xmlns="http://schemas.microsoft.com/maml/2004/10">
+              <maml:title>Resolutions</maml:title>
+              <maml:para>Try the following troubleshooting steps to attempt to fix the problem</maml:para>
+              <maml:para />
+              <maml:list>
+                <maml:listItem>
+                  <maml:para>Ensure that if IPSec is configured, that the machine can establish an IPSec connection</maml:para>
+                </maml:listItem>
+                <maml:listItem>
+                  <maml:para>Telnet to the target IP:Port</maml:para>
+                  <maml:para />
+                  <maml:example>
+                    <maml:para>telnet x.x.x.x ####</maml:para>
+                  </maml:example>
+                  <maml:para />
+                  <maml:para>Where x.x.x.x. is the IP Address or device name and #### is the target port number.</maml:para>
+                </maml:listItem>
+              </maml:list>
+            </section>
+          </MamlContent>
+        </KnowledgeArticle>
+      </KnowledgeArticles>
+    </LanguagePack>
+  </LanguagePacks>
+</ManagementPackFragment>

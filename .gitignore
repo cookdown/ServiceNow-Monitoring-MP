@@ -1,0 +1,5 @@
+*.snk
+*.suo
+*.user
+*.cache
+.vs/Cookdown.ServiceNow.Monitoring/v15/Server/sqlite3/

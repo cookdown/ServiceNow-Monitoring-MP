@@ -1,0 +1,35 @@
+﻿<ManagementPackFragment SchemaVersion="2.0" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <TypeDefinitions>
+    <ModuleTypes>
+      <DataSourceModuleType ID="CookdownCommunity.ServiceNow.Monitoring.TCPPortCheckDataSource" Accessibility="Internal" Batching="false">
+        <Configuration>
+          <xsd:element name="InstanceUrlBase" type="xsd:string" xmlns:xsd="http://www.w3.org/2001/XMLSchema"/>
+        </Configuration>
+        <ModuleImplementation Isolation="Any">
+          <Composite>
+            <MemberModules>
+              <DataSource ID="Scheduler" TypeID="System!System.Scheduler">
+                <Scheduler>
+                  <SimpleReccuringSchedule>
+                    <Interval Unit="Seconds">240</Interval>
+                  </SimpleReccuringSchedule>
+                  <ExcludeDates />
+                </Scheduler>
+              </DataSource>
+              <ProbeAction ID="Probe" TypeID="MSSL!Microsoft.SystemCenter.SyntheticTransactions.TCPPortCheckProbe">
+                <ServerName>$Config/InstanceUrlBase$</ServerName>
+                <Port>443</Port>
+              </ProbeAction>
+            </MemberModules>
+            <Composition>
+              <Node ID="Probe">
+                <Node ID="Scheduler" />
+              </Node>
+            </Composition>
+          </Composite>
+        </ModuleImplementation>
+        <OutputType>MSSL!Microsoft.SystemCenter.SyntheticTransactions.TCPPortCheckData</OutputType>
+      </DataSourceModuleType>
+    </ModuleTypes>
+  </TypeDefinitions>
+</ManagementPackFragment>
