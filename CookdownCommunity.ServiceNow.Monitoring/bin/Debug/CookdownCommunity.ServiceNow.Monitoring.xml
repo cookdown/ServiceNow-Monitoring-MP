@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?><ManagementPack xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsl="http://www.w3.org/1999/XSL/Transform" ContentReadable="true" SchemaVersion="2.0" OriginalSchemaVersion="2.0">
+<?xml version="1.0" encoding="utf-8"?><ManagementPack xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsl="http://www.w3.org/1999/XSL/Transform" ContentReadable="true" SchemaVersion="2.0" OriginalSchemaVersion="2.0">
   <Manifest>
     <Identity>
       <ID>CookdownCommunity.ServiceNow.Monitoring</ID>
