@@ -18,7 +18,7 @@ Function GetClusterStatusFromServiceNow
 {
     param($instanceURL)
     $statsEndpoint = $instanceURL + "api/now/table/sys_cluster_state"
-    $results = Invoke-RESTMethod -Uri $statsEndpoint -Headers $headers -Method GET
+    $results = Invoke-RESTMethod -Uri $statsEndpoint -Headers $headers -Method GET -ErrorAction Stop
     $results.result
 }
 
@@ -85,34 +85,39 @@ $api = New-Object -comObject 'MOM.ScriptAPI'
 $discoveryData = $api.CreateDiscoveryData(0, $sourceID, $managedEntityID)
 $headers = CreateHeaders -username $snowUserName -password $snowPassword
 
-
-
-foreach($instance in $instanceUrls.Trim().Split(","))
+try
 {
-	$api.LogScriptEvent("SNOW Discovery", 1033, 4, $("working on cluster {0}." -f $instance))    
-	$instance = $instance.Trim().ToLower()
-    $clusterNodes = GetClusterStatusFromServiceNow -instanceURL $instance
-	$api.LogScriptEvent("SNOW Discovery", 1033, 4, $("retrieved cluster nodes count = {0}" -f $clusterNodes.count))    
-    # Discover instance
-    $serviceNowInstance = CreateInstanceObject -sourceNode $clusterNodes[0] -sourceURL $instance
-    $discoveryData.AddInstance($serviceNowInstance)
-	
-    #Add watcher
-    $watcherNode = CreateWatcherNode -computerName $computerName -sourceURL $instance
-    $discoveryData.AddInstance($watcherNode)
-	
-    #Relate watcher to instance
-    $watcherRelationship = CreateWatcherRelationship -instanceObject $serviceNowInstance -watcherObject $watcherNode
-    $discoveryData.AddInstance($watcherRelationship)
-	
-    #Add Nodes
-    foreach($snowNode in $clusterNodes)
+    foreach($instance in $instanceUrls.Trim().Split(","))
     {
-        $node = CreateNodeObject -sourceNode $snowNode -sourceURL $instance
-        $discoveryData.AddInstance($node)
-		$api.LogScriptEvent("SNOW Discovery", 1011, 4, $("Created node {0}" -f $snowNode.system_id))
+	    $api.LogScriptEvent("SNOW Discovery", 1033, 4, $("working on cluster {0}." -f $instance))    
+	    $instance = $instance.Trim().ToLower()
+        $clusterNodes = GetClusterStatusFromServiceNow -instanceURL $instance
+	    $api.LogScriptEvent("SNOW Discovery", 1033, 4, $("retrieved cluster nodes count = {0}" -f $clusterNodes.count))    
+        # Discover instance
+        $serviceNowInstance = CreateInstanceObject -sourceNode $clusterNodes[0] -sourceURL $instance
+        $discoveryData.AddInstance($serviceNowInstance)
+	
+        #Add watcher
+        $watcherNode = CreateWatcherNode -computerName $computerName -sourceURL $instance
+        $discoveryData.AddInstance($watcherNode)
+	
+        #Relate watcher to instance
+        $watcherRelationship = CreateWatcherRelationship -instanceObject $serviceNowInstance -watcherObject $watcherNode
+        $discoveryData.AddInstance($watcherRelationship)
+	
+        #Add Nodes
+        foreach($snowNode in $clusterNodes)
+        {
+            $node = CreateNodeObject -sourceNode $snowNode -sourceURL $instance
+            $discoveryData.AddInstance($node)
+		    $api.LogScriptEvent("SNOW Discovery", 1011, 0, $("Created node {0}" -f $snowNode.system_id))
+        }
     }
-}
 
-$api.LogScriptEvent("SNOW Discovery", 1011, 4, $("Discovery Completed"))
-$discoveryData
+    $api.LogScriptEvent("Cookdown SNOW Discovery", 1012, 0, $("Discovery Completed sucessfully"))
+    $discoveryData
+}
+catch
+{
+    $api.LogScriptEvent("Cookdown SNOW Discovery", 1015, 1, $("Discovery Failed with error $($_.Exception.Message)"))
+}
