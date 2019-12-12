@@ -160,6 +160,10 @@
           <Name>Collect Instance Performance (Glide Pool DB : Selects)</Name>
           <Description></Description>
         </DisplayString>
+        <DisplayString ElementID="CookdownCommunity.ServiceNow.Monitoring.Performance.Instance.FetchTime">
+          <Name>Collect Instance Performance Fetch Time</Name>
+          <Description>Tracks how long it took to fetch the data for this instance.</Description>
+        </DisplayString>
         <DisplayString ElementID="CookdownCommunity.ServiceNow.Monitoring.Performance.InstanceTotal.GlidePoolDB_SelectsOver1Second">
           <Name>Collect Instance Performance (Glide Pool DB : Selects (Over 1 Second))</Name>
           <Description></Description>
