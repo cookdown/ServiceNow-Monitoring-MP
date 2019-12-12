@@ -1,5 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
-<ManagementPack SchemaVersion="2.0" ContentReadable="true" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+﻿<?xml version="1.0" encoding="utf-8"?><ManagementPack xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsl="http://www.w3.org/1999/XSL/Transform" ContentReadable="true" SchemaVersion="2.0" OriginalSchemaVersion="2.0">
   <Manifest>
     <Identity>
       <ID>CookdownCommunity.ServiceNow.Monitoring</ID>
@@ -47,42 +46,42 @@
   <TypeDefinitions>
     <EntityTypes>
       <ClassTypes>
-        <ClassType ID="CookdownCommunity.ServiceNow.Monitoring.ServiceNowInstance" Base="System!System.Service" Accessibility="Internal" Abstract="false" Hosted="false" Singleton="false">
-          <Property ID="URL" Key="true" Type="string" />
-          <Property ID="Name" Key="false" Type="string" />
-          <Property ID="Type" Key="false" Type="string" />
-          <Property ID="Version" Key="false" Type="string" />
-          <Property ID="DatabaseVersion" Key="false" Type="string" />
-          <Property ID="Build" Key="false" Type="string" />
-          <Property ID="Offering" Key="false" Type="string" />
-          <Property ID="POPStatus" Key="false" Type="string" />
-          <Property ID="SMTPStatus" Key="false" Type="string" />
+        <ClassType ID="CookdownCommunity.ServiceNow.Monitoring.ServiceNowInstance" Accessibility="Internal" Abstract="false" Base="System!System.Service" Hosted="false" Singleton="false" Extension="false">
+          <Property ID="URL" Type="string" AutoIncrement="false" Key="true" CaseSensitive="false" MaxLength="256" MinLength="0" Required="false" Scale="0" />
+          <Property ID="Name" Type="string" AutoIncrement="false" Key="false" CaseSensitive="false" MaxLength="256" MinLength="0" Required="false" Scale="0" />
+          <Property ID="Type" Type="string" AutoIncrement="false" Key="false" CaseSensitive="false" MaxLength="256" MinLength="0" Required="false" Scale="0" />
+          <Property ID="Version" Type="string" AutoIncrement="false" Key="false" CaseSensitive="false" MaxLength="256" MinLength="0" Required="false" Scale="0" />
+          <Property ID="DatabaseVersion" Type="string" AutoIncrement="false" Key="false" CaseSensitive="false" MaxLength="256" MinLength="0" Required="false" Scale="0" />
+          <Property ID="Build" Type="string" AutoIncrement="false" Key="false" CaseSensitive="false" MaxLength="256" MinLength="0" Required="false" Scale="0" />
+          <Property ID="Offering" Type="string" AutoIncrement="false" Key="false" CaseSensitive="false" MaxLength="256" MinLength="0" Required="false" Scale="0" />
+          <Property ID="POPStatus" Type="string" AutoIncrement="false" Key="false" CaseSensitive="false" MaxLength="256" MinLength="0" Required="false" Scale="0" />
+          <Property ID="SMTPStatus" Type="string" AutoIncrement="false" Key="false" CaseSensitive="false" MaxLength="256" MinLength="0" Required="false" Scale="0" />
         </ClassType>
-        <ClassType ID="CookdownCommunity.ServiceNow.Monitoring.ServiceNowNode" Base="System!System.ApplicationComponent" Accessibility="Internal" Abstract="false" Hosted="true" Singleton="false">
-          <Property ID="NodeId" Key="true" Type="string" />
-          <Property ID="SystemId" Key="false" Type="string" />
-          <Property ID="CreatedOn" Key="false" Type="datetime" />
-          <Property ID="AllowInbound" Key="false" Type="bool" />
-          <Property ID="ReadyToFailover" Key="false" Type="bool" />
+        <ClassType ID="CookdownCommunity.ServiceNow.Monitoring.ServiceNowNode" Accessibility="Internal" Abstract="false" Base="System!System.ApplicationComponent" Hosted="true" Singleton="false" Extension="false">
+          <Property ID="NodeId" Type="string" AutoIncrement="false" Key="true" CaseSensitive="false" MaxLength="256" MinLength="0" Required="false" Scale="0" />
+          <Property ID="SystemId" Type="string" AutoIncrement="false" Key="false" CaseSensitive="false" MaxLength="256" MinLength="0" Required="false" Scale="0" />
+          <Property ID="CreatedOn" Type="datetime" AutoIncrement="false" Key="false" CaseSensitive="false" MaxLength="256" MinLength="0" Required="false" Scale="0" />
+          <Property ID="AllowInbound" Type="bool" AutoIncrement="false" Key="false" CaseSensitive="false" MaxLength="256" MinLength="0" Required="false" Scale="0" />
+          <Property ID="ReadyToFailover" Type="bool" AutoIncrement="false" Key="false" CaseSensitive="false" MaxLength="256" MinLength="0" Required="false" Scale="0" />
         </ClassType>
-        <ClassType ID="CookdownCommunity.ServiceNow.Monitoring.WatcherNode" Base="System!System.Perspective" Accessibility="Internal" Abstract="false" Hosted="true" Singleton="false">
-          <Property ID="Instance" Key="true" Type="string" />
-          <Property ID="InstanceUrlBase" Key="false" Type="string" />
-          <Property ID="Location" Key="false" Type="string" />
+        <ClassType ID="CookdownCommunity.ServiceNow.Monitoring.WatcherNode" Accessibility="Internal" Abstract="false" Base="System!System.Perspective" Hosted="true" Singleton="false" Extension="false">
+          <Property ID="Instance" Type="string" AutoIncrement="false" Key="true" CaseSensitive="false" MaxLength="256" MinLength="0" Required="false" Scale="0" />
+          <Property ID="InstanceUrlBase" Type="string" AutoIncrement="false" Key="false" CaseSensitive="false" MaxLength="256" MinLength="0" Required="false" Scale="0" />
+          <Property ID="Location" Type="string" AutoIncrement="false" Key="false" CaseSensitive="false" MaxLength="256" MinLength="0" Required="false" Scale="0" />
         </ClassType>
       </ClassTypes>
       <RelationshipTypes>
-        <RelationshipType ID="CookdownCommunity.ServiceNow.Monitoring.ComputerHostsWatcher" Base="System!System.Hosting" Abstract="false" Accessibility="Internal">
-          <Source ID="Source" Type="Windows!Microsoft.Windows.Computer" />
-          <Target ID="Target" Type="CookdownCommunity.ServiceNow.Monitoring.WatcherNode" />
+        <RelationshipType ID="CookdownCommunity.ServiceNow.Monitoring.ComputerHostsWatcher" Accessibility="Internal" Abstract="false" Base="System!System.Hosting">
+          <Source ID="Source" MinCardinality="0" MaxCardinality="2147483647" Type="Windows!Microsoft.Windows.Computer" />
+          <Target ID="Target" MinCardinality="0" MaxCardinality="2147483647" Type="CookdownCommunity.ServiceNow.Monitoring.WatcherNode" />
         </RelationshipType>
-        <RelationshipType ID="CookdownCommunity.ServiceNow.Monitoring.InstanceContainsWatchers" Base="System!System.Containment" Abstract="false" Accessibility="Internal">
-          <Source ID="Source" Type="CookdownCommunity.ServiceNow.Monitoring.ServiceNowInstance" />
-          <Target ID="Target" Type="CookdownCommunity.ServiceNow.Monitoring.WatcherNode" />
+        <RelationshipType ID="CookdownCommunity.ServiceNow.Monitoring.InstanceContainsWatchers" Accessibility="Internal" Abstract="false" Base="System!System.Containment">
+          <Source ID="Source" MinCardinality="0" MaxCardinality="2147483647" Type="CookdownCommunity.ServiceNow.Monitoring.ServiceNowInstance" />
+          <Target ID="Target" MinCardinality="0" MaxCardinality="2147483647" Type="CookdownCommunity.ServiceNow.Monitoring.WatcherNode" />
         </RelationshipType>
-        <RelationshipType ID="CookdownCommunity.ServiceNow.Monitoring.InstanceHostsNodes" Base="System!System.Hosting" Abstract="false" Accessibility="Internal">
-          <Source ID="Source" Type="CookdownCommunity.ServiceNow.Monitoring.ServiceNowInstance" />
-          <Target ID="Target" Type="CookdownCommunity.ServiceNow.Monitoring.ServiceNowNode" />
+        <RelationshipType ID="CookdownCommunity.ServiceNow.Monitoring.InstanceHostsNodes" Accessibility="Internal" Abstract="false" Base="System!System.Hosting">
+          <Source ID="Source" MinCardinality="0" MaxCardinality="2147483647" Type="CookdownCommunity.ServiceNow.Monitoring.ServiceNowInstance" />
+          <Target ID="Target" MinCardinality="0" MaxCardinality="2147483647" Type="CookdownCommunity.ServiceNow.Monitoring.ServiceNowNode" />
         </RelationshipType>
       </RelationshipTypes>
     </EntityTypes>
@@ -90,26 +89,16 @@
       <SecureReference ID="CookdownCommunity.ServiceNow.Monitoring.APIProbeAccount" Accessibility="Public" Context="System!System.Entity" />
     </SecureReferences>
     <ModuleTypes>
-      <DataSourceModuleType ID="CookdownCommunity.ServiceNow.Monitoring.DiscoverServiceNow" Accessibility="Internal">
-        <Configuration>
-          <xsd:element name="SourceID" type="xsd:string" xmlns:xsd="http://www.w3.org/2001/XMLSchema" />
-          <xsd:element name="ManagedEntityID" type="xsd:string" xmlns:xsd="http://www.w3.org/2001/XMLSchema" />
-          <xsd:element name="LocationName" type="xsd:string" xmlns:xsd="http://www.w3.org/2001/XMLSchema" />
-          <xsd:element name="InstanceUrls" type="xsd:string" xmlns:xsd="http://www.w3.org/2001/XMLSchema" />
-          <xsd:element name="ComputerName" type="xsd:string" xmlns:xsd="http://www.w3.org/2001/XMLSchema" />
-        </Configuration>
+      <DataSourceModuleType ID="CookdownCommunity.ServiceNow.Monitoring.DiscoverServiceNow" Accessibility="Internal" Batching="false">
+        <Configuration><xsd:element xmlns:xsd="http://www.w3.org/2001/XMLSchema" name="SourceID" type="xsd:string" /><xsd:element xmlns:xsd="http://www.w3.org/2001/XMLSchema" name="ManagedEntityID" type="xsd:string" /><xsd:element xmlns:xsd="http://www.w3.org/2001/XMLSchema" name="LocationName" type="xsd:string" /><xsd:element xmlns:xsd="http://www.w3.org/2001/XMLSchema" name="InstanceUrls" type="xsd:string" /><xsd:element xmlns:xsd="http://www.w3.org/2001/XMLSchema" name="ComputerName" type="xsd:string" /></Configuration>
         <OverrideableParameters>
           <OverrideableParameter ID="LocationName" Selector="$Config/LocationName$" ParameterType="string" />
           <OverrideableParameter ID="InstanceUrls" Selector="$Config/InstanceUrls$" ParameterType="string" />
         </OverrideableParameters>
-        <ModuleImplementation>
+        <ModuleImplementation Isolation="Any">
           <Composite>
             <MemberModules>
-              <DataSource ID="PSDisco" TypeID="Windows!Microsoft.Windows.TimedPowerShell.DiscoveryProvider">
-                <IntervalSeconds>43200</IntervalSeconds>
-                <SyncTime />
-                <ScriptName>DiscoverServiceNowMonitoring.ps1</ScriptName>
-                <ScriptBody><![CDATA[#Bring in our parameters
+              <DataSource ID="PSDisco" TypeID="Windows!Microsoft.Windows.TimedPowerShell.DiscoveryProvider"><IntervalSeconds>43200</IntervalSeconds><SyncTime /><ScriptName>DiscoverServiceNowMonitoring.ps1</ScriptName><ScriptBody>#Bring in our parameters
 param($sourceID, $managedEntityID, $location, $instanceUrls, $computerName, $snowUserName, $snowPassword)
 
 Function CreateHeaders
@@ -226,39 +215,7 @@ foreach($instance in $instanceUrls.Trim().Split(","))
 }
 
 $api.LogScriptEvent("SNOW Discovery", 1011, 4, $("Discovery Completed"))
-$discoveryData]]></ScriptBody>
-                <Parameters>
-                  <Parameter>
-                    <Name>sourceID</Name>
-                    <Value>$Config/SourceID$</Value>
-                  </Parameter>
-                  <Parameter>
-                    <Name>managedEntityID</Name>
-                    <Value>$Config/ManagedEntityID$</Value>
-                  </Parameter>
-                  <Parameter>
-                    <Name>location</Name>
-                    <Value>$Config/LocationName$</Value>
-                  </Parameter>
-                  <Parameter>
-                    <Name>instanceUrls</Name>
-                    <Value>$Config/InstanceUrls$</Value>
-                  </Parameter>
-                  <Parameter>
-                    <Name>computerName</Name>
-                    <Value>$Config/ComputerName$</Value>
-                  </Parameter>
-                  <Parameter>
-                    <Name>snowUserName</Name>
-                    <Value>$RunAs[Name="CookdownCommunity.ServiceNow.Monitoring.APIProbeAccount"]/UserName$</Value>
-                  </Parameter>
-                  <Parameter>
-                    <Name>snowPassword</Name>
-                    <Value>$RunAs[Name="CookdownCommunity.ServiceNow.Monitoring.APIProbeAccount"]/Password$</Value>
-                  </Parameter>
-                </Parameters>
-                <TimeoutSeconds>600</TimeoutSeconds>
-              </DataSource>
+$discoveryData</ScriptBody><Parameters><Parameter><Name>sourceID</Name><Value>$Config/SourceID$</Value></Parameter><Parameter><Name>managedEntityID</Name><Value>$Config/ManagedEntityID$</Value></Parameter><Parameter><Name>location</Name><Value>$Config/LocationName$</Value></Parameter><Parameter><Name>instanceUrls</Name><Value>$Config/InstanceUrls$</Value></Parameter><Parameter><Name>computerName</Name><Value>$Config/ComputerName$</Value></Parameter><Parameter><Name>snowUserName</Name><Value>$RunAs[Name="CookdownCommunity.ServiceNow.Monitoring.APIProbeAccount"]/UserName$</Value></Parameter><Parameter><Name>snowPassword</Name><Value>$RunAs[Name="CookdownCommunity.ServiceNow.Monitoring.APIProbeAccount"]/Password$</Value></Parameter></Parameters><TimeoutSeconds>600</TimeoutSeconds></DataSource>
             </MemberModules>
             <Composition>
               <Node ID="PSDisco" />
@@ -268,24 +225,12 @@ $discoveryData]]></ScriptBody>
         <OutputType>System!System.Discovery.Data</OutputType>
       </DataSourceModuleType>
       <DataSourceModuleType ID="CookdownCommunity.ServiceNow.Monitoring.TCPPortCheckDataSource" Accessibility="Internal" Batching="false">
-        <Configuration>
-          <xsd:element name="InstanceUrlBase" type="xsd:string" xmlns:xsd="http://www.w3.org/2001/XMLSchema" />
-        </Configuration>
+        <Configuration><xsd:element xmlns:xsd="http://www.w3.org/2001/XMLSchema" name="InstanceUrlBase" type="xsd:string" /></Configuration>
         <ModuleImplementation Isolation="Any">
           <Composite>
             <MemberModules>
-              <DataSource ID="Scheduler" TypeID="System!System.Scheduler">
-                <Scheduler>
-                  <SimpleReccuringSchedule>
-                    <Interval Unit="Seconds">240</Interval>
-                  </SimpleReccuringSchedule>
-                  <ExcludeDates />
-                </Scheduler>
-              </DataSource>
-              <ProbeAction ID="Probe" TypeID="MSSL!Microsoft.SystemCenter.SyntheticTransactions.TCPPortCheckProbe">
-                <ServerName>$Config/InstanceUrlBase$</ServerName>
-                <Port>443</Port>
-              </ProbeAction>
+              <DataSource ID="Scheduler" TypeID="System!System.Scheduler"><Scheduler><SimpleReccuringSchedule><Interval Unit="Seconds">240</Interval></SimpleReccuringSchedule><ExcludeDates /></Scheduler></DataSource>
+              <ProbeAction ID="Probe" TypeID="MSSL!Microsoft.SystemCenter.SyntheticTransactions.TCPPortCheckProbe"><ServerName>$Config/InstanceUrlBase$</ServerName><Port>443</Port></ProbeAction>
             </MemberModules>
             <Composition>
               <Node ID="Probe">
@@ -297,21 +242,12 @@ $discoveryData]]></ScriptBody>
         <OutputType>MSSL!Microsoft.SystemCenter.SyntheticTransactions.TCPPortCheckData</OutputType>
       </DataSourceModuleType>
       <DataSourceModuleType ID="CookdownCommunity.ServiceNow.Monitoring.FetchStatusDataSource" Accessibility="Internal" Batching="false">
-        <Configuration>
-          <xsd:element name="InstanceURL" type="xsd:string" xmlns:xsd="http://www.w3.org/2001/XMLSchema" />
-          <xsd:element name="SnowUsername" type="xsd:string" xmlns:xsd="http://www.w3.org/2001/XMLSchema" />
-          <xsd:element name="SnowPassword" type="xsd:string" xmlns:xsd="http://www.w3.org/2001/XMLSchema" />
-        </Configuration>
-        <ModuleImplementation>
+        <Configuration><xsd:element xmlns:xsd="http://www.w3.org/2001/XMLSchema" name="InstanceURL" type="xsd:string" /><xsd:element xmlns:xsd="http://www.w3.org/2001/XMLSchema" name="SnowUsername" type="xsd:string" /><xsd:element xmlns:xsd="http://www.w3.org/2001/XMLSchema" name="SnowPassword" type="xsd:string" /></Configuration>
+        <ModuleImplementation Isolation="Any">
           <Composite>
             <MemberModules>
-              <DataSource ID="StatusTimer" TypeID="System!System.SimpleScheduler">
-                <IntervalSeconds>300</IntervalSeconds>
-                <SyncTime />
-              </DataSource>
-              <ProbeAction ID="GetStatusBags" TypeID="Windows!Microsoft.Windows.PowerShellPropertyBagProbe">
-                <ScriptName>ServiceNowStatusProbe.ps1</ScriptName>
-                <ScriptBody><![CDATA[#Bring in our parameters
+              <DataSource ID="StatusTimer" TypeID="System!System.SimpleScheduler"><IntervalSeconds>300</IntervalSeconds><SyncTime /></DataSource>
+              <ProbeAction ID="GetStatusBags" TypeID="Windows!Microsoft.Windows.PowerShellPropertyBagProbe"><ScriptName>ServiceNowStatusProbe.ps1</ScriptName><ScriptBody>#Bring in our parameters
 param($instanceURL, $SnowUsername, $SnowPassword)
 
 Function CreateHeaders
@@ -476,23 +412,7 @@ catch
 {
     MakeMonitoringStatusPropertyBag -InstanceUrl -Success $false
 }
-]]></ScriptBody>
-                <Parameters>
-                  <Parameter>
-                    <Name>InstanceURL</Name>
-                    <Value>$Config/InstanceURL$</Value>
-                  </Parameter>
-                  <Parameter>
-                    <Name>SnowUsername</Name>
-                    <Value>$Config/SnowUsername$</Value>
-                  </Parameter>
-                  <Parameter>
-                    <Name>SnowPassword</Name>
-                    <Value>$Config/SnowPassword$</Value>
-                  </Parameter>
-                </Parameters>
-                <TimeoutSeconds>120</TimeoutSeconds>
-              </ProbeAction>
+</ScriptBody><Parameters><Parameter><Name>InstanceURL</Name><Value>$Config/InstanceURL$</Value></Parameter><Parameter><Name>SnowUsername</Name><Value>$Config/SnowUsername$</Value></Parameter><Parameter><Name>SnowPassword</Name><Value>$Config/SnowPassword$</Value></Parameter></Parameters><TimeoutSeconds>120</TimeoutSeconds></ProbeAction>
             </MemberModules>
             <Composition>
               <Node ID="GetStatusBags">
@@ -503,77 +423,14 @@ catch
         </ModuleImplementation>
         <OutputType>System!System.BaseData</OutputType>
       </DataSourceModuleType>
-      <DataSourceModuleType ID="CookdownCommunity.ServiceNow.Monitoring.SnowPerformanceDataSource" Accessibility="Internal">
-        <Configuration>
-          <xsd:element name="InstanceURL" type="xsd:string" xmlns:xsd="http://www.w3.org/2001/XMLSchema" />
-          <xsd:element name="Object" type="xsd:string" xmlns:xsd="http://www.w3.org/2001/XMLSchema" />
-          <xsd:element name="Counter" type="xsd:string" xmlns:xsd="http://www.w3.org/2001/XMLSchema" />
-          <xsd:element name="NodeId" type="xsd:string" xmlns:xsd="http://www.w3.org/2001/XMLSchema" />
-        </Configuration>
-        <ModuleImplementation>
+      <DataSourceModuleType ID="CookdownCommunity.ServiceNow.Monitoring.SnowPerformanceDataSource" Accessibility="Internal" Batching="false">
+        <Configuration><xsd:element xmlns:xsd="http://www.w3.org/2001/XMLSchema" name="InstanceURL" type="xsd:string" /><xsd:element xmlns:xsd="http://www.w3.org/2001/XMLSchema" name="Object" type="xsd:string" /><xsd:element xmlns:xsd="http://www.w3.org/2001/XMLSchema" name="Counter" type="xsd:string" /><xsd:element xmlns:xsd="http://www.w3.org/2001/XMLSchema" name="NodeId" type="xsd:string" /></Configuration>
+        <ModuleImplementation Isolation="Any">
           <Composite>
             <MemberModules>
-              <DataSource ID="RunPowerShell" TypeID="CookdownCommunity.ServiceNow.Monitoring.FetchStatusDataSource">
-                <InstanceURL>$Config/InstanceURL$</InstanceURL>
-                <SnowUsername>$RunAs[Name="CookdownCommunity.ServiceNow.Monitoring.APIProbeAccount"]/UserName$</SnowUsername>
-                <SnowPassword>$RunAs[Name="CookdownCommunity.ServiceNow.Monitoring.APIProbeAccount"]/Password$</SnowPassword>
-              </DataSource>
-              <ConditionDetection ID="Filter" TypeID="System!System.ExpressionFilter">
-                <Expression>
-                  <And>
-                    <Expression>
-                      <SimpleExpression>
-                        <ValueExpression>
-                          <XPathQuery Type="String">Property[@Name='NodeId']</XPathQuery>
-                        </ValueExpression>
-                        <Operator>Equal</Operator>
-                        <ValueExpression>
-                          <Value>$Config/NodeId$</Value>
-                        </ValueExpression>
-                      </SimpleExpression>
-                    </Expression>
-                    <Expression>
-                      <SimpleExpression>
-                        <ValueExpression>
-                          <XPathQuery Type="String">Property[@Name='Type']</XPathQuery>
-                        </ValueExpression>
-                        <Operator>Equal</Operator>
-                        <ValueExpression>
-                          <Value>Performance</Value>
-                        </ValueExpression>
-                      </SimpleExpression>
-                    </Expression>
-                    <Expression>
-                      <SimpleExpression>
-                        <ValueExpression>
-                          <XPathQuery Type="String">Property[@Name='Object']</XPathQuery>
-                        </ValueExpression>
-                        <Operator>Equal</Operator>
-                        <ValueExpression>
-                          <Value>$Config/Object$</Value>
-                        </ValueExpression>
-                      </SimpleExpression>
-                    </Expression>
-                    <Expression>
-                      <SimpleExpression>
-                        <ValueExpression>
-                          <XPathQuery Type="String">Property[@Name='Counter']</XPathQuery>
-                        </ValueExpression>
-                        <Operator>Equal</Operator>
-                        <ValueExpression>
-                          <Value>$Config/Counter$</Value>
-                        </ValueExpression>
-                      </SimpleExpression>
-                    </Expression>
-                  </And>
-                </Expression>
-              </ConditionDetection>
-              <ConditionDetection ID="PerfMap" TypeID="Perf!System.Performance.DataGenericMapper">
-                <ObjectName>$Data/Property[@Name='Object']$</ObjectName>
-                <CounterName>$Data/Property[@Name='Counter']$</CounterName>
-                <InstanceName>$Data/Property[@Name='Instance']$</InstanceName>
-                <Value>$Data/Property[@Name='Value']$</Value>
-              </ConditionDetection>
+              <DataSource ID="RunPowerShell" TypeID="CookdownCommunity.ServiceNow.Monitoring.FetchStatusDataSource"><InstanceURL>$Config/InstanceURL$</InstanceURL><SnowUsername>$RunAs[Name="CookdownCommunity.ServiceNow.Monitoring.APIProbeAccount"]/UserName$</SnowUsername><SnowPassword>$RunAs[Name="CookdownCommunity.ServiceNow.Monitoring.APIProbeAccount"]/Password$</SnowPassword></DataSource>
+              <ConditionDetection ID="Filter" TypeID="System!System.ExpressionFilter"><Expression><And><Expression><SimpleExpression><ValueExpression><XPathQuery Type="String">Property[@Name='NodeId']</XPathQuery></ValueExpression><Operator>Equal</Operator><ValueExpression><Value>$Config/NodeId$</Value></ValueExpression></SimpleExpression></Expression><Expression><SimpleExpression><ValueExpression><XPathQuery Type="String">Property[@Name='Type']</XPathQuery></ValueExpression><Operator>Equal</Operator><ValueExpression><Value>Performance</Value></ValueExpression></SimpleExpression></Expression><Expression><SimpleExpression><ValueExpression><XPathQuery Type="String">Property[@Name='Object']</XPathQuery></ValueExpression><Operator>Equal</Operator><ValueExpression><Value>$Config/Object$</Value></ValueExpression></SimpleExpression></Expression><Expression><SimpleExpression><ValueExpression><XPathQuery Type="String">Property[@Name='Counter']</XPathQuery></ValueExpression><Operator>Equal</Operator><ValueExpression><Value>$Config/Counter$</Value></ValueExpression></SimpleExpression></Expression></And></Expression></ConditionDetection>
+              <ConditionDetection ID="PerfMap" TypeID="Perf!System.Performance.DataGenericMapper"><ObjectName>$Data/Property[@Name='Object']$</ObjectName><CounterName>$Data/Property[@Name='Counter']$</CounterName><InstanceName>$Data/Property[@Name='Instance']$</InstanceName><Value>$Data/Property[@Name='Value']$</Value></ConditionDetection>
             </MemberModules>
             <Composition>
               <Node ID="PerfMap">
@@ -593,50 +450,15 @@ catch
           <MonitorTypeState ID="UnderThreshold" NoDetection="false" />
           <MonitorTypeState ID="OverThreshold" NoDetection="false" />
         </MonitorTypeStates>
-        <Configuration>
-          <xsd:element name="InstanceURL" type="xsd:string" xmlns:xsd="http://www.w3.org/2001/XMLSchema" />
-          <xsd:element name="Object" type="xsd:string" xmlns:xsd="http://www.w3.org/2001/XMLSchema" />
-          <xsd:element name="Counter" type="xsd:string" xmlns:xsd="http://www.w3.org/2001/XMLSchema" />
-          <xsd:element name="NodeId" type="xsd:string" xmlns:xsd="http://www.w3.org/2001/XMLSchema" />
-          <xsd:element name="Threshold" type="xsd:string" xmlns:xsd="http://www.w3.org/2001/XMLSchema" />
-        </Configuration>
+        <Configuration><xsd:element xmlns:xsd="http://www.w3.org/2001/XMLSchema" name="InstanceURL" type="xsd:string" /><xsd:element xmlns:xsd="http://www.w3.org/2001/XMLSchema" name="Object" type="xsd:string" /><xsd:element xmlns:xsd="http://www.w3.org/2001/XMLSchema" name="Counter" type="xsd:string" /><xsd:element xmlns:xsd="http://www.w3.org/2001/XMLSchema" name="NodeId" type="xsd:string" /><xsd:element xmlns:xsd="http://www.w3.org/2001/XMLSchema" name="Threshold" type="xsd:string" /></Configuration>
         <OverrideableParameters>
           <OverrideableParameter ID="Threshold" Selector="$Config/Threshold$" ParameterType="string" />
         </OverrideableParameters>
         <MonitorImplementation>
           <MemberModules>
-            <DataSource ID="DataSource" TypeID="CookdownCommunity.ServiceNow.Monitoring.SnowPerformanceDataSource">
-              <InstanceURL>$Config/InstanceURL$</InstanceURL>
-              <Object>$Config/Object$</Object>
-              <Counter>$Config/Counter$</Counter>
-              <NodeId>$Config/NodeId$</NodeId>
-            </DataSource>
-            <ConditionDetection ID="UnderThresholdFilter" TypeID="System!System.ExpressionFilter">
-              <Expression>
-                <SimpleExpression>
-                  <ValueExpression>
-                    <XPathQuery Type="Double">Value</XPathQuery>
-                  </ValueExpression>
-                  <Operator>LessEqual</Operator>
-                  <ValueExpression>
-                    <Value Type="Double">$Config/Threshold$</Value>
-                  </ValueExpression>
-                </SimpleExpression>
-              </Expression>
-            </ConditionDetection>
-            <ConditionDetection ID="OverThresholdFilter" TypeID="System!System.ExpressionFilter">
-              <Expression>
-                <SimpleExpression>
-                  <ValueExpression>
-                    <XPathQuery Type="Double">Value</XPathQuery>
-                  </ValueExpression>
-                  <Operator>Greater</Operator>
-                  <ValueExpression>
-                    <Value Type="Double">$Config/Threshold$</Value>
-                  </ValueExpression>
-                </SimpleExpression>
-              </Expression>
-            </ConditionDetection>
+            <DataSource ID="DataSource" TypeID="CookdownCommunity.ServiceNow.Monitoring.SnowPerformanceDataSource"><InstanceURL>$Config/InstanceURL$</InstanceURL><Object>$Config/Object$</Object><Counter>$Config/Counter$</Counter><NodeId>$Config/NodeId$</NodeId></DataSource>
+            <ConditionDetection ID="UnderThresholdFilter" TypeID="System!System.ExpressionFilter"><Expression><SimpleExpression><ValueExpression><XPathQuery Type="Double">Value</XPathQuery></ValueExpression><Operator>LessEqual</Operator><ValueExpression><Value Type="Double">$Config/Threshold$</Value></ValueExpression></SimpleExpression></Expression></ConditionDetection>
+            <ConditionDetection ID="OverThresholdFilter" TypeID="System!System.ExpressionFilter"><Expression><SimpleExpression><ValueExpression><XPathQuery Type="Double">Value</XPathQuery></ValueExpression><Operator>Greater</Operator><ValueExpression><Value Type="Double">$Config/Threshold$</Value></ValueExpression></SimpleExpression></Expression></ConditionDetection>
           </MemberModules>
           <RegularDetections>
             <RegularDetection MonitorTypeStateID="UnderThreshold">
@@ -660,35 +482,9 @@ catch
         <Configuration />
         <MonitorImplementation>
           <MemberModules>
-            <DataSource ID="DS1" TypeID="CookdownCommunity.ServiceNow.Monitoring.TCPPortCheckDataSource">
-              <InstanceUrlBase>$Target/Property[Type="CookdownCommunity.ServiceNow.Monitoring.WatcherNode"]/InstanceUrlBase$</InstanceUrlBase>
-            </DataSource>
-            <ConditionDetection ID="CDTimeOutFailure" TypeID="System!System.ExpressionFilter">
-              <Expression>
-                <SimpleExpression>
-                  <ValueExpression>
-                    <XPathQuery Type="UnsignedInteger">StatusCode</XPathQuery>
-                  </ValueExpression>
-                  <Operator>Equal</Operator>
-                  <ValueExpression>
-                    <Value Type="UnsignedInteger">2147952460</Value>
-                  </ValueExpression>
-                </SimpleExpression>
-              </Expression>
-            </ConditionDetection>
-            <ConditionDetection ID="CDNoTimeOutFailure" TypeID="System!System.ExpressionFilter">
-              <Expression>
-                <SimpleExpression>
-                  <ValueExpression>
-                    <XPathQuery Type="UnsignedInteger">StatusCode</XPathQuery>
-                  </ValueExpression>
-                  <Operator>NotEqual</Operator>
-                  <ValueExpression>
-                    <Value Type="UnsignedInteger">2147952460</Value>
-                  </ValueExpression>
-                </SimpleExpression>
-              </Expression>
-            </ConditionDetection>
+            <DataSource ID="DS1" TypeID="CookdownCommunity.ServiceNow.Monitoring.TCPPortCheckDataSource"><InstanceUrlBase>$Target/Property[Type="CookdownCommunity.ServiceNow.Monitoring.WatcherNode"]/InstanceUrlBase$</InstanceUrlBase></DataSource>
+            <ConditionDetection ID="CDTimeOutFailure" TypeID="System!System.ExpressionFilter"><Expression><SimpleExpression><ValueExpression><XPathQuery Type="UnsignedInteger">StatusCode</XPathQuery></ValueExpression><Operator>Equal</Operator><ValueExpression><Value Type="UnsignedInteger">2147952460</Value></ValueExpression></SimpleExpression></Expression></ConditionDetection>
+            <ConditionDetection ID="CDNoTimeOutFailure" TypeID="System!System.ExpressionFilter"><Expression><SimpleExpression><ValueExpression><XPathQuery Type="UnsignedInteger">StatusCode</XPathQuery></ValueExpression><Operator>NotEqual</Operator><ValueExpression><Value Type="UnsignedInteger">2147952460</Value></ValueExpression></SimpleExpression></Expression></ConditionDetection>
           </MemberModules>
           <RegularDetections>
             <RegularDetection MonitorTypeStateID="TimeOutFailure">
@@ -712,35 +508,9 @@ catch
         <Configuration />
         <MonitorImplementation>
           <MemberModules>
-            <DataSource ID="DS1" TypeID="CookdownCommunity.ServiceNow.Monitoring.TCPPortCheckDataSource">
-              <InstanceUrlBase>$Target/Property[Type="CookdownCommunity.ServiceNow.Monitoring.WatcherNode"]/InstanceUrlBase$</InstanceUrlBase>
-            </DataSource>
-            <ConditionDetection ID="CDConnectionRefusedFailure" TypeID="System!System.ExpressionFilter">
-              <Expression>
-                <SimpleExpression>
-                  <ValueExpression>
-                    <XPathQuery Type="UnsignedInteger">StatusCode</XPathQuery>
-                  </ValueExpression>
-                  <Operator>Equal</Operator>
-                  <ValueExpression>
-                    <Value Type="UnsignedInteger">2147952461</Value>
-                  </ValueExpression>
-                </SimpleExpression>
-              </Expression>
-            </ConditionDetection>
-            <ConditionDetection ID="CDNoConnectionRefusedFailure" TypeID="System!System.ExpressionFilter">
-              <Expression>
-                <SimpleExpression>
-                  <ValueExpression>
-                    <XPathQuery Type="UnsignedInteger">StatusCode</XPathQuery>
-                  </ValueExpression>
-                  <Operator>NotEqual</Operator>
-                  <ValueExpression>
-                    <Value Type="UnsignedInteger">2147952461</Value>
-                  </ValueExpression>
-                </SimpleExpression>
-              </Expression>
-            </ConditionDetection>
+            <DataSource ID="DS1" TypeID="CookdownCommunity.ServiceNow.Monitoring.TCPPortCheckDataSource"><InstanceUrlBase>$Target/Property[Type="CookdownCommunity.ServiceNow.Monitoring.WatcherNode"]/InstanceUrlBase$</InstanceUrlBase></DataSource>
+            <ConditionDetection ID="CDConnectionRefusedFailure" TypeID="System!System.ExpressionFilter"><Expression><SimpleExpression><ValueExpression><XPathQuery Type="UnsignedInteger">StatusCode</XPathQuery></ValueExpression><Operator>Equal</Operator><ValueExpression><Value Type="UnsignedInteger">2147952461</Value></ValueExpression></SimpleExpression></Expression></ConditionDetection>
+            <ConditionDetection ID="CDNoConnectionRefusedFailure" TypeID="System!System.ExpressionFilter"><Expression><SimpleExpression><ValueExpression><XPathQuery Type="UnsignedInteger">StatusCode</XPathQuery></ValueExpression><Operator>NotEqual</Operator><ValueExpression><Value Type="UnsignedInteger">2147952461</Value></ValueExpression></SimpleExpression></Expression></ConditionDetection>
           </MemberModules>
           <RegularDetections>
             <RegularDetection MonitorTypeStateID="ConnectionRefusedFailure">
@@ -764,35 +534,9 @@ catch
         <Configuration />
         <MonitorImplementation>
           <MemberModules>
-            <DataSource ID="DS1" TypeID="CookdownCommunity.ServiceNow.Monitoring.TCPPortCheckDataSource">
-              <InstanceUrlBase>$Target/Property[Type="CookdownCommunity.ServiceNow.Monitoring.WatcherNode"]/InstanceUrlBase$</InstanceUrlBase>
-            </DataSource>
-            <ConditionDetection ID="CDDNSResolutionFailure" TypeID="System!System.ExpressionFilter">
-              <Expression>
-                <SimpleExpression>
-                  <ValueExpression>
-                    <XPathQuery Type="UnsignedInteger">StatusCode</XPathQuery>
-                  </ValueExpression>
-                  <Operator>Equal</Operator>
-                  <ValueExpression>
-                    <Value Type="UnsignedInteger">2147953401</Value>
-                  </ValueExpression>
-                </SimpleExpression>
-              </Expression>
-            </ConditionDetection>
-            <ConditionDetection ID="CDNoDNSResolutionFailure" TypeID="System!System.ExpressionFilter">
-              <Expression>
-                <SimpleExpression>
-                  <ValueExpression>
-                    <XPathQuery Type="UnsignedInteger">StatusCode</XPathQuery>
-                  </ValueExpression>
-                  <Operator>NotEqual</Operator>
-                  <ValueExpression>
-                    <Value Type="UnsignedInteger">2147953401</Value>
-                  </ValueExpression>
-                </SimpleExpression>
-              </Expression>
-            </ConditionDetection>
+            <DataSource ID="DS1" TypeID="CookdownCommunity.ServiceNow.Monitoring.TCPPortCheckDataSource"><InstanceUrlBase>$Target/Property[Type="CookdownCommunity.ServiceNow.Monitoring.WatcherNode"]/InstanceUrlBase$</InstanceUrlBase></DataSource>
+            <ConditionDetection ID="CDDNSResolutionFailure" TypeID="System!System.ExpressionFilter"><Expression><SimpleExpression><ValueExpression><XPathQuery Type="UnsignedInteger">StatusCode</XPathQuery></ValueExpression><Operator>Equal</Operator><ValueExpression><Value Type="UnsignedInteger">2147953401</Value></ValueExpression></SimpleExpression></Expression></ConditionDetection>
+            <ConditionDetection ID="CDNoDNSResolutionFailure" TypeID="System!System.ExpressionFilter"><Expression><SimpleExpression><ValueExpression><XPathQuery Type="UnsignedInteger">StatusCode</XPathQuery></ValueExpression><Operator>NotEqual</Operator><ValueExpression><Value Type="UnsignedInteger">2147953401</Value></ValueExpression></SimpleExpression></Expression></ConditionDetection>
           </MemberModules>
           <RegularDetections>
             <RegularDetection MonitorTypeStateID="DNSResolutionFailure">
@@ -816,35 +560,9 @@ catch
         <Configuration />
         <MonitorImplementation>
           <MemberModules>
-            <DataSource ID="DS1" TypeID="CookdownCommunity.ServiceNow.Monitoring.TCPPortCheckDataSource">
-              <InstanceUrlBase>$Target/Property[Type="CookdownCommunity.ServiceNow.Monitoring.WatcherNode"]/InstanceUrlBase$</InstanceUrlBase>
-            </DataSource>
-            <ConditionDetection ID="CDHostUnreachableFailure" TypeID="System!System.ExpressionFilter">
-              <Expression>
-                <SimpleExpression>
-                  <ValueExpression>
-                    <XPathQuery Type="UnsignedInteger">StatusCode</XPathQuery>
-                  </ValueExpression>
-                  <Operator>Equal</Operator>
-                  <ValueExpression>
-                    <Value Type="UnsignedInteger">2147952465</Value>
-                  </ValueExpression>
-                </SimpleExpression>
-              </Expression>
-            </ConditionDetection>
-            <ConditionDetection ID="CDNoHostUnreachableFailure" TypeID="System!System.ExpressionFilter">
-              <Expression>
-                <SimpleExpression>
-                  <ValueExpression>
-                    <XPathQuery Type="UnsignedInteger">StatusCode</XPathQuery>
-                  </ValueExpression>
-                  <Operator>NotEqual</Operator>
-                  <ValueExpression>
-                    <Value Type="UnsignedInteger">2147952465</Value>
-                  </ValueExpression>
-                </SimpleExpression>
-              </Expression>
-            </ConditionDetection>
+            <DataSource ID="DS1" TypeID="CookdownCommunity.ServiceNow.Monitoring.TCPPortCheckDataSource"><InstanceUrlBase>$Target/Property[Type="CookdownCommunity.ServiceNow.Monitoring.WatcherNode"]/InstanceUrlBase$</InstanceUrlBase></DataSource>
+            <ConditionDetection ID="CDHostUnreachableFailure" TypeID="System!System.ExpressionFilter"><Expression><SimpleExpression><ValueExpression><XPathQuery Type="UnsignedInteger">StatusCode</XPathQuery></ValueExpression><Operator>Equal</Operator><ValueExpression><Value Type="UnsignedInteger">2147952465</Value></ValueExpression></SimpleExpression></Expression></ConditionDetection>
+            <ConditionDetection ID="CDNoHostUnreachableFailure" TypeID="System!System.ExpressionFilter"><Expression><SimpleExpression><ValueExpression><XPathQuery Type="UnsignedInteger">StatusCode</XPathQuery></ValueExpression><Operator>NotEqual</Operator><ValueExpression><Value Type="UnsignedInteger">2147952465</Value></ValueExpression></SimpleExpression></Expression></ConditionDetection>
           </MemberModules>
           <RegularDetections>
             <RegularDetection MonitorTypeStateID="HostUnreachableFailure">
@@ -864,7 +582,7 @@ catch
   </TypeDefinitions>
   <Monitoring>
     <Discoveries>
-      <Discovery ID="CookdownCommunity.ServiceNow.Monitoring.DiscoveryWatchersAndInstances" Enabled="false" Target="Windows!Microsoft.Windows.Computer" Remotable="false">
+      <Discovery ID="CookdownCommunity.ServiceNow.Monitoring.DiscoveryWatchersAndInstances" Enabled="false" Target="Windows!Microsoft.Windows.Computer" ConfirmDelivery="false" Remotable="false" Priority="Normal">
         <Category>Discovery</Category>
         <DiscoveryTypes>
           <DiscoveryClass TypeID="CookdownCommunity.ServiceNow.Monitoring.ServiceNowInstance" />
@@ -874,565 +592,374 @@ catch
           <DiscoveryRelationship TypeID="CookdownCommunity.ServiceNow.Monitoring.ComputerHostsWatcher" />
           <DiscoveryRelationship TypeID="CookdownCommunity.ServiceNow.Monitoring.InstanceContainsWatchers" />
         </DiscoveryTypes>
-        <DataSource ID="DiscoverSnow" TypeID="CookdownCommunity.ServiceNow.Monitoring.DiscoverServiceNow">
-          <SourceID>$MPElement$</SourceID>
-          <ManagedEntityID>$Target/Id$</ManagedEntityID>
-          <LocationName></LocationName>
-          <InstanceUrls></InstanceUrls>
-          <ComputerName>$Target/Property[Type="Windows!Microsoft.Windows.Computer"]/PrincipalName$</ComputerName>
-        </DataSource>
+        <DataSource ID="DiscoverSnow" TypeID="CookdownCommunity.ServiceNow.Monitoring.DiscoverServiceNow"><SourceID>$MPElement$</SourceID><ManagedEntityID>$Target/Id$</ManagedEntityID><LocationName></LocationName><InstanceUrls></InstanceUrls><ComputerName>$Target/Property[Type="Windows!Microsoft.Windows.Computer"]/PrincipalName$</ComputerName></DataSource>
       </Discovery>
     </Discoveries>
     <Rules>
-      <Rule ID="CookdownCommunity.ServiceNow.Monitoring.Performance.InstanceTotal.GlidePoolDB_Selects" Target="CookdownCommunity.ServiceNow.Monitoring.ServiceNowInstance" Enabled="true" ConfirmDelivery="false" Remotable="true" Priority="Normal" DiscardLevel="100">
+      <Rule ID="CookdownCommunity.ServiceNow.Monitoring.Performance.InstanceTotal.GlidePoolDB_Selects" Enabled="true" Target="CookdownCommunity.ServiceNow.Monitoring.ServiceNowInstance" ConfirmDelivery="false" Remotable="true" Priority="Normal" DiscardLevel="100">
         <Category>PerformanceCollection</Category>
         <DataSources>
-          <DataSource ID="DS" TypeID="CookdownCommunity.ServiceNow.Monitoring.SnowPerformanceDataSource">
-            <InstanceURL>$Target/Property[Type="CookdownCommunity.ServiceNow.Monitoring.ServiceNowInstance"]/URL$</InstanceURL>
-            <Object>Glide Pool DB</Object>
-            <Counter>Selects</Counter>
-            <NodeId>NONE</NodeId>
-          </DataSource>
+          <DataSource ID="DS" TypeID="CookdownCommunity.ServiceNow.Monitoring.SnowPerformanceDataSource"><InstanceURL>$Target/Property[Type="CookdownCommunity.ServiceNow.Monitoring.ServiceNowInstance"]/URL$</InstanceURL><Object>Glide Pool DB</Object><Counter>Selects</Counter><NodeId>NONE</NodeId></DataSource>
         </DataSources>
         <WriteActions>
           <WriteAction ID="CollectToDB" TypeID="SC!Microsoft.SystemCenter.CollectPerformanceData" />
           <WriteAction ID="CollectToDW" TypeID="MSDL!Microsoft.SystemCenter.DataWarehouse.PublishPerformanceData" />
         </WriteActions>
       </Rule>
-      <Rule ID="CookdownCommunity.ServiceNow.Monitoring.Performance.InstanceTotal.GlidePoolDB_SelectsOver1Second" Target="CookdownCommunity.ServiceNow.Monitoring.ServiceNowInstance" Enabled="true" ConfirmDelivery="false" Remotable="true" Priority="Normal" DiscardLevel="100">
+      <Rule ID="CookdownCommunity.ServiceNow.Monitoring.Performance.InstanceTotal.GlidePoolDB_SelectsOver1Second" Enabled="true" Target="CookdownCommunity.ServiceNow.Monitoring.ServiceNowInstance" ConfirmDelivery="false" Remotable="true" Priority="Normal" DiscardLevel="100">
         <Category>PerformanceCollection</Category>
         <DataSources>
-          <DataSource ID="DS" TypeID="CookdownCommunity.ServiceNow.Monitoring.SnowPerformanceDataSource">
-            <InstanceURL>$Target/Property[Type="CookdownCommunity.ServiceNow.Monitoring.ServiceNowInstance"]/URL$</InstanceURL>
-            <Object>Glide Pool DB</Object>
-            <Counter>Selects (Over 1 Second)</Counter>
-            <NodeId>NONE</NodeId>
-          </DataSource>
+          <DataSource ID="DS" TypeID="CookdownCommunity.ServiceNow.Monitoring.SnowPerformanceDataSource"><InstanceURL>$Target/Property[Type="CookdownCommunity.ServiceNow.Monitoring.ServiceNowInstance"]/URL$</InstanceURL><Object>Glide Pool DB</Object><Counter>Selects (Over 1 Second)</Counter><NodeId>NONE</NodeId></DataSource>
         </DataSources>
         <WriteActions>
           <WriteAction ID="CollectToDB" TypeID="SC!Microsoft.SystemCenter.CollectPerformanceData" />
           <WriteAction ID="CollectToDW" TypeID="MSDL!Microsoft.SystemCenter.DataWarehouse.PublishPerformanceData" />
         </WriteActions>
       </Rule>
-      <Rule ID="CookdownCommunity.ServiceNow.Monitoring.Performance.Instance.FetchTime" Target="CookdownCommunity.ServiceNow.Monitoring.ServiceNowInstance" Enabled="true" ConfirmDelivery="false" Remotable="true" Priority="Normal" DiscardLevel="100">
+      <Rule ID="CookdownCommunity.ServiceNow.Monitoring.Performance.Instance.FetchTime" Enabled="true" Target="CookdownCommunity.ServiceNow.Monitoring.ServiceNowInstance" ConfirmDelivery="false" Remotable="true" Priority="Normal" DiscardLevel="100">
         <Category>PerformanceCollection</Category>
         <DataSources>
-          <DataSource ID="DS" TypeID="CookdownCommunity.ServiceNow.Monitoring.SnowPerformanceDataSource">
-            <InstanceURL>$Target/Property[Type="CookdownCommunity.ServiceNow.Monitoring.ServiceNowInstance"]/URL$</InstanceURL>
-            <Object>Connection</Object>
-            <Counter>Fetch Time (MS)</Counter>
-            <NodeId>NONE</NodeId>
-          </DataSource>
+          <DataSource ID="DS" TypeID="CookdownCommunity.ServiceNow.Monitoring.SnowPerformanceDataSource"><InstanceURL>$Target/Property[Type="CookdownCommunity.ServiceNow.Monitoring.ServiceNowInstance"]/URL$</InstanceURL><Object>Connection</Object><Counter>Fetch Time (MS)</Counter><NodeId>NONE</NodeId></DataSource>
         </DataSources>
         <WriteActions>
           <WriteAction ID="CollectToDB" TypeID="SC!Microsoft.SystemCenter.CollectPerformanceData" />
           <WriteAction ID="CollectToDW" TypeID="MSDL!Microsoft.SystemCenter.DataWarehouse.PublishPerformanceData" />
         </WriteActions>
       </Rule>
-      <Rule ID="CookdownCommunity.ServiceNow.Monitoring.Performance.InstanceTotal.GlidePoolDB_SelectsOver10Seconds" Target="CookdownCommunity.ServiceNow.Monitoring.ServiceNowInstance" Enabled="true" ConfirmDelivery="false" Remotable="true" Priority="Normal" DiscardLevel="100">
+      <Rule ID="CookdownCommunity.ServiceNow.Monitoring.Performance.InstanceTotal.GlidePoolDB_SelectsOver10Seconds" Enabled="true" Target="CookdownCommunity.ServiceNow.Monitoring.ServiceNowInstance" ConfirmDelivery="false" Remotable="true" Priority="Normal" DiscardLevel="100">
         <Category>PerformanceCollection</Category>
         <DataSources>
-          <DataSource ID="DS" TypeID="CookdownCommunity.ServiceNow.Monitoring.SnowPerformanceDataSource">
-            <InstanceURL>$Target/Property[Type="CookdownCommunity.ServiceNow.Monitoring.ServiceNowInstance"]/URL$</InstanceURL>
-            <Object>Glide Pool DB</Object>
-            <Counter>Selects (Over 10 Sec)</Counter>
-            <NodeId>NONE</NodeId>
-          </DataSource>
+          <DataSource ID="DS" TypeID="CookdownCommunity.ServiceNow.Monitoring.SnowPerformanceDataSource"><InstanceURL>$Target/Property[Type="CookdownCommunity.ServiceNow.Monitoring.ServiceNowInstance"]/URL$</InstanceURL><Object>Glide Pool DB</Object><Counter>Selects (Over 10 Sec)</Counter><NodeId>NONE</NodeId></DataSource>
         </DataSources>
         <WriteActions>
           <WriteAction ID="CollectToDB" TypeID="SC!Microsoft.SystemCenter.CollectPerformanceData" />
           <WriteAction ID="CollectToDW" TypeID="MSDL!Microsoft.SystemCenter.DataWarehouse.PublishPerformanceData" />
         </WriteActions>
       </Rule>
-      <Rule ID="CookdownCommunity.ServiceNow.Monitoring.Performance.InstanceTotal.GlidePoolDB_Deletes" Target="CookdownCommunity.ServiceNow.Monitoring.ServiceNowInstance" Enabled="true" ConfirmDelivery="false" Remotable="true" Priority="Normal" DiscardLevel="100">
+      <Rule ID="CookdownCommunity.ServiceNow.Monitoring.Performance.InstanceTotal.GlidePoolDB_Deletes" Enabled="true" Target="CookdownCommunity.ServiceNow.Monitoring.ServiceNowInstance" ConfirmDelivery="false" Remotable="true" Priority="Normal" DiscardLevel="100">
         <Category>PerformanceCollection</Category>
         <DataSources>
-          <DataSource ID="DS" TypeID="CookdownCommunity.ServiceNow.Monitoring.SnowPerformanceDataSource">
-            <InstanceURL>$Target/Property[Type="CookdownCommunity.ServiceNow.Monitoring.ServiceNowInstance"]/URL$</InstanceURL>
-            <Object>Glide Pool DB</Object>
-            <Counter>Deletes</Counter>
-            <NodeId>NONE</NodeId>
-          </DataSource>
+          <DataSource ID="DS" TypeID="CookdownCommunity.ServiceNow.Monitoring.SnowPerformanceDataSource"><InstanceURL>$Target/Property[Type="CookdownCommunity.ServiceNow.Monitoring.ServiceNowInstance"]/URL$</InstanceURL><Object>Glide Pool DB</Object><Counter>Deletes</Counter><NodeId>NONE</NodeId></DataSource>
         </DataSources>
         <WriteActions>
           <WriteAction ID="CollectToDB" TypeID="SC!Microsoft.SystemCenter.CollectPerformanceData" />
           <WriteAction ID="CollectToDW" TypeID="MSDL!Microsoft.SystemCenter.DataWarehouse.PublishPerformanceData" />
         </WriteActions>
       </Rule>
-      <Rule ID="CookdownCommunity.ServiceNow.Monitoring.Performance.InstanceTotal.GlidePoolDB_Inserts" Target="CookdownCommunity.ServiceNow.Monitoring.ServiceNowInstance" Enabled="true" ConfirmDelivery="false" Remotable="true" Priority="Normal" DiscardLevel="100">
+      <Rule ID="CookdownCommunity.ServiceNow.Monitoring.Performance.InstanceTotal.GlidePoolDB_Inserts" Enabled="true" Target="CookdownCommunity.ServiceNow.Monitoring.ServiceNowInstance" ConfirmDelivery="false" Remotable="true" Priority="Normal" DiscardLevel="100">
         <Category>PerformanceCollection</Category>
         <DataSources>
-          <DataSource ID="DS" TypeID="CookdownCommunity.ServiceNow.Monitoring.SnowPerformanceDataSource">
-            <InstanceURL>$Target/Property[Type="CookdownCommunity.ServiceNow.Monitoring.ServiceNowInstance"]/URL$</InstanceURL>
-            <Object>Glide Pool DB</Object>
-            <Counter>Inserts</Counter>
-            <NodeId>NONE</NodeId>
-          </DataSource>
+          <DataSource ID="DS" TypeID="CookdownCommunity.ServiceNow.Monitoring.SnowPerformanceDataSource"><InstanceURL>$Target/Property[Type="CookdownCommunity.ServiceNow.Monitoring.ServiceNowInstance"]/URL$</InstanceURL><Object>Glide Pool DB</Object><Counter>Inserts</Counter><NodeId>NONE</NodeId></DataSource>
         </DataSources>
         <WriteActions>
           <WriteAction ID="CollectToDB" TypeID="SC!Microsoft.SystemCenter.CollectPerformanceData" />
           <WriteAction ID="CollectToDW" TypeID="MSDL!Microsoft.SystemCenter.DataWarehouse.PublishPerformanceData" />
         </WriteActions>
       </Rule>
-      <Rule ID="CookdownCommunity.ServiceNow.Monitoring.Performance.InstanceTotal.GlidePoolDB_Updates" Target="CookdownCommunity.ServiceNow.Monitoring.ServiceNowInstance" Enabled="true" ConfirmDelivery="false" Remotable="true" Priority="Normal" DiscardLevel="100">
+      <Rule ID="CookdownCommunity.ServiceNow.Monitoring.Performance.InstanceTotal.GlidePoolDB_Updates" Enabled="true" Target="CookdownCommunity.ServiceNow.Monitoring.ServiceNowInstance" ConfirmDelivery="false" Remotable="true" Priority="Normal" DiscardLevel="100">
         <Category>PerformanceCollection</Category>
         <DataSources>
-          <DataSource ID="DS" TypeID="CookdownCommunity.ServiceNow.Monitoring.SnowPerformanceDataSource">
-            <InstanceURL>$Target/Property[Type="CookdownCommunity.ServiceNow.Monitoring.ServiceNowInstance"]/URL$</InstanceURL>
-            <Object>Glide Pool DB</Object>
-            <Counter>Updates</Counter>
-            <NodeId>NONE</NodeId>
-          </DataSource>
+          <DataSource ID="DS" TypeID="CookdownCommunity.ServiceNow.Monitoring.SnowPerformanceDataSource"><InstanceURL>$Target/Property[Type="CookdownCommunity.ServiceNow.Monitoring.ServiceNowInstance"]/URL$</InstanceURL><Object>Glide Pool DB</Object><Counter>Updates</Counter><NodeId>NONE</NodeId></DataSource>
         </DataSources>
         <WriteActions>
           <WriteAction ID="CollectToDB" TypeID="SC!Microsoft.SystemCenter.CollectPerformanceData" />
           <WriteAction ID="CollectToDW" TypeID="MSDL!Microsoft.SystemCenter.DataWarehouse.PublishPerformanceData" />
         </WriteActions>
       </Rule>
-      <Rule ID="CookdownCommunity.ServiceNow.Monitoring.Performance.InstanceTotal.Users_EndUsers" Target="CookdownCommunity.ServiceNow.Monitoring.ServiceNowInstance" Enabled="true" ConfirmDelivery="false" Remotable="true" Priority="Normal" DiscardLevel="100">
+      <Rule ID="CookdownCommunity.ServiceNow.Monitoring.Performance.InstanceTotal.Users_EndUsers" Enabled="true" Target="CookdownCommunity.ServiceNow.Monitoring.ServiceNowInstance" ConfirmDelivery="false" Remotable="true" Priority="Normal" DiscardLevel="100">
         <Category>PerformanceCollection</Category>
         <DataSources>
-          <DataSource ID="DS" TypeID="CookdownCommunity.ServiceNow.Monitoring.SnowPerformanceDataSource">
-            <InstanceURL>$Target/Property[Type="CookdownCommunity.ServiceNow.Monitoring.ServiceNowInstance"]/URL$</InstanceURL>
-            <Object>Users</Object>
-            <Counter>End Users</Counter>
-            <NodeId>NONE</NodeId>
-          </DataSource>
+          <DataSource ID="DS" TypeID="CookdownCommunity.ServiceNow.Monitoring.SnowPerformanceDataSource"><InstanceURL>$Target/Property[Type="CookdownCommunity.ServiceNow.Monitoring.ServiceNowInstance"]/URL$</InstanceURL><Object>Users</Object><Counter>End Users</Counter><NodeId>NONE</NodeId></DataSource>
         </DataSources>
         <WriteActions>
           <WriteAction ID="CollectToDB" TypeID="SC!Microsoft.SystemCenter.CollectPerformanceData" />
           <WriteAction ID="CollectToDW" TypeID="MSDL!Microsoft.SystemCenter.DataWarehouse.PublishPerformanceData" />
         </WriteActions>
       </Rule>
-      <Rule ID="CookdownCommunity.ServiceNow.Monitoring.Performance.InstanceTotal.Users_LoggedIn" Target="CookdownCommunity.ServiceNow.Monitoring.ServiceNowInstance" Enabled="true" ConfirmDelivery="false" Remotable="true" Priority="Normal" DiscardLevel="100">
+      <Rule ID="CookdownCommunity.ServiceNow.Monitoring.Performance.InstanceTotal.Users_LoggedIn" Enabled="true" Target="CookdownCommunity.ServiceNow.Monitoring.ServiceNowInstance" ConfirmDelivery="false" Remotable="true" Priority="Normal" DiscardLevel="100">
         <Category>PerformanceCollection</Category>
         <DataSources>
-          <DataSource ID="DS" TypeID="CookdownCommunity.ServiceNow.Monitoring.SnowPerformanceDataSource">
-            <InstanceURL>$Target/Property[Type="CookdownCommunity.ServiceNow.Monitoring.ServiceNowInstance"]/URL$</InstanceURL>
-            <Object>Users</Object>
-            <Counter>Logged In</Counter>
-            <NodeId>NONE</NodeId>
-          </DataSource>
+          <DataSource ID="DS" TypeID="CookdownCommunity.ServiceNow.Monitoring.SnowPerformanceDataSource"><InstanceURL>$Target/Property[Type="CookdownCommunity.ServiceNow.Monitoring.ServiceNowInstance"]/URL$</InstanceURL><Object>Users</Object><Counter>Logged In</Counter><NodeId>NONE</NodeId></DataSource>
         </DataSources>
         <WriteActions>
           <WriteAction ID="CollectToDB" TypeID="SC!Microsoft.SystemCenter.CollectPerformanceData" />
           <WriteAction ID="CollectToDW" TypeID="MSDL!Microsoft.SystemCenter.DataWarehouse.PublishPerformanceData" />
         </WriteActions>
       </Rule>
-      <Rule ID="CookdownCommunity.ServiceNow.Monitoring.Performance.InstanceTotal.Users_Total" Target="CookdownCommunity.ServiceNow.Monitoring.ServiceNowInstance" Enabled="true" ConfirmDelivery="false" Remotable="true" Priority="Normal" DiscardLevel="100">
+      <Rule ID="CookdownCommunity.ServiceNow.Monitoring.Performance.InstanceTotal.Users_Total" Enabled="true" Target="CookdownCommunity.ServiceNow.Monitoring.ServiceNowInstance" ConfirmDelivery="false" Remotable="true" Priority="Normal" DiscardLevel="100">
         <Category>PerformanceCollection</Category>
         <DataSources>
-          <DataSource ID="DS" TypeID="CookdownCommunity.ServiceNow.Monitoring.SnowPerformanceDataSource">
-            <InstanceURL>$Target/Property[Type="CookdownCommunity.ServiceNow.Monitoring.ServiceNowInstance"]/URL$</InstanceURL>
-            <Object>Users</Object>
-            <Counter>Total</Counter>
-            <NodeId>NONE</NodeId>
-          </DataSource>
+          <DataSource ID="DS" TypeID="CookdownCommunity.ServiceNow.Monitoring.SnowPerformanceDataSource"><InstanceURL>$Target/Property[Type="CookdownCommunity.ServiceNow.Monitoring.ServiceNowInstance"]/URL$</InstanceURL><Object>Users</Object><Counter>Total</Counter><NodeId>NONE</NodeId></DataSource>
         </DataSources>
         <WriteActions>
           <WriteAction ID="CollectToDB" TypeID="SC!Microsoft.SystemCenter.CollectPerformanceData" />
           <WriteAction ID="CollectToDW" TypeID="MSDL!Microsoft.SystemCenter.DataWarehouse.PublishPerformanceData" />
         </WriteActions>
       </Rule>
-      <Rule ID="CookdownCommunity.ServiceNow.Monitoring.Performance.Memory_InUse" Target="CookdownCommunity.ServiceNow.Monitoring.ServiceNowNode" Enabled="true" ConfirmDelivery="false" Remotable="true" Priority="Normal" DiscardLevel="100">
+      <Rule ID="CookdownCommunity.ServiceNow.Monitoring.Performance.Memory_InUse" Enabled="true" Target="CookdownCommunity.ServiceNow.Monitoring.ServiceNowNode" ConfirmDelivery="false" Remotable="true" Priority="Normal" DiscardLevel="100">
         <Category>PerformanceCollection</Category>
         <DataSources>
-          <DataSource ID="DS" TypeID="CookdownCommunity.ServiceNow.Monitoring.SnowPerformanceDataSource">
-            <InstanceURL>$Target/Host/Property[Type="CookdownCommunity.ServiceNow.Monitoring.ServiceNowInstance"]/URL$</InstanceURL>
-            <Object>Memory</Object>
-            <Counter>In Use</Counter>
-            <NodeId>$Target/Property[Type="CookdownCommunity.ServiceNow.Monitoring.ServiceNowNode"]/NodeId$</NodeId>
-          </DataSource>
+          <DataSource ID="DS" TypeID="CookdownCommunity.ServiceNow.Monitoring.SnowPerformanceDataSource"><InstanceURL>$Target/Host/Property[Type="CookdownCommunity.ServiceNow.Monitoring.ServiceNowInstance"]/URL$</InstanceURL><Object>Memory</Object><Counter>In Use</Counter><NodeId>$Target/Property[Type="CookdownCommunity.ServiceNow.Monitoring.ServiceNowNode"]/NodeId$</NodeId></DataSource>
         </DataSources>
         <WriteActions>
           <WriteAction ID="CollectToDB" TypeID="SC!Microsoft.SystemCenter.CollectPerformanceData" />
           <WriteAction ID="CollectToDW" TypeID="MSDL!Microsoft.SystemCenter.DataWarehouse.PublishPerformanceData" />
         </WriteActions>
       </Rule>
-      <Rule ID="CookdownCommunity.ServiceNow.Monitoring.Performance.Memory_PercentFree" Target="CookdownCommunity.ServiceNow.Monitoring.ServiceNowNode" Enabled="true" ConfirmDelivery="false" Remotable="true" Priority="Normal" DiscardLevel="100">
+      <Rule ID="CookdownCommunity.ServiceNow.Monitoring.Performance.Memory_PercentFree" Enabled="true" Target="CookdownCommunity.ServiceNow.Monitoring.ServiceNowNode" ConfirmDelivery="false" Remotable="true" Priority="Normal" DiscardLevel="100">
         <Category>PerformanceCollection</Category>
         <DataSources>
-          <DataSource ID="DS" TypeID="CookdownCommunity.ServiceNow.Monitoring.SnowPerformanceDataSource">
-            <InstanceURL>$Target/Host/Property[Type="CookdownCommunity.ServiceNow.Monitoring.ServiceNowInstance"]/URL$</InstanceURL>
-            <Object>Memory</Object>
-            <Counter>Percent Free</Counter>
-            <NodeId>$Target/Property[Type="CookdownCommunity.ServiceNow.Monitoring.ServiceNowNode"]/NodeId$</NodeId>
-          </DataSource>
+          <DataSource ID="DS" TypeID="CookdownCommunity.ServiceNow.Monitoring.SnowPerformanceDataSource"><InstanceURL>$Target/Host/Property[Type="CookdownCommunity.ServiceNow.Monitoring.ServiceNowInstance"]/URL$</InstanceURL><Object>Memory</Object><Counter>Percent Free</Counter><NodeId>$Target/Property[Type="CookdownCommunity.ServiceNow.Monitoring.ServiceNowNode"]/NodeId$</NodeId></DataSource>
         </DataSources>
         <WriteActions>
           <WriteAction ID="CollectToDB" TypeID="SC!Microsoft.SystemCenter.CollectPerformanceData" />
           <WriteAction ID="CollectToDW" TypeID="MSDL!Microsoft.SystemCenter.DataWarehouse.PublishPerformanceData" />
         </WriteActions>
       </Rule>
-      <Rule ID="CookdownCommunity.ServiceNow.Monitoring.Performance.Memory_Total" Target="CookdownCommunity.ServiceNow.Monitoring.ServiceNowNode" Enabled="true" ConfirmDelivery="false" Remotable="true" Priority="Normal" DiscardLevel="100">
+      <Rule ID="CookdownCommunity.ServiceNow.Monitoring.Performance.Memory_Total" Enabled="true" Target="CookdownCommunity.ServiceNow.Monitoring.ServiceNowNode" ConfirmDelivery="false" Remotable="true" Priority="Normal" DiscardLevel="100">
         <Category>PerformanceCollection</Category>
         <DataSources>
-          <DataSource ID="DS" TypeID="CookdownCommunity.ServiceNow.Monitoring.SnowPerformanceDataSource">
-            <InstanceURL>$Target/Host/Property[Type="CookdownCommunity.ServiceNow.Monitoring.ServiceNowInstance"]/URL$</InstanceURL>
-            <Object>Memory</Object>
-            <Counter>Total</Counter>
-            <NodeId>$Target/Property[Type="CookdownCommunity.ServiceNow.Monitoring.ServiceNowNode"]/NodeId$</NodeId>
-          </DataSource>
+          <DataSource ID="DS" TypeID="CookdownCommunity.ServiceNow.Monitoring.SnowPerformanceDataSource"><InstanceURL>$Target/Host/Property[Type="CookdownCommunity.ServiceNow.Monitoring.ServiceNowInstance"]/URL$</InstanceURL><Object>Memory</Object><Counter>Total</Counter><NodeId>$Target/Property[Type="CookdownCommunity.ServiceNow.Monitoring.ServiceNowNode"]/NodeId$</NodeId></DataSource>
         </DataSources>
         <WriteActions>
           <WriteAction ID="CollectToDB" TypeID="SC!Microsoft.SystemCenter.CollectPerformanceData" />
           <WriteAction ID="CollectToDW" TypeID="MSDL!Microsoft.SystemCenter.DataWarehouse.PublishPerformanceData" />
         </WriteActions>
       </Rule>
-      <Rule ID="CookdownCommunity.ServiceNow.Monitoring.Performance.Memory_Max" Target="CookdownCommunity.ServiceNow.Monitoring.ServiceNowNode" Enabled="true" ConfirmDelivery="false" Remotable="true" Priority="Normal" DiscardLevel="100">
+      <Rule ID="CookdownCommunity.ServiceNow.Monitoring.Performance.Memory_Max" Enabled="true" Target="CookdownCommunity.ServiceNow.Monitoring.ServiceNowNode" ConfirmDelivery="false" Remotable="true" Priority="Normal" DiscardLevel="100">
         <Category>PerformanceCollection</Category>
         <DataSources>
-          <DataSource ID="DS" TypeID="CookdownCommunity.ServiceNow.Monitoring.SnowPerformanceDataSource">
-            <InstanceURL>$Target/Host/Property[Type="CookdownCommunity.ServiceNow.Monitoring.ServiceNowInstance"]/URL$</InstanceURL>
-            <Object>Memory</Object>
-            <Counter>Max</Counter>
-            <NodeId>$Target/Property[Type="CookdownCommunity.ServiceNow.Monitoring.ServiceNowNode"]/NodeId$</NodeId>
-          </DataSource>
+          <DataSource ID="DS" TypeID="CookdownCommunity.ServiceNow.Monitoring.SnowPerformanceDataSource"><InstanceURL>$Target/Host/Property[Type="CookdownCommunity.ServiceNow.Monitoring.ServiceNowInstance"]/URL$</InstanceURL><Object>Memory</Object><Counter>Max</Counter><NodeId>$Target/Property[Type="CookdownCommunity.ServiceNow.Monitoring.ServiceNowNode"]/NodeId$</NodeId></DataSource>
         </DataSources>
         <WriteActions>
           <WriteAction ID="CollectToDB" TypeID="SC!Microsoft.SystemCenter.CollectPerformanceData" />
           <WriteAction ID="CollectToDW" TypeID="MSDL!Microsoft.SystemCenter.DataWarehouse.PublishPerformanceData" />
         </WriteActions>
       </Rule>
-      <Rule ID="CookdownCommunity.ServiceNow.Monitoring.Performance.Servlet_CacheFlushed" Target="CookdownCommunity.ServiceNow.Monitoring.ServiceNowNode" Enabled="true" ConfirmDelivery="false" Remotable="true" Priority="Normal" DiscardLevel="100">
+      <Rule ID="CookdownCommunity.ServiceNow.Monitoring.Performance.Servlet_CacheFlushed" Enabled="true" Target="CookdownCommunity.ServiceNow.Monitoring.ServiceNowNode" ConfirmDelivery="false" Remotable="true" Priority="Normal" DiscardLevel="100">
         <Category>PerformanceCollection</Category>
         <DataSources>
-          <DataSource ID="DS" TypeID="CookdownCommunity.ServiceNow.Monitoring.SnowPerformanceDataSource">
-            <InstanceURL>$Target/Host/Property[Type="CookdownCommunity.ServiceNow.Monitoring.ServiceNowInstance"]/URL$</InstanceURL>
-            <Object>Servlet</Object>
-            <Counter>Cache Flushes</Counter>
-            <NodeId>$Target/Property[Type="CookdownCommunity.ServiceNow.Monitoring.ServiceNowNode"]/NodeId$</NodeId>
-          </DataSource>
+          <DataSource ID="DS" TypeID="CookdownCommunity.ServiceNow.Monitoring.SnowPerformanceDataSource"><InstanceURL>$Target/Host/Property[Type="CookdownCommunity.ServiceNow.Monitoring.ServiceNowInstance"]/URL$</InstanceURL><Object>Servlet</Object><Counter>Cache Flushes</Counter><NodeId>$Target/Property[Type="CookdownCommunity.ServiceNow.Monitoring.ServiceNowNode"]/NodeId$</NodeId></DataSource>
         </DataSources>
         <WriteActions>
           <WriteAction ID="CollectToDB" TypeID="SC!Microsoft.SystemCenter.CollectPerformanceData" />
           <WriteAction ID="CollectToDW" TypeID="MSDL!Microsoft.SystemCenter.DataWarehouse.PublishPerformanceData" />
         </WriteActions>
       </Rule>
-      <Rule ID="CookdownCommunity.ServiceNow.Monitoring.Performance.Servlet_Uptime" Target="CookdownCommunity.ServiceNow.Monitoring.ServiceNowNode" Enabled="true" ConfirmDelivery="false" Remotable="true" Priority="Normal" DiscardLevel="100">
+      <Rule ID="CookdownCommunity.ServiceNow.Monitoring.Performance.Servlet_Uptime" Enabled="true" Target="CookdownCommunity.ServiceNow.Monitoring.ServiceNowNode" ConfirmDelivery="false" Remotable="true" Priority="Normal" DiscardLevel="100">
         <Category>PerformanceCollection</Category>
         <DataSources>
-          <DataSource ID="DS" TypeID="CookdownCommunity.ServiceNow.Monitoring.SnowPerformanceDataSource">
-            <InstanceURL>$Target/Host/Property[Type="CookdownCommunity.ServiceNow.Monitoring.ServiceNowInstance"]/URL$</InstanceURL>
-            <Object>Servlet</Object>
-            <Counter>Uptime</Counter>
-            <NodeId>$Target/Property[Type="CookdownCommunity.ServiceNow.Monitoring.ServiceNowNode"]/NodeId$</NodeId>
-          </DataSource>
+          <DataSource ID="DS" TypeID="CookdownCommunity.ServiceNow.Monitoring.SnowPerformanceDataSource"><InstanceURL>$Target/Host/Property[Type="CookdownCommunity.ServiceNow.Monitoring.ServiceNowInstance"]/URL$</InstanceURL><Object>Servlet</Object><Counter>Uptime</Counter><NodeId>$Target/Property[Type="CookdownCommunity.ServiceNow.Monitoring.ServiceNowNode"]/NodeId$</NodeId></DataSource>
         </DataSources>
         <WriteActions>
           <WriteAction ID="CollectToDB" TypeID="SC!Microsoft.SystemCenter.CollectPerformanceData" />
           <WriteAction ID="CollectToDW" TypeID="MSDL!Microsoft.SystemCenter.DataWarehouse.PublishPerformanceData" />
         </WriteActions>
       </Rule>
-      <Rule ID="CookdownCommunity.ServiceNow.Monitoring.Performance.Servlet_Transactions" Target="CookdownCommunity.ServiceNow.Monitoring.ServiceNowNode" Enabled="true" ConfirmDelivery="false" Remotable="true" Priority="Normal" DiscardLevel="100">
+      <Rule ID="CookdownCommunity.ServiceNow.Monitoring.Performance.Servlet_Transactions" Enabled="true" Target="CookdownCommunity.ServiceNow.Monitoring.ServiceNowNode" ConfirmDelivery="false" Remotable="true" Priority="Normal" DiscardLevel="100">
         <Category>PerformanceCollection</Category>
         <DataSources>
-          <DataSource ID="DS" TypeID="CookdownCommunity.ServiceNow.Monitoring.SnowPerformanceDataSource">
-            <InstanceURL>$Target/Host/Property[Type="CookdownCommunity.ServiceNow.Monitoring.ServiceNowInstance"]/URL$</InstanceURL>
-            <Object>Servlet</Object>
-            <Counter>Transactions</Counter>
-            <NodeId>$Target/Property[Type="CookdownCommunity.ServiceNow.Monitoring.ServiceNowNode"]/NodeId$</NodeId>
-          </DataSource>
+          <DataSource ID="DS" TypeID="CookdownCommunity.ServiceNow.Monitoring.SnowPerformanceDataSource"><InstanceURL>$Target/Host/Property[Type="CookdownCommunity.ServiceNow.Monitoring.ServiceNowInstance"]/URL$</InstanceURL><Object>Servlet</Object><Counter>Transactions</Counter><NodeId>$Target/Property[Type="CookdownCommunity.ServiceNow.Monitoring.ServiceNowNode"]/NodeId$</NodeId></DataSource>
         </DataSources>
         <WriteActions>
           <WriteAction ID="CollectToDB" TypeID="SC!Microsoft.SystemCenter.CollectPerformanceData" />
           <WriteAction ID="CollectToDW" TypeID="MSDL!Microsoft.SystemCenter.DataWarehouse.PublishPerformanceData" />
         </WriteActions>
       </Rule>
-      <Rule ID="CookdownCommunity.ServiceNow.Monitoring.Performance.Servlet_ErrorsHandled" Target="CookdownCommunity.ServiceNow.Monitoring.ServiceNowNode" Enabled="true" ConfirmDelivery="false" Remotable="true" Priority="Normal" DiscardLevel="100">
+      <Rule ID="CookdownCommunity.ServiceNow.Monitoring.Performance.Servlet_ErrorsHandled" Enabled="true" Target="CookdownCommunity.ServiceNow.Monitoring.ServiceNowNode" ConfirmDelivery="false" Remotable="true" Priority="Normal" DiscardLevel="100">
         <Category>PerformanceCollection</Category>
         <DataSources>
-          <DataSource ID="DS" TypeID="CookdownCommunity.ServiceNow.Monitoring.SnowPerformanceDataSource">
-            <InstanceURL>$Target/Host/Property[Type="CookdownCommunity.ServiceNow.Monitoring.ServiceNowInstance"]/URL$</InstanceURL>
-            <Object>Servlet</Object>
-            <Counter>Errors Handled</Counter>
-            <NodeId>$Target/Property[Type="CookdownCommunity.ServiceNow.Monitoring.ServiceNowNode"]/NodeId$</NodeId>
-          </DataSource>
+          <DataSource ID="DS" TypeID="CookdownCommunity.ServiceNow.Monitoring.SnowPerformanceDataSource"><InstanceURL>$Target/Host/Property[Type="CookdownCommunity.ServiceNow.Monitoring.ServiceNowInstance"]/URL$</InstanceURL><Object>Servlet</Object><Counter>Errors Handled</Counter><NodeId>$Target/Property[Type="CookdownCommunity.ServiceNow.Monitoring.ServiceNowNode"]/NodeId$</NodeId></DataSource>
         </DataSources>
         <WriteActions>
           <WriteAction ID="CollectToDB" TypeID="SC!Microsoft.SystemCenter.CollectPerformanceData" />
           <WriteAction ID="CollectToDW" TypeID="MSDL!Microsoft.SystemCenter.DataWarehouse.PublishPerformanceData" />
         </WriteActions>
       </Rule>
-      <Rule ID="CookdownCommunity.ServiceNow.Monitoring.Performance.Servlet_ProcessorTransactions" Target="CookdownCommunity.ServiceNow.Monitoring.ServiceNowNode" Enabled="true" ConfirmDelivery="false" Remotable="true" Priority="Normal" DiscardLevel="100">
+      <Rule ID="CookdownCommunity.ServiceNow.Monitoring.Performance.Servlet_ProcessorTransactions" Enabled="true" Target="CookdownCommunity.ServiceNow.Monitoring.ServiceNowNode" ConfirmDelivery="false" Remotable="true" Priority="Normal" DiscardLevel="100">
         <Category>PerformanceCollection</Category>
         <DataSources>
-          <DataSource ID="DS" TypeID="CookdownCommunity.ServiceNow.Monitoring.SnowPerformanceDataSource">
-            <InstanceURL>$Target/Host/Property[Type="CookdownCommunity.ServiceNow.Monitoring.ServiceNowInstance"]/URL$</InstanceURL>
-            <Object>Servlet</Object>
-            <Counter>Processor Transactions</Counter>
-            <NodeId>$Target/Property[Type="CookdownCommunity.ServiceNow.Monitoring.ServiceNowNode"]/NodeId$</NodeId>
-          </DataSource>
+          <DataSource ID="DS" TypeID="CookdownCommunity.ServiceNow.Monitoring.SnowPerformanceDataSource"><InstanceURL>$Target/Host/Property[Type="CookdownCommunity.ServiceNow.Monitoring.ServiceNowInstance"]/URL$</InstanceURL><Object>Servlet</Object><Counter>Processor Transactions</Counter><NodeId>$Target/Property[Type="CookdownCommunity.ServiceNow.Monitoring.ServiceNowNode"]/NodeId$</NodeId></DataSource>
         </DataSources>
         <WriteActions>
           <WriteAction ID="CollectToDB" TypeID="SC!Microsoft.SystemCenter.CollectPerformanceData" />
           <WriteAction ID="CollectToDW" TypeID="MSDL!Microsoft.SystemCenter.DataWarehouse.PublishPerformanceData" />
         </WriteActions>
       </Rule>
-      <Rule ID="CookdownCommunity.ServiceNow.Monitoring.Performance.Servlet_CancelledTransactions" Target="CookdownCommunity.ServiceNow.Monitoring.ServiceNowNode" Enabled="true" ConfirmDelivery="false" Remotable="true" Priority="Normal" DiscardLevel="100">
+      <Rule ID="CookdownCommunity.ServiceNow.Monitoring.Performance.Servlet_CancelledTransactions" Enabled="true" Target="CookdownCommunity.ServiceNow.Monitoring.ServiceNowNode" ConfirmDelivery="false" Remotable="true" Priority="Normal" DiscardLevel="100">
         <Category>PerformanceCollection</Category>
         <DataSources>
-          <DataSource ID="DS" TypeID="CookdownCommunity.ServiceNow.Monitoring.SnowPerformanceDataSource">
-            <InstanceURL>$Target/Host/Property[Type="CookdownCommunity.ServiceNow.Monitoring.ServiceNowInstance"]/URL$</InstanceURL>
-            <Object>Servlet</Object>
-            <Counter>Cancelled Transactions</Counter>
-            <NodeId>$Target/Property[Type="CookdownCommunity.ServiceNow.Monitoring.ServiceNowNode"]/NodeId$</NodeId>
-          </DataSource>
+          <DataSource ID="DS" TypeID="CookdownCommunity.ServiceNow.Monitoring.SnowPerformanceDataSource"><InstanceURL>$Target/Host/Property[Type="CookdownCommunity.ServiceNow.Monitoring.ServiceNowInstance"]/URL$</InstanceURL><Object>Servlet</Object><Counter>Cancelled Transactions</Counter><NodeId>$Target/Property[Type="CookdownCommunity.ServiceNow.Monitoring.ServiceNowNode"]/NodeId$</NodeId></DataSource>
         </DataSources>
         <WriteActions>
           <WriteAction ID="CollectToDB" TypeID="SC!Microsoft.SystemCenter.CollectPerformanceData" />
           <WriteAction ID="CollectToDW" TypeID="MSDL!Microsoft.SystemCenter.DataWarehouse.PublishPerformanceData" />
         </WriteActions>
       </Rule>
-      <Rule ID="CookdownCommunity.ServiceNow.Monitoring.Performance.Servlet_ActiveSessions" Target="CookdownCommunity.ServiceNow.Monitoring.ServiceNowNode" Enabled="true" ConfirmDelivery="false" Remotable="true" Priority="Normal" DiscardLevel="100">
+      <Rule ID="CookdownCommunity.ServiceNow.Monitoring.Performance.Servlet_ActiveSessions" Enabled="true" Target="CookdownCommunity.ServiceNow.Monitoring.ServiceNowNode" ConfirmDelivery="false" Remotable="true" Priority="Normal" DiscardLevel="100">
         <Category>PerformanceCollection</Category>
         <DataSources>
-          <DataSource ID="DS" TypeID="CookdownCommunity.ServiceNow.Monitoring.SnowPerformanceDataSource">
-            <InstanceURL>$Target/Host/Property[Type="CookdownCommunity.ServiceNow.Monitoring.ServiceNowInstance"]/URL$</InstanceURL>
-            <Object>Servlet</Object>
-            <Counter>Active Sessions</Counter>
-            <NodeId>$Target/Property[Type="CookdownCommunity.ServiceNow.Monitoring.ServiceNowNode"]/NodeId$</NodeId>
-          </DataSource>
+          <DataSource ID="DS" TypeID="CookdownCommunity.ServiceNow.Monitoring.SnowPerformanceDataSource"><InstanceURL>$Target/Host/Property[Type="CookdownCommunity.ServiceNow.Monitoring.ServiceNowInstance"]/URL$</InstanceURL><Object>Servlet</Object><Counter>Active Sessions</Counter><NodeId>$Target/Property[Type="CookdownCommunity.ServiceNow.Monitoring.ServiceNowNode"]/NodeId$</NodeId></DataSource>
         </DataSources>
         <WriteActions>
           <WriteAction ID="CollectToDB" TypeID="SC!Microsoft.SystemCenter.CollectPerformanceData" />
           <WriteAction ID="CollectToDW" TypeID="MSDL!Microsoft.SystemCenter.DataWarehouse.PublishPerformanceData" />
         </WriteActions>
       </Rule>
-      <Rule ID="CookdownCommunity.ServiceNow.Monitoring.Performance.Scheduler_WorkerCount" Target="CookdownCommunity.ServiceNow.Monitoring.ServiceNowNode" Enabled="true" ConfirmDelivery="false" Remotable="true" Priority="Normal" DiscardLevel="100">
+      <Rule ID="CookdownCommunity.ServiceNow.Monitoring.Performance.Scheduler_WorkerCount" Enabled="true" Target="CookdownCommunity.ServiceNow.Monitoring.ServiceNowNode" ConfirmDelivery="false" Remotable="true" Priority="Normal" DiscardLevel="100">
         <Category>PerformanceCollection</Category>
         <DataSources>
-          <DataSource ID="DS" TypeID="CookdownCommunity.ServiceNow.Monitoring.SnowPerformanceDataSource">
-            <InstanceURL>$Target/Host/Property[Type="CookdownCommunity.ServiceNow.Monitoring.ServiceNowInstance"]/URL$</InstanceURL>
-            <Object>Scheduler</Object>
-            <Counter>Worker Count</Counter>
-            <NodeId>$Target/Property[Type="CookdownCommunity.ServiceNow.Monitoring.ServiceNowNode"]/NodeId$</NodeId>
-          </DataSource>
+          <DataSource ID="DS" TypeID="CookdownCommunity.ServiceNow.Monitoring.SnowPerformanceDataSource"><InstanceURL>$Target/Host/Property[Type="CookdownCommunity.ServiceNow.Monitoring.ServiceNowInstance"]/URL$</InstanceURL><Object>Scheduler</Object><Counter>Worker Count</Counter><NodeId>$Target/Property[Type="CookdownCommunity.ServiceNow.Monitoring.ServiceNowNode"]/NodeId$</NodeId></DataSource>
         </DataSources>
         <WriteActions>
           <WriteAction ID="CollectToDB" TypeID="SC!Microsoft.SystemCenter.CollectPerformanceData" />
           <WriteAction ID="CollectToDW" TypeID="MSDL!Microsoft.SystemCenter.DataWarehouse.PublishPerformanceData" />
         </WriteActions>
       </Rule>
-      <Rule ID="CookdownCommunity.ServiceNow.Monitoring.Performance.Scheduler_QueueLength" Target="CookdownCommunity.ServiceNow.Monitoring.ServiceNowNode" Enabled="true" ConfirmDelivery="false" Remotable="true" Priority="Normal" DiscardLevel="100">
+      <Rule ID="CookdownCommunity.ServiceNow.Monitoring.Performance.Scheduler_QueueLength" Enabled="true" Target="CookdownCommunity.ServiceNow.Monitoring.ServiceNowNode" ConfirmDelivery="false" Remotable="true" Priority="Normal" DiscardLevel="100">
         <Category>PerformanceCollection</Category>
         <DataSources>
-          <DataSource ID="DS" TypeID="CookdownCommunity.ServiceNow.Monitoring.SnowPerformanceDataSource">
-            <InstanceURL>$Target/Host/Property[Type="CookdownCommunity.ServiceNow.Monitoring.ServiceNowInstance"]/URL$</InstanceURL>
-            <Object>Scheduler</Object>
-            <Counter>Queue Length</Counter>
-            <NodeId>$Target/Property[Type="CookdownCommunity.ServiceNow.Monitoring.ServiceNowNode"]/NodeId$</NodeId>
-          </DataSource>
+          <DataSource ID="DS" TypeID="CookdownCommunity.ServiceNow.Monitoring.SnowPerformanceDataSource"><InstanceURL>$Target/Host/Property[Type="CookdownCommunity.ServiceNow.Monitoring.ServiceNowInstance"]/URL$</InstanceURL><Object>Scheduler</Object><Counter>Queue Length</Counter><NodeId>$Target/Property[Type="CookdownCommunity.ServiceNow.Monitoring.ServiceNowNode"]/NodeId$</NodeId></DataSource>
         </DataSources>
         <WriteActions>
           <WriteAction ID="CollectToDB" TypeID="SC!Microsoft.SystemCenter.CollectPerformanceData" />
           <WriteAction ID="CollectToDW" TypeID="MSDL!Microsoft.SystemCenter.DataWarehouse.PublishPerformanceData" />
         </WriteActions>
       </Rule>
-      <Rule ID="CookdownCommunity.ServiceNow.Monitoring.Performance.Scheduler_MeanQueueAge" Target="CookdownCommunity.ServiceNow.Monitoring.ServiceNowNode" Enabled="true" ConfirmDelivery="false" Remotable="true" Priority="Normal" DiscardLevel="100">
+      <Rule ID="CookdownCommunity.ServiceNow.Monitoring.Performance.Scheduler_MeanQueueAge" Enabled="true" Target="CookdownCommunity.ServiceNow.Monitoring.ServiceNowNode" ConfirmDelivery="false" Remotable="true" Priority="Normal" DiscardLevel="100">
         <Category>PerformanceCollection</Category>
         <DataSources>
-          <DataSource ID="DS" TypeID="CookdownCommunity.ServiceNow.Monitoring.SnowPerformanceDataSource">
-            <InstanceURL>$Target/Host/Property[Type="CookdownCommunity.ServiceNow.Monitoring.ServiceNowInstance"]/URL$</InstanceURL>
-            <Object>Scheduler</Object>
-            <Counter>Mean Queue Age</Counter>
-            <NodeId>$Target/Property[Type="CookdownCommunity.ServiceNow.Monitoring.ServiceNowNode"]/NodeId$</NodeId>
-          </DataSource>
+          <DataSource ID="DS" TypeID="CookdownCommunity.ServiceNow.Monitoring.SnowPerformanceDataSource"><InstanceURL>$Target/Host/Property[Type="CookdownCommunity.ServiceNow.Monitoring.ServiceNowInstance"]/URL$</InstanceURL><Object>Scheduler</Object><Counter>Mean Queue Age</Counter><NodeId>$Target/Property[Type="CookdownCommunity.ServiceNow.Monitoring.ServiceNowNode"]/NodeId$</NodeId></DataSource>
         </DataSources>
         <WriteActions>
           <WriteAction ID="CollectToDB" TypeID="SC!Microsoft.SystemCenter.CollectPerformanceData" />
           <WriteAction ID="CollectToDW" TypeID="MSDL!Microsoft.SystemCenter.DataWarehouse.PublishPerformanceData" />
         </WriteActions>
       </Rule>
-      <Rule ID="CookdownCommunity.ServiceNow.Monitoring.Performance.Scheduler_TotalJobs" Target="CookdownCommunity.ServiceNow.Monitoring.ServiceNowNode" Enabled="true" ConfirmDelivery="false" Remotable="true" Priority="Normal" DiscardLevel="100">
+      <Rule ID="CookdownCommunity.ServiceNow.Monitoring.Performance.Scheduler_TotalJobs" Enabled="true" Target="CookdownCommunity.ServiceNow.Monitoring.ServiceNowNode" ConfirmDelivery="false" Remotable="true" Priority="Normal" DiscardLevel="100">
         <Category>PerformanceCollection</Category>
         <DataSources>
-          <DataSource ID="DS" TypeID="CookdownCommunity.ServiceNow.Monitoring.SnowPerformanceDataSource">
-            <InstanceURL>$Target/Host/Property[Type="CookdownCommunity.ServiceNow.Monitoring.ServiceNowInstance"]/URL$</InstanceURL>
-            <Object>Scheduler</Object>
-            <Counter>Total Jobs</Counter>
-            <NodeId>$Target/Property[Type="CookdownCommunity.ServiceNow.Monitoring.ServiceNowNode"]/NodeId$</NodeId>
-          </DataSource>
+          <DataSource ID="DS" TypeID="CookdownCommunity.ServiceNow.Monitoring.SnowPerformanceDataSource"><InstanceURL>$Target/Host/Property[Type="CookdownCommunity.ServiceNow.Monitoring.ServiceNowInstance"]/URL$</InstanceURL><Object>Scheduler</Object><Counter>Total Jobs</Counter><NodeId>$Target/Property[Type="CookdownCommunity.ServiceNow.Monitoring.ServiceNowNode"]/NodeId$</NodeId></DataSource>
         </DataSources>
         <WriteActions>
           <WriteAction ID="CollectToDB" TypeID="SC!Microsoft.SystemCenter.CollectPerformanceData" />
           <WriteAction ID="CollectToDW" TypeID="MSDL!Microsoft.SystemCenter.DataWarehouse.PublishPerformanceData" />
         </WriteActions>
       </Rule>
-      <Rule ID="CookdownCommunity.ServiceNow.Monitoring.Performance.Scheduler_TotalBurstWorkers" Target="CookdownCommunity.ServiceNow.Monitoring.ServiceNowNode" Enabled="true" ConfirmDelivery="false" Remotable="true" Priority="Normal" DiscardLevel="100">
+      <Rule ID="CookdownCommunity.ServiceNow.Monitoring.Performance.Scheduler_TotalBurstWorkers" Enabled="true" Target="CookdownCommunity.ServiceNow.Monitoring.ServiceNowNode" ConfirmDelivery="false" Remotable="true" Priority="Normal" DiscardLevel="100">
         <Category>PerformanceCollection</Category>
         <DataSources>
-          <DataSource ID="DS" TypeID="CookdownCommunity.ServiceNow.Monitoring.SnowPerformanceDataSource">
-            <InstanceURL>$Target/Host/Property[Type="CookdownCommunity.ServiceNow.Monitoring.ServiceNowInstance"]/URL$</InstanceURL>
-            <Object>Scheduler</Object>
-            <Counter>Total Burst Workers</Counter>
-            <NodeId>$Target/Property[Type="CookdownCommunity.ServiceNow.Monitoring.ServiceNowNode"]/NodeId$</NodeId>
-          </DataSource>
+          <DataSource ID="DS" TypeID="CookdownCommunity.ServiceNow.Monitoring.SnowPerformanceDataSource"><InstanceURL>$Target/Host/Property[Type="CookdownCommunity.ServiceNow.Monitoring.ServiceNowInstance"]/URL$</InstanceURL><Object>Scheduler</Object><Counter>Total Burst Workers</Counter><NodeId>$Target/Property[Type="CookdownCommunity.ServiceNow.Monitoring.ServiceNowNode"]/NodeId$</NodeId></DataSource>
         </DataSources>
         <WriteActions>
           <WriteAction ID="CollectToDB" TypeID="SC!Microsoft.SystemCenter.CollectPerformanceData" />
           <WriteAction ID="CollectToDW" TypeID="MSDL!Microsoft.SystemCenter.DataWarehouse.PublishPerformanceData" />
         </WriteActions>
       </Rule>
-      <Rule ID="CookdownCommunity.ServiceNow.Monitoring.Performance.GlidePoolDB_Selects" Target="CookdownCommunity.ServiceNow.Monitoring.ServiceNowNode" Enabled="true" ConfirmDelivery="false" Remotable="true" Priority="Normal" DiscardLevel="100">
+      <Rule ID="CookdownCommunity.ServiceNow.Monitoring.Performance.GlidePoolDB_Selects" Enabled="true" Target="CookdownCommunity.ServiceNow.Monitoring.ServiceNowNode" ConfirmDelivery="false" Remotable="true" Priority="Normal" DiscardLevel="100">
         <Category>PerformanceCollection</Category>
         <DataSources>
-          <DataSource ID="DS" TypeID="CookdownCommunity.ServiceNow.Monitoring.SnowPerformanceDataSource">
-            <InstanceURL>$Target/Host/Property[Type="CookdownCommunity.ServiceNow.Monitoring.ServiceNowInstance"]/URL$</InstanceURL>
-            <Object>Glide Pool DB</Object>
-            <Counter>Selects</Counter>
-            <NodeId>$Target/Property[Type="CookdownCommunity.ServiceNow.Monitoring.ServiceNowNode"]/NodeId$</NodeId>
-          </DataSource>
+          <DataSource ID="DS" TypeID="CookdownCommunity.ServiceNow.Monitoring.SnowPerformanceDataSource"><InstanceURL>$Target/Host/Property[Type="CookdownCommunity.ServiceNow.Monitoring.ServiceNowInstance"]/URL$</InstanceURL><Object>Glide Pool DB</Object><Counter>Selects</Counter><NodeId>$Target/Property[Type="CookdownCommunity.ServiceNow.Monitoring.ServiceNowNode"]/NodeId$</NodeId></DataSource>
         </DataSources>
         <WriteActions>
           <WriteAction ID="CollectToDB" TypeID="SC!Microsoft.SystemCenter.CollectPerformanceData" />
           <WriteAction ID="CollectToDW" TypeID="MSDL!Microsoft.SystemCenter.DataWarehouse.PublishPerformanceData" />
         </WriteActions>
       </Rule>
-      <Rule ID="CookdownCommunity.ServiceNow.Monitoring.Performance.GlidePoolDB_SelectsOver1Second" Target="CookdownCommunity.ServiceNow.Monitoring.ServiceNowNode" Enabled="true" ConfirmDelivery="false" Remotable="true" Priority="Normal" DiscardLevel="100">
+      <Rule ID="CookdownCommunity.ServiceNow.Monitoring.Performance.GlidePoolDB_SelectsOver1Second" Enabled="true" Target="CookdownCommunity.ServiceNow.Monitoring.ServiceNowNode" ConfirmDelivery="false" Remotable="true" Priority="Normal" DiscardLevel="100">
         <Category>PerformanceCollection</Category>
         <DataSources>
-          <DataSource ID="DS" TypeID="CookdownCommunity.ServiceNow.Monitoring.SnowPerformanceDataSource">
-            <InstanceURL>$Target/Host/Property[Type="CookdownCommunity.ServiceNow.Monitoring.ServiceNowInstance"]/URL$</InstanceURL>
-            <Object>Glide Pool DB</Object>
-            <Counter>Selects (Over 1 Second)</Counter>
-            <NodeId>$Target/Property[Type="CookdownCommunity.ServiceNow.Monitoring.ServiceNowNode"]/NodeId$</NodeId>
-          </DataSource>
+          <DataSource ID="DS" TypeID="CookdownCommunity.ServiceNow.Monitoring.SnowPerformanceDataSource"><InstanceURL>$Target/Host/Property[Type="CookdownCommunity.ServiceNow.Monitoring.ServiceNowInstance"]/URL$</InstanceURL><Object>Glide Pool DB</Object><Counter>Selects (Over 1 Second)</Counter><NodeId>$Target/Property[Type="CookdownCommunity.ServiceNow.Monitoring.ServiceNowNode"]/NodeId$</NodeId></DataSource>
         </DataSources>
         <WriteActions>
           <WriteAction ID="CollectToDB" TypeID="SC!Microsoft.SystemCenter.CollectPerformanceData" />
           <WriteAction ID="CollectToDW" TypeID="MSDL!Microsoft.SystemCenter.DataWarehouse.PublishPerformanceData" />
         </WriteActions>
       </Rule>
-      <Rule ID="CookdownCommunity.ServiceNow.Monitoring.Performance.GlidePoolDB_SelectsOver10Seconds" Target="CookdownCommunity.ServiceNow.Monitoring.ServiceNowNode" Enabled="true" ConfirmDelivery="false" Remotable="true" Priority="Normal" DiscardLevel="100">
+      <Rule ID="CookdownCommunity.ServiceNow.Monitoring.Performance.GlidePoolDB_SelectsOver10Seconds" Enabled="true" Target="CookdownCommunity.ServiceNow.Monitoring.ServiceNowNode" ConfirmDelivery="false" Remotable="true" Priority="Normal" DiscardLevel="100">
         <Category>PerformanceCollection</Category>
         <DataSources>
-          <DataSource ID="DS" TypeID="CookdownCommunity.ServiceNow.Monitoring.SnowPerformanceDataSource">
-            <InstanceURL>$Target/Host/Property[Type="CookdownCommunity.ServiceNow.Monitoring.ServiceNowInstance"]/URL$</InstanceURL>
-            <Object>Glide Pool DB</Object>
-            <Counter>Selects (Over 10 Sec)</Counter>
-            <NodeId>$Target/Property[Type="CookdownCommunity.ServiceNow.Monitoring.ServiceNowNode"]/NodeId$</NodeId>
-          </DataSource>
+          <DataSource ID="DS" TypeID="CookdownCommunity.ServiceNow.Monitoring.SnowPerformanceDataSource"><InstanceURL>$Target/Host/Property[Type="CookdownCommunity.ServiceNow.Monitoring.ServiceNowInstance"]/URL$</InstanceURL><Object>Glide Pool DB</Object><Counter>Selects (Over 10 Sec)</Counter><NodeId>$Target/Property[Type="CookdownCommunity.ServiceNow.Monitoring.ServiceNowNode"]/NodeId$</NodeId></DataSource>
         </DataSources>
         <WriteActions>
           <WriteAction ID="CollectToDB" TypeID="SC!Microsoft.SystemCenter.CollectPerformanceData" />
           <WriteAction ID="CollectToDW" TypeID="MSDL!Microsoft.SystemCenter.DataWarehouse.PublishPerformanceData" />
         </WriteActions>
       </Rule>
-      <Rule ID="CookdownCommunity.ServiceNow.Monitoring.Performance.GlidePoolDB_Deletes" Target="CookdownCommunity.ServiceNow.Monitoring.ServiceNowNode" Enabled="true" ConfirmDelivery="false" Remotable="true" Priority="Normal" DiscardLevel="100">
+      <Rule ID="CookdownCommunity.ServiceNow.Monitoring.Performance.GlidePoolDB_Deletes" Enabled="true" Target="CookdownCommunity.ServiceNow.Monitoring.ServiceNowNode" ConfirmDelivery="false" Remotable="true" Priority="Normal" DiscardLevel="100">
         <Category>PerformanceCollection</Category>
         <DataSources>
-          <DataSource ID="DS" TypeID="CookdownCommunity.ServiceNow.Monitoring.SnowPerformanceDataSource">
-            <InstanceURL>$Target/Host/Property[Type="CookdownCommunity.ServiceNow.Monitoring.ServiceNowInstance"]/URL$</InstanceURL>
-            <Object>Glide Pool DB</Object>
-            <Counter>Deletes</Counter>
-            <NodeId>$Target/Property[Type="CookdownCommunity.ServiceNow.Monitoring.ServiceNowNode"]/NodeId$</NodeId>
-          </DataSource>
+          <DataSource ID="DS" TypeID="CookdownCommunity.ServiceNow.Monitoring.SnowPerformanceDataSource"><InstanceURL>$Target/Host/Property[Type="CookdownCommunity.ServiceNow.Monitoring.ServiceNowInstance"]/URL$</InstanceURL><Object>Glide Pool DB</Object><Counter>Deletes</Counter><NodeId>$Target/Property[Type="CookdownCommunity.ServiceNow.Monitoring.ServiceNowNode"]/NodeId$</NodeId></DataSource>
         </DataSources>
         <WriteActions>
           <WriteAction ID="CollectToDB" TypeID="SC!Microsoft.SystemCenter.CollectPerformanceData" />
           <WriteAction ID="CollectToDW" TypeID="MSDL!Microsoft.SystemCenter.DataWarehouse.PublishPerformanceData" />
         </WriteActions>
       </Rule>
-      <Rule ID="CookdownCommunity.ServiceNow.Monitoring.Performance.GlidePoolDB_Inserts" Target="CookdownCommunity.ServiceNow.Monitoring.ServiceNowNode" Enabled="true" ConfirmDelivery="false" Remotable="true" Priority="Normal" DiscardLevel="100">
+      <Rule ID="CookdownCommunity.ServiceNow.Monitoring.Performance.GlidePoolDB_Inserts" Enabled="true" Target="CookdownCommunity.ServiceNow.Monitoring.ServiceNowNode" ConfirmDelivery="false" Remotable="true" Priority="Normal" DiscardLevel="100">
         <Category>PerformanceCollection</Category>
         <DataSources>
-          <DataSource ID="DS" TypeID="CookdownCommunity.ServiceNow.Monitoring.SnowPerformanceDataSource">
-            <InstanceURL>$Target/Host/Property[Type="CookdownCommunity.ServiceNow.Monitoring.ServiceNowInstance"]/URL$</InstanceURL>
-            <Object>Glide Pool DB</Object>
-            <Counter>Inserts</Counter>
-            <NodeId>$Target/Property[Type="CookdownCommunity.ServiceNow.Monitoring.ServiceNowNode"]/NodeId$</NodeId>
-          </DataSource>
+          <DataSource ID="DS" TypeID="CookdownCommunity.ServiceNow.Monitoring.SnowPerformanceDataSource"><InstanceURL>$Target/Host/Property[Type="CookdownCommunity.ServiceNow.Monitoring.ServiceNowInstance"]/URL$</InstanceURL><Object>Glide Pool DB</Object><Counter>Inserts</Counter><NodeId>$Target/Property[Type="CookdownCommunity.ServiceNow.Monitoring.ServiceNowNode"]/NodeId$</NodeId></DataSource>
         </DataSources>
         <WriteActions>
           <WriteAction ID="CollectToDB" TypeID="SC!Microsoft.SystemCenter.CollectPerformanceData" />
           <WriteAction ID="CollectToDW" TypeID="MSDL!Microsoft.SystemCenter.DataWarehouse.PublishPerformanceData" />
         </WriteActions>
       </Rule>
-      <Rule ID="CookdownCommunity.ServiceNow.Monitoring.Performance.GlidePoolDB_Updates" Target="CookdownCommunity.ServiceNow.Monitoring.ServiceNowNode" Enabled="true" ConfirmDelivery="false" Remotable="true" Priority="Normal" DiscardLevel="100">
+      <Rule ID="CookdownCommunity.ServiceNow.Monitoring.Performance.GlidePoolDB_Updates" Enabled="true" Target="CookdownCommunity.ServiceNow.Monitoring.ServiceNowNode" ConfirmDelivery="false" Remotable="true" Priority="Normal" DiscardLevel="100">
         <Category>PerformanceCollection</Category>
         <DataSources>
-          <DataSource ID="DS" TypeID="CookdownCommunity.ServiceNow.Monitoring.SnowPerformanceDataSource">
-            <InstanceURL>$Target/Host/Property[Type="CookdownCommunity.ServiceNow.Monitoring.ServiceNowInstance"]/URL$</InstanceURL>
-            <Object>Glide Pool DB</Object>
-            <Counter>Updates</Counter>
-            <NodeId>$Target/Property[Type="CookdownCommunity.ServiceNow.Monitoring.ServiceNowNode"]/NodeId$</NodeId>
-          </DataSource>
+          <DataSource ID="DS" TypeID="CookdownCommunity.ServiceNow.Monitoring.SnowPerformanceDataSource"><InstanceURL>$Target/Host/Property[Type="CookdownCommunity.ServiceNow.Monitoring.ServiceNowInstance"]/URL$</InstanceURL><Object>Glide Pool DB</Object><Counter>Updates</Counter><NodeId>$Target/Property[Type="CookdownCommunity.ServiceNow.Monitoring.ServiceNowNode"]/NodeId$</NodeId></DataSource>
         </DataSources>
         <WriteActions>
           <WriteAction ID="CollectToDB" TypeID="SC!Microsoft.SystemCenter.CollectPerformanceData" />
           <WriteAction ID="CollectToDW" TypeID="MSDL!Microsoft.SystemCenter.DataWarehouse.PublishPerformanceData" />
         </WriteActions>
       </Rule>
-      <Rule ID="CookdownCommunity.ServiceNow.Monitoring.Performance.JVM_ClassesLoaded" Target="CookdownCommunity.ServiceNow.Monitoring.ServiceNowNode" Enabled="true" ConfirmDelivery="false" Remotable="true" Priority="Normal" DiscardLevel="100">
+      <Rule ID="CookdownCommunity.ServiceNow.Monitoring.Performance.JVM_ClassesLoaded" Enabled="true" Target="CookdownCommunity.ServiceNow.Monitoring.ServiceNowNode" ConfirmDelivery="false" Remotable="true" Priority="Normal" DiscardLevel="100">
         <Category>PerformanceCollection</Category>
         <DataSources>
-          <DataSource ID="DS" TypeID="CookdownCommunity.ServiceNow.Monitoring.SnowPerformanceDataSource">
-            <InstanceURL>$Target/Host/Property[Type="CookdownCommunity.ServiceNow.Monitoring.ServiceNowInstance"]/URL$</InstanceURL>
-            <Object>JVM</Object>
-            <Counter>Classes Loaded</Counter>
-            <NodeId>$Target/Property[Type="CookdownCommunity.ServiceNow.Monitoring.ServiceNowNode"]/NodeId$</NodeId>
-          </DataSource>
+          <DataSource ID="DS" TypeID="CookdownCommunity.ServiceNow.Monitoring.SnowPerformanceDataSource"><InstanceURL>$Target/Host/Property[Type="CookdownCommunity.ServiceNow.Monitoring.ServiceNowInstance"]/URL$</InstanceURL><Object>JVM</Object><Counter>Classes Loaded</Counter><NodeId>$Target/Property[Type="CookdownCommunity.ServiceNow.Monitoring.ServiceNowNode"]/NodeId$</NodeId></DataSource>
         </DataSources>
         <WriteActions>
           <WriteAction ID="CollectToDB" TypeID="SC!Microsoft.SystemCenter.CollectPerformanceData" />
           <WriteAction ID="CollectToDW" TypeID="MSDL!Microsoft.SystemCenter.DataWarehouse.PublishPerformanceData" />
         </WriteActions>
       </Rule>
-      <Rule ID="CookdownCommunity.ServiceNow.Monitoring.Performance.JVM_ClassesUnloaded" Target="CookdownCommunity.ServiceNow.Monitoring.ServiceNowNode" Enabled="true" ConfirmDelivery="false" Remotable="true" Priority="Normal" DiscardLevel="100">
+      <Rule ID="CookdownCommunity.ServiceNow.Monitoring.Performance.JVM_ClassesUnloaded" Enabled="true" Target="CookdownCommunity.ServiceNow.Monitoring.ServiceNowNode" ConfirmDelivery="false" Remotable="true" Priority="Normal" DiscardLevel="100">
         <Category>PerformanceCollection</Category>
         <DataSources>
-          <DataSource ID="DS" TypeID="CookdownCommunity.ServiceNow.Monitoring.SnowPerformanceDataSource">
-            <InstanceURL>$Target/Host/Property[Type="CookdownCommunity.ServiceNow.Monitoring.ServiceNowInstance"]/URL$</InstanceURL>
-            <Object>JVM</Object>
-            <Counter>Classes Unloaded</Counter>
-            <NodeId>$Target/Property[Type="CookdownCommunity.ServiceNow.Monitoring.ServiceNowNode"]/NodeId$</NodeId>
-          </DataSource>
+          <DataSource ID="DS" TypeID="CookdownCommunity.ServiceNow.Monitoring.SnowPerformanceDataSource"><InstanceURL>$Target/Host/Property[Type="CookdownCommunity.ServiceNow.Monitoring.ServiceNowInstance"]/URL$</InstanceURL><Object>JVM</Object><Counter>Classes Unloaded</Counter><NodeId>$Target/Property[Type="CookdownCommunity.ServiceNow.Monitoring.ServiceNowNode"]/NodeId$</NodeId></DataSource>
         </DataSources>
         <WriteActions>
           <WriteAction ID="CollectToDB" TypeID="SC!Microsoft.SystemCenter.CollectPerformanceData" />
           <WriteAction ID="CollectToDW" TypeID="MSDL!Microsoft.SystemCenter.DataWarehouse.PublishPerformanceData" />
         </WriteActions>
       </Rule>
-      <Rule ID="CookdownCommunity.ServiceNow.Monitoring.Performance.Users_EndUsers" Target="CookdownCommunity.ServiceNow.Monitoring.ServiceNowNode" Enabled="true" ConfirmDelivery="false" Remotable="true" Priority="Normal" DiscardLevel="100">
+      <Rule ID="CookdownCommunity.ServiceNow.Monitoring.Performance.Users_EndUsers" Enabled="true" Target="CookdownCommunity.ServiceNow.Monitoring.ServiceNowNode" ConfirmDelivery="false" Remotable="true" Priority="Normal" DiscardLevel="100">
         <Category>PerformanceCollection</Category>
         <DataSources>
-          <DataSource ID="DS" TypeID="CookdownCommunity.ServiceNow.Monitoring.SnowPerformanceDataSource">
-            <InstanceURL>$Target/Host/Property[Type="CookdownCommunity.ServiceNow.Monitoring.ServiceNowInstance"]/URL$</InstanceURL>
-            <Object>Users</Object>
-            <Counter>End Users</Counter>
-            <NodeId>$Target/Property[Type="CookdownCommunity.ServiceNow.Monitoring.ServiceNowNode"]/NodeId$</NodeId>
-          </DataSource>
+          <DataSource ID="DS" TypeID="CookdownCommunity.ServiceNow.Monitoring.SnowPerformanceDataSource"><InstanceURL>$Target/Host/Property[Type="CookdownCommunity.ServiceNow.Monitoring.ServiceNowInstance"]/URL$</InstanceURL><Object>Users</Object><Counter>End Users</Counter><NodeId>$Target/Property[Type="CookdownCommunity.ServiceNow.Monitoring.ServiceNowNode"]/NodeId$</NodeId></DataSource>
         </DataSources>
         <WriteActions>
           <WriteAction ID="CollectToDB" TypeID="SC!Microsoft.SystemCenter.CollectPerformanceData" />
           <WriteAction ID="CollectToDW" TypeID="MSDL!Microsoft.SystemCenter.DataWarehouse.PublishPerformanceData" />
         </WriteActions>
       </Rule>
-      <Rule ID="CookdownCommunity.ServiceNow.Monitoring.Performance.Users_LoggedIn" Target="CookdownCommunity.ServiceNow.Monitoring.ServiceNowNode" Enabled="true" ConfirmDelivery="false" Remotable="true" Priority="Normal" DiscardLevel="100">
+      <Rule ID="CookdownCommunity.ServiceNow.Monitoring.Performance.Users_LoggedIn" Enabled="true" Target="CookdownCommunity.ServiceNow.Monitoring.ServiceNowNode" ConfirmDelivery="false" Remotable="true" Priority="Normal" DiscardLevel="100">
         <Category>PerformanceCollection</Category>
         <DataSources>
-          <DataSource ID="DS" TypeID="CookdownCommunity.ServiceNow.Monitoring.SnowPerformanceDataSource">
-            <InstanceURL>$Target/Host/Property[Type="CookdownCommunity.ServiceNow.Monitoring.ServiceNowInstance"]/URL$</InstanceURL>
-            <Object>Users</Object>
-            <Counter>Logged In</Counter>
-            <NodeId>$Target/Property[Type="CookdownCommunity.ServiceNow.Monitoring.ServiceNowNode"]/NodeId$</NodeId>
-          </DataSource>
+          <DataSource ID="DS" TypeID="CookdownCommunity.ServiceNow.Monitoring.SnowPerformanceDataSource"><InstanceURL>$Target/Host/Property[Type="CookdownCommunity.ServiceNow.Monitoring.ServiceNowInstance"]/URL$</InstanceURL><Object>Users</Object><Counter>Logged In</Counter><NodeId>$Target/Property[Type="CookdownCommunity.ServiceNow.Monitoring.ServiceNowNode"]/NodeId$</NodeId></DataSource>
         </DataSources>
         <WriteActions>
           <WriteAction ID="CollectToDB" TypeID="SC!Microsoft.SystemCenter.CollectPerformanceData" />
           <WriteAction ID="CollectToDW" TypeID="MSDL!Microsoft.SystemCenter.DataWarehouse.PublishPerformanceData" />
         </WriteActions>
       </Rule>
-      <Rule ID="CookdownCommunity.ServiceNow.Monitoring.Performance.Users_Total" Target="CookdownCommunity.ServiceNow.Monitoring.ServiceNowNode" Enabled="true" ConfirmDelivery="false" Remotable="true" Priority="Normal" DiscardLevel="100">
+      <Rule ID="CookdownCommunity.ServiceNow.Monitoring.Performance.Users_Total" Enabled="true" Target="CookdownCommunity.ServiceNow.Monitoring.ServiceNowNode" ConfirmDelivery="false" Remotable="true" Priority="Normal" DiscardLevel="100">
         <Category>PerformanceCollection</Category>
         <DataSources>
-          <DataSource ID="DS" TypeID="CookdownCommunity.ServiceNow.Monitoring.SnowPerformanceDataSource">
-            <InstanceURL>$Target/Host/Property[Type="CookdownCommunity.ServiceNow.Monitoring.ServiceNowInstance"]/URL$</InstanceURL>
-            <Object>Users</Object>
-            <Counter>Total</Counter>
-            <NodeId>$Target/Property[Type="CookdownCommunity.ServiceNow.Monitoring.ServiceNowNode"]/NodeId$</NodeId>
-          </DataSource>
+          <DataSource ID="DS" TypeID="CookdownCommunity.ServiceNow.Monitoring.SnowPerformanceDataSource"><InstanceURL>$Target/Host/Property[Type="CookdownCommunity.ServiceNow.Monitoring.ServiceNowInstance"]/URL$</InstanceURL><Object>Users</Object><Counter>Total</Counter><NodeId>$Target/Property[Type="CookdownCommunity.ServiceNow.Monitoring.ServiceNowNode"]/NodeId$</NodeId></DataSource>
         </DataSources>
         <WriteActions>
           <WriteAction ID="CollectToDB" TypeID="SC!Microsoft.SystemCenter.CollectPerformanceData" />
@@ -1442,16 +969,9 @@ catch
       <Rule ID="CookdownCommunity.ServiceNow.Monitoring.HttpsTCPPortTest.ConnectionTime" Enabled="true" Target="CookdownCommunity.ServiceNow.Monitoring.WatcherNode" ConfirmDelivery="false" Remotable="true" Priority="Normal" DiscardLevel="100">
         <Category>PerformanceCollection</Category>
         <DataSources>
-          <DataSource ID="DS1" TypeID="CookdownCommunity.ServiceNow.Monitoring.TCPPortCheckDataSource">
-            <InstanceUrlBase>$Target/Property[Type="CookdownCommunity.ServiceNow.Monitoring.WatcherNode"]/InstanceUrlBase$</InstanceUrlBase>
-          </DataSource>
+          <DataSource ID="DS1" TypeID="CookdownCommunity.ServiceNow.Monitoring.TCPPortCheckDataSource"><InstanceUrlBase>$Target/Property[Type="CookdownCommunity.ServiceNow.Monitoring.WatcherNode"]/InstanceUrlBase$</InstanceUrlBase></DataSource>
         </DataSources>
-        <ConditionDetection ID="PerfMapper" TypeID="Perf!System.Performance.DataGenericMapper">
-          <ObjectName>TCP Port Check</ObjectName>
-          <CounterName>Connection Time</CounterName>
-          <InstanceName>$Data/ServerName$:$Data/Port$</InstanceName>
-          <Value>$Data/ConnectionTime$</Value>
-        </ConditionDetection>
+        <ConditionDetection ID="PerfMapper" TypeID="Perf!System.Performance.DataGenericMapper"><ObjectName>TCP Port Check</ObjectName><CounterName>Connection Time</CounterName><InstanceName>$Data/ServerName$:$Data/Port$</InstanceName><Value>$Data/ConnectionTime$</Value></ConditionDetection>
         <WriteActions>
           <WriteAction ID="CollectToDB" TypeID="SC!Microsoft.SystemCenter.CollectPerformanceData" />
           <WriteAction ID="CollectToDW" TypeID="MSDL!Microsoft.SystemCenter.DataWarehouse.PublishPerformanceData" />
@@ -1465,13 +985,7 @@ catch
           <OperationalState ID="UnderThreshold" MonitorTypeStateID="UnderThreshold" HealthState="Success" />
           <OperationalState ID="OverThreshold" MonitorTypeStateID="OverThreshold" HealthState="Warning" />
         </OperationalStates>
-        <Configuration>
-          <InstanceURL>$Target/Property[Type="CookdownCommunity.ServiceNow.Monitoring.ServiceNowInstance"]/URL$</InstanceURL>
-          <Object>Connection</Object>
-          <Counter>Fetch Time (MS)</Counter>
-          <NodeId>NONE</NodeId>
-          <Threshold>3500</Threshold>
-        </Configuration>
+        <Configuration><InstanceURL>$Target/Property[Type="CookdownCommunity.ServiceNow.Monitoring.ServiceNowInstance"]/URL$</InstanceURL><Object>Connection</Object><Counter>Fetch Time (MS)</Counter><NodeId>NONE</NodeId><Threshold>3500</Threshold></Configuration>
       </UnitMonitor>
       <UnitMonitor ID="CookdownCommunity.ServiceNow.Monitoring.NodeMemoryUtilization" Accessibility="Internal" Enabled="true" Target="CookdownCommunity.ServiceNow.Monitoring.ServiceNowNode" ParentMonitorID="Health!System.Health.PerformanceState" Remotable="true" Priority="Normal" TypeID="CookdownCommunity.ServiceNow.Monitoring.PerformanceThreshold" ConfirmDelivery="false">
         <Category>AvailabilityHealth</Category>
@@ -1485,13 +999,7 @@ catch
           <OperationalState ID="UnderThreshold" MonitorTypeStateID="UnderThreshold" HealthState="Success" />
           <OperationalState ID="OverThreshold" MonitorTypeStateID="OverThreshold" HealthState="Error" />
         </OperationalStates>
-        <Configuration>
-          <InstanceURL>$Target/Host/Property[Type="CookdownCommunity.ServiceNow.Monitoring.ServiceNowInstance"]/URL$</InstanceURL>
-          <Object>Memory</Object>
-          <Counter>Percent Free</Counter>
-          <NodeId>$Target/Property[Type="CookdownCommunity.ServiceNow.Monitoring.ServiceNowNode"]/NodeId$</NodeId>
-          <Threshold>90</Threshold>
-        </Configuration>
+        <Configuration><InstanceURL>$Target/Host/Property[Type="CookdownCommunity.ServiceNow.Monitoring.ServiceNowInstance"]/URL$</InstanceURL><Object>Memory</Object><Counter>Percent Free</Counter><NodeId>$Target/Property[Type="CookdownCommunity.ServiceNow.Monitoring.ServiceNowNode"]/NodeId$</NodeId><Threshold>90</Threshold></Configuration>
       </UnitMonitor>
       <UnitMonitor ID="CookdownCommunity.ServiceNow.Monitoring.NodeScheduleQueue" Accessibility="Internal" Enabled="true" Target="CookdownCommunity.ServiceNow.Monitoring.ServiceNowNode" ParentMonitorID="Health!System.Health.PerformanceState" Remotable="true" Priority="Normal" TypeID="CookdownCommunity.ServiceNow.Monitoring.PerformanceThreshold" ConfirmDelivery="false">
         <Category>AvailabilityHealth</Category>
@@ -1499,13 +1007,7 @@ catch
           <OperationalState ID="UnderThreshold" MonitorTypeStateID="UnderThreshold" HealthState="Success" />
           <OperationalState ID="OverThreshold" MonitorTypeStateID="OverThreshold" HealthState="Warning" />
         </OperationalStates>
-        <Configuration>
-          <InstanceURL>$Target/Host/Property[Type="CookdownCommunity.ServiceNow.Monitoring.ServiceNowInstance"]/URL$</InstanceURL>
-          <Object>Scheduler</Object>
-          <Counter>Queue Length</Counter>
-          <NodeId>$Target/Property[Type="CookdownCommunity.ServiceNow.Monitoring.ServiceNowNode"]/NodeId$</NodeId>
-          <Threshold>3</Threshold>
-        </Configuration>
+        <Configuration><InstanceURL>$Target/Host/Property[Type="CookdownCommunity.ServiceNow.Monitoring.ServiceNowInstance"]/URL$</InstanceURL><Object>Scheduler</Object><Counter>Queue Length</Counter><NodeId>$Target/Property[Type="CookdownCommunity.ServiceNow.Monitoring.ServiceNowNode"]/NodeId$</NodeId><Threshold>3</Threshold></Configuration>
       </UnitMonitor>
       <UnitMonitor ID="CookdownCommunity.ServiceNow.Monitoring.HttpsTCPPortTest.TimeOutMonitor" Accessibility="Public" Enabled="true" Target="CookdownCommunity.ServiceNow.Monitoring.WatcherNode" ParentMonitorID="Health!System.Health.AvailabilityState" Remotable="true" Priority="Normal" TypeID="CookdownCommunity.ServiceNow.Monitoring.HttpsTCPPortTest.TimeOut" ConfirmDelivery="false">
         <Category>PerformanceHealth</Category>
@@ -1950,181 +1452,16 @@ catch
       </DisplayStrings>
       <KnowledgeArticles>
         <KnowledgeArticle ElementID="CookdownCommunity.ServiceNow.Monitoring.HttpsTCPPortTest.TimeOutMonitor" Visible="true">
-          <MamlContent>
-            <maml:section xmlns="http://schemas.microsoft.com/maml/2004/10" xmlns:maml="http://schemas.microsoft.com/maml/2004/10">
-              <maml:title>Summary</maml:title>
-              <maml:para>Connecting to the target part timed out.</maml:para>
-            </maml:section>
-            <maml:section xmlns="http://schemas.microsoft.com/maml/2004/10" xmlns:maml="http://schemas.microsoft.com/maml/2004/10">
-              <maml:title>Causes</maml:title>
-              <maml:para>This can happen for a few reasons:</maml:para>
-              <maml:para />
-              <maml:list>
-                <maml:listItem>
-                  <maml:para>The target computer is offline</maml:para>
-                </maml:listItem>
-                <maml:listItem>
-                  <maml:para>There is a firewall between the watcher node and the target IP or device</maml:para>
-                </maml:listItem>
-                <maml:listItem>
-                  <maml:para>IPSec is required between the watcher node and the target IP or device</maml:para>
-                </maml:listItem>
-                <maml:listItem>
-                  <maml:para>The target IP:Port is actually not available</maml:para>
-                </maml:listItem>
-              </maml:list>
-            </maml:section>
-            <maml:section xmlns="http://schemas.microsoft.com/maml/2004/10" xmlns:maml="http://schemas.microsoft.com/maml/2004/10">
-              <maml:title>Resolutions</maml:title>
-              <maml:para>Try the following troubleshooting steps to attempt to fix the problem</maml:para>
-              <maml:para />
-              <maml:list>
-                <maml:listItem>
-                  <maml:para>Ping the target computer to ensure it's on the network</maml:para>
-                </maml:listItem>
-                <maml:listItem>
-                  <maml:para>Telnet to the target IP:Port</maml:para>
-                  <maml:para />
-                  <maml:example>
-                    <maml:para>telnet x.x.x.x ####</maml:para>
-                  </maml:example>
-                  <maml:para />
-                  <maml:para>Where x.x.x.x. is the IP Address or device name and #### is the target port number.</maml:para>
-                </maml:listItem>
-              </maml:list>
-            </maml:section>
-          </MamlContent>
+          <MamlContent><maml:section xmlns="http://schemas.microsoft.com/maml/2004/10" xmlns:maml="http://schemas.microsoft.com/maml/2004/10"><maml:title>Summary</maml:title><maml:para>Connecting to the target part timed out.</maml:para></maml:section><maml:section xmlns="http://schemas.microsoft.com/maml/2004/10" xmlns:maml="http://schemas.microsoft.com/maml/2004/10"><maml:title>Causes</maml:title><maml:para>This can happen for a few reasons:</maml:para><maml:para /><maml:list><maml:listItem><maml:para>The target computer is offline</maml:para></maml:listItem><maml:listItem><maml:para>There is a firewall between the watcher node and the target IP or device</maml:para></maml:listItem><maml:listItem><maml:para>IPSec is required between the watcher node and the target IP or device</maml:para></maml:listItem><maml:listItem><maml:para>The target IP:Port is actually not available</maml:para></maml:listItem></maml:list></maml:section><maml:section xmlns="http://schemas.microsoft.com/maml/2004/10" xmlns:maml="http://schemas.microsoft.com/maml/2004/10"><maml:title>Resolutions</maml:title><maml:para>Try the following troubleshooting steps to attempt to fix the problem</maml:para><maml:para /><maml:list><maml:listItem><maml:para>Ping the target computer to ensure it's on the network</maml:para></maml:listItem><maml:listItem><maml:para>Telnet to the target IP:Port</maml:para><maml:para /><maml:example><maml:para>telnet x.x.x.x ####</maml:para></maml:example><maml:para /><maml:para>Where x.x.x.x. is the IP Address or device name and #### is the target port number.</maml:para></maml:listItem></maml:list></maml:section></MamlContent>
         </KnowledgeArticle>
         <KnowledgeArticle ElementID="CookdownCommunity.ServiceNow.Monitoring.HttpsTCPPortTest.DNSResolutionMonitor" Visible="true">
-          <MamlContent>
-            <maml:section xmlns="http://schemas.microsoft.com/maml/2004/10" xmlns:maml="http://schemas.microsoft.com/maml/2004/10">
-              <maml:title>Summary</maml:title>
-              <maml:para>Could not resolve the name supplied name through the watcher nodes Domain Name Service.</maml:para>
-            </maml:section>
-            <maml:section xmlns="http://schemas.microsoft.com/maml/2004/10" xmlns:maml="http://schemas.microsoft.com/maml/2004/10">
-              <maml:title>Causes</maml:title>
-              <maml:para>This can happen for a few reasons:</maml:para>
-              <maml:para />
-              <maml:list>
-                <maml:listItem>
-                  <maml:para>The DNS client side cache has a stale entry</maml:para>
-                </maml:listItem>
-                <maml:listItem>
-                  <maml:para>The DNS infrastructure not available</maml:para>
-                </maml:listItem>
-                <maml:listItem>
-                  <maml:para>The watcher node DNS settings are out of date or incorrect</maml:para>
-                </maml:listItem>
-                <maml:listItem>
-                  <maml:para>DNS has a stale entry for the supplied target name and is returning the wrong IP address</maml:para>
-                </maml:listItem>
-              </maml:list>
-            </maml:section>
-            <maml:section xmlns="http://schemas.microsoft.com/maml/2004/10" xmlns:maml="http://schemas.microsoft.com/maml/2004/10">
-              <maml:title>Resolutions</maml:title>
-              <maml:para>Try the following troubleshooting steps to attempt to fix the problem</maml:para>
-              <maml:para />
-              <maml:list>
-                <maml:listItem>
-                  <maml:para>On a Windows Computer, at the command line type:</maml:para>
-                  <maml:para>ipconfig /flushdns</maml:para>
-                  <maml:para />
-                  <maml:para>Then type:</maml:para>
-                  <maml:para>ipconfig /registerdns</maml:para>
-                  <maml:para />
-                </maml:listItem>
-                <maml:listItem>
-                  <maml:para>Check with your network or domain administrator if there is any problems with the DNS infrastructure that the watcher node is configured to use.</maml:para>
-                </maml:listItem>
-                <maml:listItem>
-                  <maml:para>Check the IP Address that is being returned to ensure it is returning the actual device name you expect.</maml:para>
-                  <maml:para>Do this by pinging by the device name you supplied in the wizard. Next take the IP Address and type ping -a [IPAddress]. For example, if the IP Address is 10.10.1.1:</maml:para>
-                  <maml:example>
-                    <maml:para>ping -a 10.10.1.1</maml:para>
-                  </maml:example>
-                  <maml:para />
-                  <maml:para>If the name returned is different than the name supplied in the wizard there are likely some name resolution issues related to having a misconfigured or stale DNS entry.</maml:para>
-                </maml:listItem>
-              </maml:list>
-            </maml:section>
-          </MamlContent>
+          <MamlContent><maml:section xmlns="http://schemas.microsoft.com/maml/2004/10" xmlns:maml="http://schemas.microsoft.com/maml/2004/10"><maml:title>Summary</maml:title><maml:para>Could not resolve the name supplied name through the watcher nodes Domain Name Service.</maml:para></maml:section><maml:section xmlns="http://schemas.microsoft.com/maml/2004/10" xmlns:maml="http://schemas.microsoft.com/maml/2004/10"><maml:title>Causes</maml:title><maml:para>This can happen for a few reasons:</maml:para><maml:para /><maml:list><maml:listItem><maml:para>The DNS client side cache has a stale entry</maml:para></maml:listItem><maml:listItem><maml:para>The DNS infrastructure not available</maml:para></maml:listItem><maml:listItem><maml:para>The watcher node DNS settings are out of date or incorrect</maml:para></maml:listItem><maml:listItem><maml:para>DNS has a stale entry for the supplied target name and is returning the wrong IP address</maml:para></maml:listItem></maml:list></maml:section><maml:section xmlns="http://schemas.microsoft.com/maml/2004/10" xmlns:maml="http://schemas.microsoft.com/maml/2004/10"><maml:title>Resolutions</maml:title><maml:para>Try the following troubleshooting steps to attempt to fix the problem</maml:para><maml:para /><maml:list><maml:listItem><maml:para>On a Windows Computer, at the command line type:</maml:para><maml:para>ipconfig /flushdns</maml:para><maml:para /><maml:para>Then type:</maml:para><maml:para>ipconfig /registerdns</maml:para><maml:para /></maml:listItem><maml:listItem><maml:para>Check with your network or domain administrator if there is any problems with the DNS infrastructure that the watcher node is configured to use.</maml:para></maml:listItem><maml:listItem><maml:para>Check the IP Address that is being returned to ensure it is returning the actual device name you expect.</maml:para><maml:para>Do this by pinging by the device name you supplied in the wizard. Next take the IP Address and type ping -a [IPAddress]. For example, if the IP Address is 10.10.1.1:</maml:para><maml:example><maml:para>ping -a 10.10.1.1</maml:para></maml:example><maml:para /><maml:para>If the name returned is different than the name supplied in the wizard there are likely some name resolution issues related to having a misconfigured or stale DNS entry.</maml:para></maml:listItem></maml:list></maml:section></MamlContent>
         </KnowledgeArticle>
         <KnowledgeArticle ElementID="CookdownCommunity.ServiceNow.Monitoring.HttpsTCPPortTest.HostUnreachableMonitor" Visible="true">
-          <MamlContent>
-            <maml:section xmlns="http://schemas.microsoft.com/maml/2004/10" xmlns:maml="http://schemas.microsoft.com/maml/2004/10">
-              <maml:title>Summary</maml:title>
-              <maml:para>The target IP or device could not be reached</maml:para>
-            </maml:section>
-            <maml:section xmlns="http://schemas.microsoft.com/maml/2004/10" xmlns:maml="http://schemas.microsoft.com/maml/2004/10">
-              <maml:title>Causes</maml:title>
-              <maml:para>This can happen for a few reasons:</maml:para>
-              <maml:para />
-              <maml:list>
-                <maml:listItem>
-                  <maml:para>The target computer is offline</maml:para>
-                </maml:listItem>
-                <maml:listItem>
-                  <maml:para>The watcher node doesn't have the appropriate permissions</maml:para>
-                </maml:listItem>
-                <maml:listItem>
-                  <maml:para>There may be a firewall between the watcher node and the target device</maml:para>
-                </maml:listItem>
-              </maml:list>
-            </maml:section>
-            <maml:section xmlns="http://schemas.microsoft.com/maml/2004/10" xmlns:maml="http://schemas.microsoft.com/maml/2004/10">
-              <maml:title>Resolutions</maml:title>
-              <maml:para>Try the following troubleshooting steps to attempt to fix the problem</maml:para>
-              <maml:para />
-              <maml:list>
-                <maml:listItem>
-                  <maml:para>Ping the target computer to ensure it's on the network</maml:para>
-                </maml:listItem>
-                <maml:listItem>
-                  <maml:para>Ensure that the Run As account used by the watcher node has the appropriate permissions to the target data source</maml:para>
-                </maml:listItem>
-                <maml:listItem>
-                  <maml:para>Check if the Windows Firewall is enabled on either the target machine or the watcher node. If it is, create an exclusion for the application you are monitoring.</maml:para>
-                </maml:listItem>
-              </maml:list>
-            </maml:section>
-          </MamlContent>
+          <MamlContent><maml:section xmlns="http://schemas.microsoft.com/maml/2004/10" xmlns:maml="http://schemas.microsoft.com/maml/2004/10"><maml:title>Summary</maml:title><maml:para>The target IP or device could not be reached</maml:para></maml:section><maml:section xmlns="http://schemas.microsoft.com/maml/2004/10" xmlns:maml="http://schemas.microsoft.com/maml/2004/10"><maml:title>Causes</maml:title><maml:para>This can happen for a few reasons:</maml:para><maml:para /><maml:list><maml:listItem><maml:para>The target computer is offline</maml:para></maml:listItem><maml:listItem><maml:para>The watcher node doesn't have the appropriate permissions</maml:para></maml:listItem><maml:listItem><maml:para>There may be a firewall between the watcher node and the target device</maml:para></maml:listItem></maml:list></maml:section><maml:section xmlns="http://schemas.microsoft.com/maml/2004/10" xmlns:maml="http://schemas.microsoft.com/maml/2004/10"><maml:title>Resolutions</maml:title><maml:para>Try the following troubleshooting steps to attempt to fix the problem</maml:para><maml:para /><maml:list><maml:listItem><maml:para>Ping the target computer to ensure it's on the network</maml:para></maml:listItem><maml:listItem><maml:para>Ensure that the Run As account used by the watcher node has the appropriate permissions to the target data source</maml:para></maml:listItem><maml:listItem><maml:para>Check if the Windows Firewall is enabled on either the target machine or the watcher node. If it is, create an exclusion for the application you are monitoring.</maml:para></maml:listItem></maml:list></maml:section></MamlContent>
         </KnowledgeArticle>
         <KnowledgeArticle ElementID="CookdownCommunity.ServiceNow.Monitoring.HttpsTCPPortTest.ConnectionRefusedMonitor" Visible="true">
-          <MamlContent>
-            <maml:section xmlns="http://schemas.microsoft.com/maml/2004/10" xmlns:maml="http://schemas.microsoft.com/maml/2004/10">
-              <maml:title>Summary</maml:title>
-              <maml:para>Connection is refused</maml:para>
-            </maml:section>
-            <maml:section xmlns="http://schemas.microsoft.com/maml/2004/10" xmlns:maml="http://schemas.microsoft.com/maml/2004/10">
-              <maml:title>Causes</maml:title>
-              <maml:para>This can happen for a few reasons:</maml:para>
-              <maml:para />
-              <maml:list>
-                <maml:listItem>
-                  <maml:para>The watcher node doesn't have the appropriate permissions</maml:para>
-                </maml:listItem>
-              </maml:list>
-            </maml:section>
-            <maml:section xmlns="http://schemas.microsoft.com/maml/2004/10" xmlns:maml="http://schemas.microsoft.com/maml/2004/10">
-              <maml:title>Resolutions</maml:title>
-              <maml:para>Try the following troubleshooting steps to attempt to fix the problem</maml:para>
-              <maml:para />
-              <maml:list>
-                <maml:listItem>
-                  <maml:para>Ensure that if IPSec is configured, that the machine can establish an IPSec connection</maml:para>
-                </maml:listItem>
-                <maml:listItem>
-                  <maml:para>Telnet to the target IP:Port</maml:para>
-                  <maml:para />
-                  <maml:example>
-                    <maml:para>telnet x.x.x.x ####</maml:para>
-                  </maml:example>
-                  <maml:para />
-                  <maml:para>Where x.x.x.x. is the IP Address or device name and #### is the target port number.</maml:para>
-                </maml:listItem>
-              </maml:list>
-            </maml:section>
-          </MamlContent>
+          <MamlContent><maml:section xmlns="http://schemas.microsoft.com/maml/2004/10" xmlns:maml="http://schemas.microsoft.com/maml/2004/10"><maml:title>Summary</maml:title><maml:para>Connection is refused</maml:para></maml:section><maml:section xmlns="http://schemas.microsoft.com/maml/2004/10" xmlns:maml="http://schemas.microsoft.com/maml/2004/10"><maml:title>Causes</maml:title><maml:para>This can happen for a few reasons:</maml:para><maml:para /><maml:list><maml:listItem><maml:para>The watcher node doesn't have the appropriate permissions</maml:para></maml:listItem></maml:list></maml:section><maml:section xmlns="http://schemas.microsoft.com/maml/2004/10" xmlns:maml="http://schemas.microsoft.com/maml/2004/10"><maml:title>Resolutions</maml:title><maml:para>Try the following troubleshooting steps to attempt to fix the problem</maml:para><maml:para /><maml:list><maml:listItem><maml:para>Ensure that if IPSec is configured, that the machine can establish an IPSec connection</maml:para></maml:listItem><maml:listItem><maml:para>Telnet to the target IP:Port</maml:para><maml:para /><maml:example><maml:para>telnet x.x.x.x ####</maml:para></maml:example><maml:para /><maml:para>Where x.x.x.x. is the IP Address or device name and #### is the target port number.</maml:para></maml:listItem></maml:list></maml:section></MamlContent>
         </KnowledgeArticle>
       </KnowledgeArticles>
     </LanguagePack>
