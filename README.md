@@ -1,6 +1,8 @@
 # ServiceNow-Monitoring-MP
 
-The ServiceNow Monitoring Management Pack lets you know what experience your end users have when they access ServiceNow from each of your satellite offices. Setup outside in monitoring from any existing SCOM Agent in each site you want to test from and get detailed insights such as:
+The ServiceNow Monitoring Management Pack lets you know what experience your end users have when they access ServiceNow from each of your satellite offices. Setup outside in monitoring from any existing SCOM Agent in each site you want to test from and get detailed insights.
+
+### [Download Now](http://cookdown.com/servicenow-monitoring-mp/)
 
 ## We're open sourced for community contributions
 
