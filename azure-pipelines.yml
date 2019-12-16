@@ -22,25 +22,25 @@ stages:
         - msbuild
         - visualstudio
 
-        steps:
-        - task: VSBuild@1
-          inputs:
-            solution: '$(solution)'
-            platform: '$(buildPlatform)'
-            configuration: '$(buildConfiguration)'
-            clean: true
-            
-        - task: CopyFiles@2
-          displayName: 'Copy Files to: $(build.artifactstagingdirectory)'
-          inputs:
-            SourceFolder: '$(system.defaultworkingdirectory)'
-            Contents: '**\bin\$(buildConfiguration)\**'
-            TargetFolder: '$(build.artifactstagingdirectory)'
-            CleanTargetFolder: true
-          condition: succeededOrFailed()
+      steps:
+      - task: VSBuild@1
+        inputs:
+          solution: '$(solution)'
+          platform: '$(buildPlatform)'
+          configuration: '$(buildConfiguration)'
+          clean: true
 
-        - task: PublishPipelineArtifact@0
-          displayName: 'Publish Pipeline Build Artifact'
-          inputs:
-            artifactName: '$(artifactName)'
-            targetPath: '$(build.artifactstagingdirectory)'
+      - task: CopyFiles@2
+        displayName: 'Copy Files to: $(build.artifactstagingdirectory)'
+        inputs:
+          SourceFolder: '$(system.defaultworkingdirectory)'
+          Contents: '**\bin\$(buildConfiguration)\**'
+          TargetFolder: '$(build.artifactstagingdirectory)'
+          CleanTargetFolder: true
+        condition: succeededOrFailed()
+
+      - task: PublishPipelineArtifact@0
+        displayName: 'Publish Pipeline Build Artifact'
+        inputs:
+          artifactName: '$(artifactName)'
+          targetPath: '$(build.artifactstagingdirectory)'
