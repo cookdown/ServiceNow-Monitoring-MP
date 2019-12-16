@@ -3,7 +3,7 @@
   <Manifest>
     <Identity>
       <ID>CookdownCommunity.ServiceNow.Monitoring</ID>
-      <Version>1.0.0.8</Version>
+      <Version>1.1.0.22</Version>
     </Identity>
     <Name>CookdownCommunity.ServiceNow.Monitoring</Name>
     <References>
@@ -1589,6 +1589,338 @@
     </Monitors>
   </Monitoring>
   <Presentation>
+    <Views>
+      <View ID="CookdownCommunity.ServiceNow.Monitoring.Presentation.Views.DatabasePerf" Accessibility="Public" Enabled="true" Target="System!System.Entity" TypeID="SC!Microsoft.SystemCenter.PerformanceViewType" Visible="true">
+        <Category>Operations</Category>
+        <Criteria>
+          <Object>Glide Pool DB</Object>
+          <Instance>Total</Instance>
+        </Criteria>
+        <Presentation>
+          <SortedColumnIndex>0</SortedColumnIndex>
+          <SortOrder>0</SortOrder>
+          <StartTime>2019-12-25T00:00:00+00:00</StartTime>
+          <EndTime>2019-12-25T23:59:59+00:00</EndTime>
+          <DynamicTimeTicks>864000000000</DynamicTimeTicks>
+          <IsDynamic>true</IsDynamic>
+          <Is3DMode>false</Is3DMode>
+          <ShowAlerts>false</ShowAlerts>
+          <ShowMaintenanceMode>false</ShowMaintenanceMode>
+          <BaselineMode>false</BaselineMode>
+          <ShowPointLabels>false</ShowPointLabels>
+          <EnableSmartLabels>true</EnableSmartLabels>
+          <RightAngleAxes>false</RightAngleAxes>
+          <ClusterSeries>false</ClusterSeries>
+          <Title />
+          <TitleFont>Microsoft Sans Serif,12,Regular</TitleFont>
+          <ChartFont>Microsoft Sans Serif,8.25,Regular</ChartFont>
+          <ShowBands>false</ShowBands>
+          <BandColor>-1579033</BandColor>
+          <ChartType>Line</ChartType>
+          <Depth>100</Depth>
+          <GapDepth>100</GapDepth>
+          <Perspective>10</Perspective>
+          <GraphXRotation>0</GraphXRotation>
+          <GraphYRotation>0</GraphYRotation>
+          <XLabelAngle>0</XLabelAngle>
+          <LabelColor>-16777216</LabelColor>
+          <LabelFont>Microsoft Sans Serif,8.25,Regular</LabelFont>
+          <XAxisVisible>True</XAxisVisible>
+          <XShowMajorGridlines>false</XShowMajorGridlines>
+          <XShowMinorGridlines>false</XShowMinorGridlines>
+          <ShowInterlaceStrips>false</ShowInterlaceStrips>
+          <XInterlaceColor>16777215</XInterlaceColor>
+          <XShowSideMargin>true</XShowSideMargin>
+          <XAxisFont>Microsoft Sans Serif,8.25,Regular</XAxisFont>
+          <AutoAxis>true</AutoAxis>
+          <AxisMax>100</AxisMax>
+          <AxisMin>0</AxisMin>
+          <YAxisVisible>True</YAxisVisible>
+          <YShowMajorGridlines>true</YShowMajorGridlines>
+          <YShowMinorGridlines>false</YShowMinorGridlines>
+          <YShowInterlaceStrips>false</YShowInterlaceStrips>
+          <YShowSideMargin>true</YShowSideMargin>
+          <YAxisFont>Microsoft Sans Serif,8.25,Regular</YAxisFont>
+          <BackgroundColor1>-1</BackgroundColor1>
+          <BackgroundColor2>-1</BackgroundColor2>
+          <GradientType>None</GradientType>
+          <Series />
+        </Presentation>
+        <Target />
+      </View>
+      <View ID="CookdownCommunity.ServiceNow.Monitoring.Presentation.Views.InstallationSetup" Accessibility="Public" Enabled="true" Target="System!System.Entity" TypeID="SC!Microsoft.SystemCenter.UrlViewType" Visible="true">
+        <Category>Operations</Category>
+        <Criteria>
+          <Url>https://go.cookdown.com/ServiceNow-Monitoring-Mp-Docs</Url>
+        </Criteria>
+        <Presentation />
+        <Target />
+      </View>
+      <View ID="CookdownCommunity.ServiceNow.Monitoring.Presentation.Views.InstancesState" Accessibility="Public" Enabled="true" Target="CookdownCommunity.ServiceNow.Monitoring.ServiceNowInstance" TypeID="SC!Microsoft.SystemCenter.StateViewType" Visible="true">
+        <Category>Operations</Category>
+        <Criteria>
+          <InMaintenanceMode>false</InMaintenanceMode>
+        </Criteria>
+        <Presentation>
+          <ColumnInfo Index="0" SortIndex="0" Width="100" Grouped="false" Sorted="true" IsSortable="true" Visible="true" SortOrder="Descending">
+            <Name>State</Name>
+            <Id>CookdownCommunity.ServiceNow.Monitoring.ServiceNowInstance-*-70df842a-cf71-59b7-bdf3-71adc8366cb9-*-Health</Id>
+          </ColumnInfo>
+          <ColumnInfo Index="20" SortIndex="-1" Width="22" Grouped="false" Sorted="false" IsSortable="true" Visible="true" SortOrder="Ascending">
+            <Name>In Maintenance Mode</Name>
+            <Id>InMaintenanceMode</Id>
+          </ColumnInfo>
+          <ColumnInfo Index="1" SortIndex="-1" Width="100" Grouped="false" Sorted="false" IsSortable="true" Visible="true" SortOrder="Ascending">
+            <Name>Name</Name>
+            <Id>Name</Id>
+          </ColumnInfo>
+          <ColumnInfo Index="2" SortIndex="-1" Width="100" Grouped="false" Sorted="false" IsSortable="true" Visible="false" SortOrder="Ascending">
+            <Name>Path</Name>
+            <Id>Path</Id>
+          </ColumnInfo>
+          <ColumnInfo Index="3" SortIndex="-1" Width="100" Grouped="false" Sorted="false" IsSortable="true" Visible="false" SortOrder="Ascending">
+            <Name>Display Name</Name>
+            <Id>System.Entity/DisplayName</Id>
+          </ColumnInfo>
+          <ColumnInfo Index="4" SortIndex="-1" Width="100" Grouped="false" Sorted="false" IsSortable="true" Visible="false" SortOrder="Ascending">
+            <Name>Service Description</Name>
+            <Id>System.Service/ServiceDescription</Id>
+          </ColumnInfo>
+          <ColumnInfo Index="5" SortIndex="-1" Width="100" Grouped="false" Sorted="false" IsSortable="true" Visible="false" SortOrder="Ascending">
+            <Name>Business Detailed Description</Name>
+            <Id>System.Service/BusinessDetailedDescription</Id>
+          </ColumnInfo>
+          <ColumnInfo Index="6" SortIndex="-1" Width="100" Grouped="false" Sorted="false" IsSortable="false" Visible="false" SortOrder="Ascending">
+            <Name>Is Business Service</Name>
+            <Id>System.Service/IsBusinessService</Id>
+          </ColumnInfo>
+          <ColumnInfo Index="7" SortIndex="-1" Width="100" Grouped="false" Sorted="false" IsSortable="true" Visible="false" SortOrder="Ascending">
+            <Name>Owned By Organization</Name>
+            <Id>System.Service/OwnedByOrganization</Id>
+          </ColumnInfo>
+          <ColumnInfo Index="8" SortIndex="-1" Width="100" Grouped="false" Sorted="false" IsSortable="false" Visible="false" SortOrder="Ascending">
+            <Name>Priority</Name>
+            <Id>System.Service/Priority</Id>
+          </ColumnInfo>
+          <ColumnInfo Index="9" SortIndex="-1" Width="100" Grouped="false" Sorted="false" IsSortable="false" Visible="false" SortOrder="Ascending">
+            <Name>Status</Name>
+            <Id>System.Service/Status</Id>
+          </ColumnInfo>
+          <ColumnInfo Index="10" SortIndex="-1" Width="100" Grouped="false" Sorted="false" IsSortable="false" Visible="false" SortOrder="Ascending">
+            <Name>Classification</Name>
+            <Id>System.Service/Classification</Id>
+          </ColumnInfo>
+          <ColumnInfo Index="11" SortIndex="-1" Width="100" Grouped="false" Sorted="false" IsSortable="true" Visible="false" SortOrder="Ascending">
+            <Name>Availability Schedule</Name>
+            <Id>System.Service/AvailabilitySchedule</Id>
+          </ColumnInfo>
+          <ColumnInfo Index="12" SortIndex="-1" Width="250" Grouped="false" Sorted="false" IsSortable="true" Visible="true" SortOrder="Ascending">
+            <Name>URL</Name>
+            <Id>CookdownCommunity.ServiceNow.Monitoring.ServiceNowInstance/URL</Id>
+          </ColumnInfo>
+          <ColumnInfo Index="13" SortIndex="-1" Width="100" Grouped="false" Sorted="false" IsSortable="true" Visible="false" SortOrder="Ascending">
+            <Name>Name</Name>
+            <Id>CookdownCommunity.ServiceNow.Monitoring.ServiceNowInstance/Name</Id>
+          </ColumnInfo>
+          <ColumnInfo Index="14" SortIndex="-1" Width="100" Grouped="false" Sorted="false" IsSortable="true" Visible="false" SortOrder="Ascending">
+            <Name>Instance Type</Name>
+            <Id>CookdownCommunity.ServiceNow.Monitoring.ServiceNowInstance/Type</Id>
+          </ColumnInfo>
+          <ColumnInfo Index="15" SortIndex="-1" Width="100" Grouped="false" Sorted="false" IsSortable="true" Visible="true" SortOrder="Ascending">
+            <Name>Version</Name>
+            <Id>CookdownCommunity.ServiceNow.Monitoring.ServiceNowInstance/Version</Id>
+          </ColumnInfo>
+          <ColumnInfo Index="16" SortIndex="-1" Width="100" Grouped="false" Sorted="false" IsSortable="true" Visible="false" SortOrder="Ascending">
+            <Name>Database Version</Name>
+            <Id>CookdownCommunity.ServiceNow.Monitoring.ServiceNowInstance/DatabaseVersion</Id>
+          </ColumnInfo>
+          <ColumnInfo Index="17" SortIndex="-1" Width="300" Grouped="false" Sorted="false" IsSortable="true" Visible="true" SortOrder="Ascending">
+            <Name>Build</Name>
+            <Id>CookdownCommunity.ServiceNow.Monitoring.ServiceNowInstance/Build</Id>
+          </ColumnInfo>
+          <ColumnInfo Index="18" SortIndex="-1" Width="100" Grouped="false" Sorted="false" IsSortable="true" Visible="false" SortOrder="Ascending">
+            <Name>ServiceNow Offering</Name>
+            <Id>CookdownCommunity.ServiceNow.Monitoring.ServiceNowInstance/Offering</Id>
+          </ColumnInfo>
+          <ColumnInfo Index="19" SortIndex="-1" Width="100" Grouped="false" Sorted="false" IsSortable="true" Visible="false" SortOrder="Ascending">
+            <Name>POP Status</Name>
+            <Id>CookdownCommunity.ServiceNow.Monitoring.ServiceNowInstance/POPStatus</Id>
+          </ColumnInfo>
+          <ColumnInfo Index="21" SortIndex="-1" Width="100" Grouped="false" Sorted="false" IsSortable="true" Visible="false" SortOrder="Ascending">
+            <Name>SMTP Status</Name>
+            <Id>CookdownCommunity.ServiceNow.Monitoring.ServiceNowInstance/SMTPStatus</Id>
+          </ColumnInfo>
+          <ColumnInfo Index="22" SortIndex="-1" Width="100" Grouped="false" Sorted="false" IsSortable="true" Visible="false" SortOrder="Ascending">
+            <Name>ServiceNow Watcher</Name>
+            <Id>CookdownCommunity.ServiceNow.Monitoring.WatcherNode</Id>
+          </ColumnInfo>
+          <ColumnInfo Index="23" SortIndex="-1" Width="100" Grouped="false" Sorted="false" IsSortable="true" Visible="false" SortOrder="Ascending">
+            <Name>ServiceNow Node</Name>
+            <Id>CookdownCommunity.ServiceNow.Monitoring.ServiceNowNode</Id>
+          </ColumnInfo>
+        </Presentation>
+        <Target />
+      </View>
+      <View ID="CookdownCommunity.ServiceNow.Monitoring.Presentation.Views.NodesState" Accessibility="Public" Enabled="true" Target="CookdownCommunity.ServiceNow.Monitoring.ServiceNowNode" TypeID="SC!Microsoft.SystemCenter.StateViewType" Visible="true">
+        <Category>Operations</Category>
+        <Criteria>
+          <InMaintenanceMode>false</InMaintenanceMode>
+        </Criteria>
+        <Presentation>
+          <ColumnInfo Index="0" SortIndex="0" Width="100" Grouped="false" Sorted="false" IsSortable="true" Visible="true" SortOrder="Descending">
+            <Name>State</Name>
+            <Id>CookdownCommunity.ServiceNow.Monitoring.ServiceNowNode-*-a4c851e3-1447-6012-99aa-4f56bfdbf1e1-*-Health</Id>
+          </ColumnInfo>
+          <ColumnInfo Index="5" SortIndex="-1" Width="22" Grouped="false" Sorted="false" IsSortable="true" Visible="true" SortOrder="Ascending">
+            <Name>In Maintenance Mode</Name>
+            <Id>InMaintenanceMode</Id>
+          </ColumnInfo>
+          <ColumnInfo Index="1" SortIndex="-1" Width="300" Grouped="false" Sorted="false" IsSortable="true" Visible="true" SortOrder="Ascending">
+            <Name>Name</Name>
+            <Id>Name</Id>
+          </ColumnInfo>
+          <ColumnInfo Index="2" SortIndex="-1" Width="250" Grouped="false" Sorted="false" IsSortable="true" Visible="true" SortOrder="Ascending">
+            <Name>Path</Name>
+            <Id>Path</Id>
+          </ColumnInfo>
+          <ColumnInfo Index="6" SortIndex="-1" Width="100" Grouped="false" Sorted="false" IsSortable="true" Visible="false" SortOrder="Ascending">
+            <Name>Display Name</Name>
+            <Id>System.Entity/DisplayName</Id>
+          </ColumnInfo>
+          <ColumnInfo Index="7" SortIndex="-1" Width="100" Grouped="false" Sorted="false" IsSortable="true" Visible="false" SortOrder="Ascending">
+            <Name>Node ID</Name>
+            <Id>CookdownCommunity.ServiceNow.Monitoring.ServiceNowNode/NodeId</Id>
+          </ColumnInfo>
+          <ColumnInfo Index="8" SortIndex="-1" Width="100" Grouped="false" Sorted="false" IsSortable="true" Visible="false" SortOrder="Ascending">
+            <Name>System ID</Name>
+            <Id>CookdownCommunity.ServiceNow.Monitoring.ServiceNowNode/SystemId</Id>
+          </ColumnInfo>
+          <ColumnInfo Index="9" SortIndex="-1" Width="100" Grouped="false" Sorted="false" IsSortable="false" Visible="false" SortOrder="Ascending">
+            <Name>Created On</Name>
+            <Id>CookdownCommunity.ServiceNow.Monitoring.ServiceNowNode/CreatedOn</Id>
+          </ColumnInfo>
+          <ColumnInfo Index="3" SortIndex="-1" Width="100" Grouped="false" Sorted="false" IsSortable="false" Visible="true" SortOrder="Ascending">
+            <Name>Allow Inbound</Name>
+            <Id>CookdownCommunity.ServiceNow.Monitoring.ServiceNowNode/AllowInbound</Id>
+          </ColumnInfo>
+          <ColumnInfo Index="4" SortIndex="-1" Width="100" Grouped="false" Sorted="false" IsSortable="false" Visible="true" SortOrder="Ascending">
+            <Name>Ready for Failover?</Name>
+            <Id>CookdownCommunity.ServiceNow.Monitoring.ServiceNowNode/ReadyToFailover</Id>
+          </ColumnInfo>
+        </Presentation>
+        <Target />
+      </View>
+      <View ID="CookdownCommunity.ServiceNow.Monitoring.Presentation.Views.UserPerf" Accessibility="Public" Enabled="true" Target="CookdownCommunity.ServiceNow.Monitoring.ServiceNowInstance" TypeID="SC!Microsoft.SystemCenter.PerformanceViewType" Visible="true">
+        <Category>Operations</Category>
+        <Criteria>
+          <Object>Users</Object>
+          <Instance>Total</Instance>
+        </Criteria>
+        <Presentation>
+          <SortedColumnIndex>0</SortedColumnIndex>
+          <SortOrder>0</SortOrder>
+          <StartTime>2019-12-25T00:00:00+00:00</StartTime>
+          <EndTime>2019-12-25T23:59:59+00:00</EndTime>
+          <DynamicTimeTicks>864000000000</DynamicTimeTicks>
+          <IsDynamic>true</IsDynamic>
+          <Is3DMode>false</Is3DMode>
+          <ShowAlerts>false</ShowAlerts>
+          <ShowMaintenanceMode>false</ShowMaintenanceMode>
+          <BaselineMode>false</BaselineMode>
+          <ShowPointLabels>false</ShowPointLabels>
+          <EnableSmartLabels>true</EnableSmartLabels>
+          <RightAngleAxes>false</RightAngleAxes>
+          <ClusterSeries>false</ClusterSeries>
+          <Title />
+          <TitleFont>Microsoft Sans Serif,12,Regular</TitleFont>
+          <ChartFont>Microsoft Sans Serif,8.25,Regular</ChartFont>
+          <ShowBands>false</ShowBands>
+          <BandColor>-1579033</BandColor>
+          <ChartType>Line</ChartType>
+          <Depth>100</Depth>
+          <GapDepth>100</GapDepth>
+          <Perspective>10</Perspective>
+          <GraphXRotation>0</GraphXRotation>
+          <GraphYRotation>0</GraphYRotation>
+          <XLabelAngle>0</XLabelAngle>
+          <LabelColor>-16777216</LabelColor>
+          <LabelFont>Microsoft Sans Serif,8.25,Regular</LabelFont>
+          <XAxisVisible>True</XAxisVisible>
+          <XShowMajorGridlines>false</XShowMajorGridlines>
+          <XShowMinorGridlines>false</XShowMinorGridlines>
+          <ShowInterlaceStrips>false</ShowInterlaceStrips>
+          <XInterlaceColor>16777215</XInterlaceColor>
+          <XShowSideMargin>true</XShowSideMargin>
+          <XAxisFont>Microsoft Sans Serif,8.25,Regular</XAxisFont>
+          <AutoAxis>true</AutoAxis>
+          <AxisMax>100</AxisMax>
+          <AxisMin>0</AxisMin>
+          <YAxisVisible>True</YAxisVisible>
+          <YShowMajorGridlines>true</YShowMajorGridlines>
+          <YShowMinorGridlines>false</YShowMinorGridlines>
+          <YShowInterlaceStrips>false</YShowInterlaceStrips>
+          <YShowSideMargin>true</YShowSideMargin>
+          <YAxisFont>Microsoft Sans Serif,8.25,Regular</YAxisFont>
+          <BackgroundColor1>-1</BackgroundColor1>
+          <BackgroundColor2>-1</BackgroundColor2>
+          <GradientType>None</GradientType>
+          <Series />
+        </Presentation>
+        <Target />
+      </View>
+      <View ID="CookdownCommunity.ServiceNow.Monitoring.Presentation.Views.WatchersState" Accessibility="Public" Enabled="true" Target="CookdownCommunity.ServiceNow.Monitoring.WatcherNode" TypeID="SC!Microsoft.SystemCenter.StateViewType" Visible="true">
+        <Category>Operations</Category>
+        <Criteria>
+          <InMaintenanceMode>false</InMaintenanceMode>
+        </Criteria>
+        <Presentation>
+          <ColumnInfo Index="0" SortIndex="0" Width="100" Grouped="false" Sorted="true" IsSortable="true" Visible="true" SortOrder="Descending">
+            <Name>State</Name>
+            <Id>CookdownCommunity.ServiceNow.Monitoring.WatcherNode-*-b81c7051-1405-a274-0088-80f11332bd84-*-Health</Id>
+          </ColumnInfo>
+          <ColumnInfo Index="7" SortIndex="-1" Width="22" Grouped="false" Sorted="false" IsSortable="true" Visible="true" SortOrder="Ascending">
+            <Name>In Maintenance Mode</Name>
+            <Id>InMaintenanceMode</Id>
+          </ColumnInfo>
+          <ColumnInfo Index="1" SortIndex="-1" Width="100" Grouped="false" Sorted="false" IsSortable="true" Visible="true" SortOrder="Ascending">
+            <Name>Name</Name>
+            <Id>Name</Id>
+          </ColumnInfo>
+          <ColumnInfo Index="2" SortIndex="-1" Width="250" Grouped="false" Sorted="false" IsSortable="true" Visible="true" SortOrder="Ascending">
+            <Name>Path</Name>
+            <Id>Path</Id>
+          </ColumnInfo>
+          <ColumnInfo Index="3" SortIndex="-1" Width="100" Grouped="false" Sorted="false" IsSortable="true" Visible="false" SortOrder="Ascending">
+            <Name>Display Name</Name>
+            <Id>System.Entity/DisplayName</Id>
+          </ColumnInfo>
+          <ColumnInfo Index="4" SortIndex="-1" Width="250" Grouped="false" Sorted="false" IsSortable="true" Visible="true" SortOrder="Ascending">
+            <Name>Watching Instance</Name>
+            <Id>CookdownCommunity.ServiceNow.Monitoring.WatcherNode/Instance</Id>
+          </ColumnInfo>
+          <ColumnInfo Index="5" SortIndex="-1" Width="100" Grouped="false" Sorted="false" IsSortable="true" Visible="false" SortOrder="Ascending">
+            <Name>Tested Base URL</Name>
+            <Id>CookdownCommunity.ServiceNow.Monitoring.WatcherNode/InstanceUrlBase</Id>
+          </ColumnInfo>
+          <ColumnInfo Index="6" SortIndex="-1" Width="100" Grouped="false" Sorted="false" IsSortable="true" Visible="true" SortOrder="Ascending">
+            <Name>Watcher Location</Name>
+            <Id>CookdownCommunity.ServiceNow.Monitoring.WatcherNode/Location</Id>
+          </ColumnInfo>
+        </Presentation>
+        <Target />
+      </View>
+    </Views>
+    <Folders>
+      <Folder ID="CookdownCommunity.ServiceNow.Monitoring.Presentation.Folders.ServiceNowMonitoring" Accessibility="Public" ParentFolder="SC!Microsoft.SystemCenter.Monitoring.ViewFolder.Root" />
+    </Folders>
+    <FolderItems>
+      <FolderItem ElementID="CookdownCommunity.ServiceNow.Monitoring.Presentation.Views.InstallationSetup" ID="i452b81f8a8a445c89e4dec7e3894a9d4" Folder="CookdownCommunity.ServiceNow.Monitoring.Presentation.Folders.ServiceNowMonitoring" />
+      <FolderItem ElementID="CookdownCommunity.ServiceNow.Monitoring.Presentation.Views.InstancesState" ID="i7522e6a85e804d42a849920a5df7878e" Folder="CookdownCommunity.ServiceNow.Monitoring.Presentation.Folders.ServiceNowMonitoring" />
+      <FolderItem ElementID="CookdownCommunity.ServiceNow.Monitoring.Presentation.Views.NodesState" ID="i34d04e93678740e5aa9d7349636f1f9b" Folder="CookdownCommunity.ServiceNow.Monitoring.Presentation.Folders.ServiceNowMonitoring" />
+      <FolderItem ElementID="CookdownCommunity.ServiceNow.Monitoring.Presentation.Views.UserPerf" ID="ie5b206ca6add4621835aa050eb8e42aa" Folder="CookdownCommunity.ServiceNow.Monitoring.Presentation.Folders.ServiceNowMonitoring" />
+      <FolderItem ElementID="CookdownCommunity.ServiceNow.Monitoring.Presentation.Views.DatabasePerf" ID="iffa3f75a943c473e80d382757daa3838" Folder="CookdownCommunity.ServiceNow.Monitoring.Presentation.Folders.ServiceNowMonitoring" />
+      <FolderItem ElementID="CookdownCommunity.ServiceNow.Monitoring.Presentation.Views.WatchersState" ID="i486652930c5e4300a014d91fa6d5b671" Folder="CookdownCommunity.ServiceNow.Monitoring.Presentation.Folders.ServiceNowMonitoring" />
+    </FolderItems>
     <StringResources>
       <StringResource ID="CookdownCommunity.ServiceNow.Monitoring.NodeMemoryUtilization.AlertMessage" />
       <StringResource ID="CookdownCommunity.ServiceNow.Monitoring.HttpsTCPPortTest.TimeOutMonitor.AlertMessage" />
@@ -1838,6 +2170,30 @@
         </DisplayString>
         <DisplayString ElementID="CookdownCommunity.ServiceNow.Monitoring.HttpsTCPPortTest.HostUnreachable" SubElementID="NoHostUnreachableFailure">
           <Name>Host Reachable (Success)</Name>
+        </DisplayString>
+        <DisplayString ElementID="CookdownCommunity.ServiceNow.Monitoring.Presentation.Folders.ServiceNowMonitoring">
+          <Name>ServiceNow Monitoring [Community]</Name>
+        </DisplayString>
+        <DisplayString ElementID="CookdownCommunity.ServiceNow.Monitoring.Presentation.Views.DatabasePerf">
+          <Name>DB Activity</Name>
+          <Description>Shows the instance wide performance for the database activity</Description>
+        </DisplayString>
+        <DisplayString ElementID="CookdownCommunity.ServiceNow.Monitoring.Presentation.Views.InstallationSetup">
+          <Name>Installation and Setup</Name>
+          <Description>Installation and setup documentation for the ServiceNow monitoring MP from the Cookdown Community</Description>
+        </DisplayString>
+        <DisplayString ElementID="CookdownCommunity.ServiceNow.Monitoring.Presentation.Views.InstancesState">
+          <Name>Instances</Name>
+        </DisplayString>
+        <DisplayString ElementID="CookdownCommunity.ServiceNow.Monitoring.Presentation.Views.NodesState">
+          <Name>Nodes</Name>
+        </DisplayString>
+        <DisplayString ElementID="CookdownCommunity.ServiceNow.Monitoring.Presentation.Views.UserPerf">
+          <Name>User Activity</Name>
+          <Description>Performance collection on User Activity</Description>
+        </DisplayString>
+        <DisplayString ElementID="CookdownCommunity.ServiceNow.Monitoring.Presentation.Views.WatchersState">
+          <Name>Watchers</Name>
         </DisplayString>
         <DisplayString ElementID="CookdownCommunity.ServiceNow.Monitoring.Performance.InstanceTotal.GlidePoolDB_Selects">
           <Name>Collect Instance Performance (Glide Pool DB : Selects)</Name>

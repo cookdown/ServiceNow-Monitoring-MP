@@ -32,4 +32,14 @@
       </DataSourceModuleType>
     </ModuleTypes>
   </TypeDefinitions>
+  <LanguagePacks>
+    <LanguagePack ID="ENU" IsDefault="true">
+      <DisplayStrings>
+        <DisplayString ElementID="CookdownCommunity.ServiceNow.Monitoring.TCPPortCheckDataSource">
+          <Name>TCP PortCheck Data Source</Name>
+          <Description>Data source for ServiceNow port checks</Description>
+        </DisplayString>
+      </DisplayStrings>
+    </LanguagePack>
+  </LanguagePacks>
 </ManagementPackFragment>

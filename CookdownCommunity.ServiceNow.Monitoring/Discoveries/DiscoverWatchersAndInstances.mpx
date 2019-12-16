@@ -1,7 +1,7 @@
 ﻿<ManagementPackFragment SchemaVersion="2.0" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
   <TypeDefinitions>
     <ModuleTypes>
-      <DataSourceModuleType ID="CookdownCommunity.ServiceNow.Monitoring.DiscoverServiceNow" Accessibility="Internal">
+      <DataSourceModuleType ID="CookdownCommunity.ServiceNow.Monitoring.DiscoverServiceNow" Accessibility="Internal" Batching="false">
         <Configuration>
           <xsd:element name="SourceID" type="xsd:string" xmlns:xsd="http://www.w3.org/2001/XMLSchema" />
           <xsd:element name="ManagedEntityID" type="xsd:string" xmlns:xsd="http://www.w3.org/2001/XMLSchema" />
@@ -10,17 +10,141 @@
           <xsd:element name="ComputerName" type="xsd:string" xmlns:xsd="http://www.w3.org/2001/XMLSchema" />
         </Configuration>
         <OverrideableParameters>
-          <OverrideableParameter ID="LocationName" Selector="$Config/LocationName$" ParameterType="string"/>
-          <OverrideableParameter ID="InstanceUrls" Selector="$Config/InstanceUrls$" ParameterType="string"/>
+          <OverrideableParameter ID="LocationName" Selector="$Config/LocationName$" ParameterType="string" />
+          <OverrideableParameter ID="InstanceUrls" Selector="$Config/InstanceUrls$" ParameterType="string" />
         </OverrideableParameters>
-        <ModuleImplementation>
+        <ModuleImplementation Isolation="Any">
           <Composite>
             <MemberModules>
-              <DataSource ID="PSDisco"  TypeID="Windows!Microsoft.Windows.TimedPowerShell.DiscoveryProvider">
+              <DataSource ID="PSDisco" TypeID="Windows!Microsoft.Windows.TimedPowerShell.DiscoveryProvider">
                 <IntervalSeconds>43200</IntervalSeconds>
-                <SyncTime/>
+                <SyncTime />
                 <ScriptName>DiscoverServiceNowMonitoring.ps1</ScriptName>
-                <ScriptBody>$IncludeFileContent/Scripts/DiscoverServiceNowMonitoring.ps1$</ScriptBody>
+                <ScriptBody>
+                  #Bring in our parameters
+                  param($sourceID, $managedEntityID, $location, $instanceUrls, $computerName, $snowUserName, $snowPassword)
+
+                  Function CreateHeaders
+                  {
+                  param($username, $password)
+                  # Build auth header
+                  $base64AuthInfo = [Convert]::ToBase64String([Text.Encoding]::ASCII.GetBytes(("{0}:{1}" -f $username, $password)))
+
+                  # Set proper headers
+                  $headers = New-Object "System.Collections.Generic.Dictionary[[String],[String]]"
+                  $headers.Add('Authorization',('Basic {0}' -f $base64AuthInfo))
+                  $headers.Add('Accept','application/json')
+                  $headers
+                  }
+
+                  Function GetClusterStatusFromServiceNow
+                  {
+                  param($instanceURL)
+                  $statsEndpoint = $instanceURL + "api/now/table/sys_cluster_state"
+                  $results = Invoke-RESTMethod -Uri $statsEndpoint -Headers $headers -Method GET -ErrorAction Stop
+                  $results.result
+                  }
+
+                  Function CreateInstanceObject
+                  {
+                  param($sourceNode,$sourceURL)
+
+                  $stats = [xml]$sourceNode.stats
+                  $instance = $discoveryData.CreateClassInstance("$MPElement[Name='CookdownCommunity.ServiceNow.Monitoring.ServiceNowInstance']$")
+                  $instance.AddProperty("$MPElement[Name='CookdownCommunity.ServiceNow.Monitoring.ServiceNowInstance']/URL$", $sourceURL)
+                  $instance.AddProperty("$MPElement[Name='CookdownCommunity.ServiceNow.Monitoring.ServiceNowInstance']/Name$", $Stats.xmlstats.instance_name)
+                  $instance.AddProperty("$MPElement[Name='CookdownCommunity.ServiceNow.Monitoring.ServiceNowInstance']/Type$", $Stats.xmlstats.instance_type)
+                  $instance.AddProperty("$MPElement[Name='CookdownCommunity.ServiceNow.Monitoring.ServiceNowInstance']/Version$", $Stats.xmlstats.'glide.build.name')
+                  $instance.AddProperty("$MPElement[Name='CookdownCommunity.ServiceNow.Monitoring.ServiceNowInstance']/Build$", $Stats.xmlstats.'glide.build.tag')
+                  $instance.AddProperty("$MPElement[Name='CookdownCommunity.ServiceNow.Monitoring.ServiceNowInstance']/DatabaseVersion$", $stats.xmlstats.'db.product_version')
+                  $instance.AddProperty("$MPElement[Name='CookdownCommunity.ServiceNow.Monitoring.ServiceNowInstance']/Offering$", $Stats.xmlstats.'glide.offering')
+                  $instance.AddProperty("$MPElement[Name='CookdownCommunity.ServiceNow.Monitoring.ServiceNowInstance']/POPStatus$", $stats.xmlstats.'glide.pop3.status'.InnerText)
+                  $instance.AddProperty("$MPElement[Name='CookdownCommunity.ServiceNow.Monitoring.ServiceNowInstance']/SMTPStatus$", $stats.xmlstats.'glide.smtp.status'.InnerText)
+                  $instance.AddProperty("$MPElement[Name='System!System.Entity']/DisplayName$", $Stats.xmlstats.instance_name)
+                  $instance
+                  }
+
+                  Function CreateNodeObject
+                  {
+                  param($sourceNode,$sourceURL)
+
+                  $stats = [xml]$sourceNode.stats
+                  $node = $discoveryData.CreateClassInstance("$MPElement[Name='CookdownCommunity.ServiceNow.Monitoring.ServiceNowNode']$")
+                  $node.AddProperty("$MPElement[Name='CookdownCommunity.ServiceNow.Monitoring.ServiceNowInstance']/URL$", $sourceURL)
+                  $node.AddProperty("$MPElement[Name='CookdownCommunity.ServiceNow.Monitoring.ServiceNowNode']/NodeId$", $sourceNode.node_id)
+                  $node.AddProperty("$MPElement[Name='CookdownCommunity.ServiceNow.Monitoring.ServiceNowNode']/SystemId$", $sourceNode.system_id)
+                  $node.AddProperty("$MPElement[Name='CookdownCommunity.ServiceNow.Monitoring.ServiceNowNode']/CreatedOn$", $sourceNode.sys_created_on)
+                  $node.AddProperty("$MPElement[Name='CookdownCommunity.ServiceNow.Monitoring.ServiceNowNode']/AllowInbound$", $sourceNode.allow_inbound)
+                  $node.AddProperty("$MPElement[Name='CookdownCommunity.ServiceNow.Monitoring.ServiceNowNode']/ReadyToFailover$", $sourceNode.ready_to_failover)
+                  $node.AddProperty("$MPElement[Name='System!System.Entity']/DisplayName$", $sourceNode.system_id)
+                  $node
+                  }
+
+                  Function CreateWatcherNode
+                  {
+                  param($computerName,$sourceURL)
+                  $watcherNode = $discoveryData.CreateClassInstance("$MPElement[Name='CookdownCommunity.ServiceNow.Monitoring.WatcherNode']$")
+                  $watcherNode.AddProperty("$MPElement[Name='Windows!Microsoft.Windows.Computer']/PrincipalName$", $computerName)
+                  $watcherNode.AddProperty("$MPElement[Name='CookdownCommunity.ServiceNow.Monitoring.WatcherNode']/Instance$", $sourceURL)
+                  $watcherNode.AddProperty("$MPElement[Name='CookdownCommunity.ServiceNow.Monitoring.WatcherNode']/InstanceUrlBase$", $sourceURL.Replace("https://","").Replace("/",""))
+                  $watcherNode.AddProperty("$MPElement[Name='CookdownCommunity.ServiceNow.Monitoring.WatcherNode']/Location$", $location)
+                  $watcherNode.AddProperty("$MPElement[Name='System!System.Entity']/DisplayName$", $location)
+                  $watcherNode
+                  }
+
+                  Function CreateWatcherRelationship
+                  {
+                  param($instanceObject,$watcherObject)
+                  $watcherRelationship = $discoveryData.CreateRelationshipInstance("$MPElement[Name='CookdownCommunity.ServiceNow.Monitoring.InstanceContainsWatchers']$")
+                  $watcherRelationship.Source = $instanceObject
+                  $watcherRelationship.Target = $watcherObject
+                  $watcherRelationship
+                  }
+
+                  #Initialize the Object and create a discovery data unique to this Agent
+                  $api = New-Object -comObject 'MOM.ScriptAPI'
+                  [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
+
+                  $discoveryData = $api.CreateDiscoveryData(0, $sourceID, $managedEntityID)
+                  $headers = CreateHeaders -username $snowUserName -password $snowPassword
+
+                  try
+                  {
+                  foreach($instance in $instanceUrls.Trim().Split(","))
+                  {
+                  $api.LogScriptEvent("SNOW Discovery", 1033, 4, $("working on cluster {0}." -f $instance))
+                  $instance = $instance.Trim().ToLower()
+                  $clusterNodes = GetClusterStatusFromServiceNow -instanceURL $instance
+                  $api.LogScriptEvent("SNOW Discovery", 1033, 4, $("retrieved cluster nodes count = {0}" -f $clusterNodes.count))
+                  # Discover instance
+                  $serviceNowInstance = CreateInstanceObject -sourceNode $clusterNodes[0] -sourceURL $instance
+                  $discoveryData.AddInstance($serviceNowInstance)
+
+                  #Add watcher
+                  $watcherNode = CreateWatcherNode -computerName $computerName -sourceURL $instance
+                  $discoveryData.AddInstance($watcherNode)
+
+                  #Relate watcher to instance
+                  $watcherRelationship = CreateWatcherRelationship -instanceObject $serviceNowInstance -watcherObject $watcherNode
+                  $discoveryData.AddInstance($watcherRelationship)
+
+                  #Add Nodes
+                  foreach($snowNode in $clusterNodes)
+                  {
+                  $node = CreateNodeObject -sourceNode $snowNode -sourceURL $instance
+                  $discoveryData.AddInstance($node)
+                  $api.LogScriptEvent("SNOW Discovery", 1011, 0, $("Created node {0}" -f $snowNode.system_id))
+                  }
+                  }
+
+                  $api.LogScriptEvent("Cookdown SNOW Discovery", 1012, 0, $("Discovery Completed sucessfully"))
+                  $discoveryData
+                  }
+                  catch
+                  {
+                  $api.LogScriptEvent("Cookdown SNOW Discovery", 1015, 1, $("Discovery Failed with error $($_.Exception.Message)"))
+                  }
+                </ScriptBody>
                 <Parameters>
                   <Parameter>
                     <Name>sourceID</Name>
@@ -55,7 +179,7 @@
               </DataSource>
             </MemberModules>
             <Composition>
-              <Node ID="PSDisco"/>
+              <Node ID="PSDisco" />
             </Composition>
           </Composite>
         </ModuleImplementation>
@@ -65,15 +189,15 @@
   </TypeDefinitions>
   <Monitoring>
     <Discoveries>
-      <Discovery ID="CookdownCommunity.ServiceNow.Monitoring.DiscoveryWatchersAndInstances" Enabled="false" Target="Windows!Microsoft.Windows.Computer" Remotable="false">
+      <Discovery ID="CookdownCommunity.ServiceNow.Monitoring.DiscoveryWatchersAndInstances" Enabled="false" Target="Windows!Microsoft.Windows.Computer" ConfirmDelivery="false" Remotable="false" Priority="Normal">
         <Category>Discovery</Category>
         <DiscoveryTypes>
-          <DiscoveryClass TypeID="CookdownCommunity.ServiceNow.Monitoring.ServiceNowInstance"/>
-          <DiscoveryClass TypeID="CookdownCommunity.ServiceNow.Monitoring.ServiceNowNode"/>
-          <DiscoveryClass TypeID="CookdownCommunity.ServiceNow.Monitoring.WatcherNode"/>
-          <DiscoveryRelationship TypeID="CookdownCommunity.ServiceNow.Monitoring.InstanceHostsNodes"/>
-          <DiscoveryRelationship TypeID="CookdownCommunity.ServiceNow.Monitoring.ComputerHostsWatcher"/>
-          <DiscoveryRelationship TypeID="CookdownCommunity.ServiceNow.Monitoring.InstanceContainsWatchers"/>
+          <DiscoveryClass TypeID="CookdownCommunity.ServiceNow.Monitoring.ServiceNowInstance" />
+          <DiscoveryClass TypeID="CookdownCommunity.ServiceNow.Monitoring.ServiceNowNode" />
+          <DiscoveryClass TypeID="CookdownCommunity.ServiceNow.Monitoring.WatcherNode" />
+          <DiscoveryRelationship TypeID="CookdownCommunity.ServiceNow.Monitoring.InstanceHostsNodes" />
+          <DiscoveryRelationship TypeID="CookdownCommunity.ServiceNow.Monitoring.ComputerHostsWatcher" />
+          <DiscoveryRelationship TypeID="CookdownCommunity.ServiceNow.Monitoring.InstanceContainsWatchers" />
         </DiscoveryTypes>
         <DataSource ID="DiscoverSnow" TypeID="CookdownCommunity.ServiceNow.Monitoring.DiscoverServiceNow">
           <SourceID>$MPElement$</SourceID>
@@ -85,4 +209,24 @@
       </Discovery>
     </Discoveries>
   </Monitoring>
+  <LanguagePacks>
+    <LanguagePack ID="ENU" IsDefault="true">
+      <DisplayStrings>
+        <DisplayString ElementID="CookdownCommunity.ServiceNow.Monitoring.DiscoveryWatchersAndInstances">
+          <Name>Discover ServiceNow watchers and instances</Name>
+          <Description>Discover the ServiceNow watchers and instances for monitoring</Description>
+        </DisplayString>
+        <DisplayString ElementID="CookdownCommunity.ServiceNow.Monitoring.DiscoverServiceNow">
+          <Name>Discover ServiceNow Objects</Name>
+          <Description>Discovers the ServiceNow monitored objects</Description>
+        </DisplayString>
+        <DisplayString ElementID="CookdownCommunity.ServiceNow.Monitoring.DiscoverServiceNow" SubElementID="LocationName">
+          <Name>Location Name</Name>
+        </DisplayString>
+        <DisplayString ElementID="CookdownCommunity.ServiceNow.Monitoring.DiscoverServiceNow" SubElementID="InstanceUrls">
+          <Name>Instance Urls</Name>
+        </DisplayString>
+      </DisplayStrings>
+    </LanguagePack>
+  </LanguagePacks>
 </ManagementPackFragment>

@@ -211,4 +211,34 @@
       </UnitMonitorType>
     </MonitorTypes>
   </TypeDefinitions>
+  <LanguagePacks>
+    <LanguagePack ID="ENU" IsDefault="true">
+      <DisplayStrings>
+        <DisplayString ElementID="CookdownCommunity.ServiceNow.Monitoring.HttpsTCPPortTest.TimeOutMonitor" SubElementID="OK">
+          <Name>OK</Name>
+        </DisplayString>
+        <DisplayString ElementID="CookdownCommunity.ServiceNow.Monitoring.HttpsTCPPortTest.TimeOutMonitor" SubElementID="Error">
+          <Name>Error</Name>
+        </DisplayString>
+        <DisplayString ElementID="CookdownCommunity.ServiceNow.Monitoring.HttpsTCPPortTest.ConnectionRefusedMonitor" SubElementID="OK">
+          <Name>OK</Name>
+        </DisplayString>
+        <DisplayString ElementID="CookdownCommunity.ServiceNow.Monitoring.HttpsTCPPortTest.ConnectionRefusedMonitor" SubElementID="Error">
+          <Name>Error</Name>
+        </DisplayString>
+        <DisplayString ElementID="CookdownCommunity.ServiceNow.Monitoring.HttpsTCPPortTest.HostUnreachableMonitor" SubElementID="OK">
+          <Name>OK</Name>
+        </DisplayString>
+        <DisplayString ElementID="CookdownCommunity.ServiceNow.Monitoring.HttpsTCPPortTest.HostUnreachableMonitor" SubElementID="Error">
+          <Name>Error</Name>
+        </DisplayString>
+        <DisplayString ElementID="CookdownCommunity.ServiceNow.Monitoring.HttpsTCPPortTest.DNSResolutionMonitor" SubElementID="OK">
+          <Name>OK</Name>
+        </DisplayString>
+        <DisplayString ElementID="CookdownCommunity.ServiceNow.Monitoring.HttpsTCPPortTest.DNSResolutionMonitor" SubElementID="Error">
+          <Name>Error</Name>
+        </DisplayString>
+      </DisplayStrings>
+    </LanguagePack>
+  </LanguagePacks>
 </ManagementPackFragment>

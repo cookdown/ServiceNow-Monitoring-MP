@@ -1,22 +1,20 @@
-﻿<ManagementPackFragment SchemaVersion="2.0" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
-  <TypeDefinitions>
+﻿<ManagementPackFragment SchemaVersion="2.0" xmlns:xsd="http://www.w3.org/2001/XMLSchema"><TypeDefinitions>
     <EntityTypes>
       <ClassTypes>
-        <ClassType ID="CookdownCommunity.ServiceNow.Monitoring.ServiceNowInstance" Base="System!System.Service" Accessibility="Internal" Abstract="false" Hosted="false" Singleton="false">
-          <Property ID="URL" Key="true" Type="string" />
-          <Property ID="Name" Key="false" Type="string" />
-          <Property ID="Type" Key="false" Type="string" />
-          <Property ID="Version" Key="false" Type="string" />
-          <Property ID="DatabaseVersion" Key="false" Type="string" />
-          <Property ID="Build" Key="false" Type="string" />
-          <Property ID="Offering" Key="false" Type="string" />
-          <Property ID="POPStatus" Key="false" Type="string" />
-          <Property ID="SMTPStatus" Key="false" Type="string" />
+        <ClassType ID="CookdownCommunity.ServiceNow.Monitoring.ServiceNowInstance" Accessibility="Public" Abstract="false" Base="System!System.Service" Hosted="false" Singleton="false" Extension="false">
+          <Property ID="URL" Type="string" AutoIncrement="false" Key="true" CaseSensitive="false" MaxLength="256" MinLength="0" Required="false" Scale="0" />
+          <Property ID="Name" Type="string" AutoIncrement="false" Key="false" CaseSensitive="false" MaxLength="256" MinLength="0" Required="false" Scale="0" />
+          <Property ID="Type" Type="string" AutoIncrement="false" Key="false" CaseSensitive="false" MaxLength="256" MinLength="0" Required="false" Scale="0" />
+          <Property ID="Version" Type="string" AutoIncrement="false" Key="false" CaseSensitive="false" MaxLength="256" MinLength="0" Required="false" Scale="0" />
+          <Property ID="DatabaseVersion" Type="string" AutoIncrement="false" Key="false" CaseSensitive="false" MaxLength="256" MinLength="0" Required="false" Scale="0" />
+          <Property ID="Build" Type="string" AutoIncrement="false" Key="false" CaseSensitive="false" MaxLength="256" MinLength="0" Required="false" Scale="0" />
+          <Property ID="Offering" Type="string" AutoIncrement="false" Key="false" CaseSensitive="false" MaxLength="256" MinLength="0" Required="false" Scale="0" />
+          <Property ID="POPStatus" Type="string" AutoIncrement="false" Key="false" CaseSensitive="false" MaxLength="256" MinLength="0" Required="false" Scale="0" />
+          <Property ID="SMTPStatus" Type="string" AutoIncrement="false" Key="false" CaseSensitive="false" MaxLength="256" MinLength="0" Required="false" Scale="0" />
         </ClassType>
       </ClassTypes>
     </EntityTypes>
-  </TypeDefinitions>
-  <LanguagePacks>
+  </TypeDefinitions><LanguagePacks>
     <LanguagePack ID="ENU" IsDefault="true">
       <DisplayStrings>
         <DisplayString ElementID="CookdownCommunity.ServiceNow.Monitoring.ServiceNowInstance">
@@ -52,5 +50,4 @@
         </DisplayString>
       </DisplayStrings>
     </LanguagePack>
-  </LanguagePacks>
-</ManagementPackFragment>
+  </LanguagePacks></ManagementPackFragment>

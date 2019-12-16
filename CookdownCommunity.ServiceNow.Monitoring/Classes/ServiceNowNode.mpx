@@ -1,18 +1,16 @@
-﻿<ManagementPackFragment SchemaVersion="2.0" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
-  <TypeDefinitions>
+﻿<ManagementPackFragment SchemaVersion="2.0" xmlns:xsd="http://www.w3.org/2001/XMLSchema"><TypeDefinitions>
     <EntityTypes>
       <ClassTypes>
-        <ClassType ID="CookdownCommunity.ServiceNow.Monitoring.ServiceNowNode" Base="System!System.ApplicationComponent" Accessibility="Internal" Abstract="false" Hosted="true" Singleton="false">
-          <Property ID="NodeId" Key="true" Type="string" />
-          <Property ID="SystemId" Key="false" Type="string" />
-          <Property ID="CreatedOn" Key="false" Type="datetime" />
-          <Property ID="AllowInbound" Key="false" Type="bool" />
-          <Property ID="ReadyToFailover" Key="false" Type="bool" />
+        <ClassType ID="CookdownCommunity.ServiceNow.Monitoring.ServiceNowNode" Accessibility="Public" Abstract="false" Base="System!System.ApplicationComponent" Hosted="true" Singleton="false" Extension="false">
+          <Property ID="NodeId" Type="string" AutoIncrement="false" Key="true" CaseSensitive="false" MaxLength="256" MinLength="0" Required="false" Scale="0" />
+          <Property ID="SystemId" Type="string" AutoIncrement="false" Key="false" CaseSensitive="false" MaxLength="256" MinLength="0" Required="false" Scale="0" />
+          <Property ID="CreatedOn" Type="datetime" AutoIncrement="false" Key="false" CaseSensitive="false" MaxLength="256" MinLength="0" Required="false" Scale="0" />
+          <Property ID="AllowInbound" Type="bool" AutoIncrement="false" Key="false" CaseSensitive="false" MaxLength="256" MinLength="0" Required="false" Scale="0" />
+          <Property ID="ReadyToFailover" Type="bool" AutoIncrement="false" Key="false" CaseSensitive="false" MaxLength="256" MinLength="0" Required="false" Scale="0" />
         </ClassType>
       </ClassTypes>
     </EntityTypes>
-  </TypeDefinitions>
-  <LanguagePacks>
+  </TypeDefinitions><LanguagePacks>
     <LanguagePack ID="ENU" IsDefault="true">
       <DisplayStrings>
         <DisplayString ElementID="CookdownCommunity.ServiceNow.Monitoring.ServiceNowNode">
@@ -36,5 +34,4 @@
         </DisplayString>
       </DisplayStrings>
     </LanguagePack>
-  </LanguagePacks>
-</ManagementPackFragment>
+  </LanguagePacks></ManagementPackFragment>

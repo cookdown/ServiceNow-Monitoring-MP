@@ -1,0 +1,24 @@
+﻿<ManagementPackFragment SchemaVersion="2.0" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <Presentation>
+    <Folders>
+      <Folder ID="CookdownCommunity.ServiceNow.Monitoring.Presentation.Folders.ServiceNowMonitoring" Accessibility="Public" ParentFolder="SC!Microsoft.SystemCenter.Monitoring.ViewFolder.Root" />
+    </Folders>
+    <FolderItems>
+      <FolderItem ElementID="CookdownCommunity.ServiceNow.Monitoring.Presentation.Views.InstallationSetup" ID="i452b81f8a8a445c89e4dec7e3894a9d4" Folder="CookdownCommunity.ServiceNow.Monitoring.Presentation.Folders.ServiceNowMonitoring" />
+      <FolderItem ElementID="CookdownCommunity.ServiceNow.Monitoring.Presentation.Views.InstancesState" ID="i7522e6a85e804d42a849920a5df7878e" Folder="CookdownCommunity.ServiceNow.Monitoring.Presentation.Folders.ServiceNowMonitoring" />
+      <FolderItem ElementID="CookdownCommunity.ServiceNow.Monitoring.Presentation.Views.NodesState" ID="i34d04e93678740e5aa9d7349636f1f9b" Folder="CookdownCommunity.ServiceNow.Monitoring.Presentation.Folders.ServiceNowMonitoring" />
+      <FolderItem ElementID="CookdownCommunity.ServiceNow.Monitoring.Presentation.Views.UserPerf" ID="ie5b206ca6add4621835aa050eb8e42aa" Folder="CookdownCommunity.ServiceNow.Monitoring.Presentation.Folders.ServiceNowMonitoring" />
+      <FolderItem ElementID="CookdownCommunity.ServiceNow.Monitoring.Presentation.Views.DatabasePerf" ID="iffa3f75a943c473e80d382757daa3838" Folder="CookdownCommunity.ServiceNow.Monitoring.Presentation.Folders.ServiceNowMonitoring" />
+      <FolderItem ElementID="CookdownCommunity.ServiceNow.Monitoring.Presentation.Views.WatchersState" ID="i486652930c5e4300a014d91fa6d5b671" Folder="CookdownCommunity.ServiceNow.Monitoring.Presentation.Folders.ServiceNowMonitoring" />
+    </FolderItems>
+  </Presentation>
+  <LanguagePacks>
+    <LanguagePack ID="ENU" IsDefault="true">
+      <DisplayStrings>
+        <DisplayString ElementID="CookdownCommunity.ServiceNow.Monitoring.Presentation.Folders.ServiceNowMonitoring">
+          <Name>ServiceNow Monitoring [Community]</Name>
+        </DisplayString>
+      </DisplayStrings>
+    </LanguagePack>
+  </LanguagePacks>
+</ManagementPackFragment>
