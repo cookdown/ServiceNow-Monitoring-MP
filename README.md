@@ -1,7 +1,8 @@
 # ServiceNow-Monitoring-MP
-## We're open sourced for community contributions
 
 The ServiceNow Monitoring Management Pack lets you know what experience your end users have when they access ServiceNow from each of your satellite offices. Setup outside in monitoring from any existing SCOM Agent in each site you want to test from and get detailed insights such as:
+
+## We're open sourced for community contributions
 
 -   Availability -- ServiceNow itself is up but something between your users and ServiceNow preventing them from accessing it? get early alerts from SCOM when ServiceNow isn't available from each site
 -   See how your ServiceNow site is load-balanced -- we expose the servers that underpin your ServiceNow instance in SCOM, allowing you to alert on key performance metrics
