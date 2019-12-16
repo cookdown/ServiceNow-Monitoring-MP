@@ -1,0 +1,24 @@
+﻿<ManagementPackFragment SchemaVersion="2.0" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <Presentation>
+    <Views>
+      <View ID="CookdownCommunity.ServiceNow.Monitoring.Presentation.Views.InstallationSetup" Accessibility="Public" Enabled="true" Target="System!System.Entity" TypeID="SC!Microsoft.SystemCenter.UrlViewType" Visible="true">
+        <Category>Operations</Category>
+        <Criteria>
+          <Url>https://go.cookdown.com/ServiceNow-Monitoring-Mp-Docs</Url>
+        </Criteria>
+        <Presentation />
+        <Target />
+      </View>
+    </Views>
+  </Presentation>
+  <LanguagePacks>
+    <LanguagePack ID="ENU" IsDefault="true">
+      <DisplayStrings>
+        <DisplayString ElementID="CookdownCommunity.ServiceNow.Monitoring.Presentation.Views.InstallationSetup">
+          <Name>Installation and Setup</Name>
+          <Description>Installation and setup documentation for the ServiceNow monitoring MP from the Cookdown Community</Description>
+        </DisplayString>
+      </DisplayStrings>
+    </LanguagePack>
+  </LanguagePacks>
+</ManagementPackFragment>
