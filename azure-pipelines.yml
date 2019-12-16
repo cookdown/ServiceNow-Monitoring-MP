@@ -1,0 +1,49 @@
+trigger:
+  batch: true
+  branches:
+    include:
+      - '*'
+
+variables:
+  solution: 'CookdownCommunity.ServiceNow.Monitoring.sln'
+  buildPlatform: 'Any CPU'
+  buildConfiguration: 'Release'
+  artifactName: 'SNOW-Monitoring'
+
+stages:
+- stage: BuildMP
+
+  jobs:
+    - job: BuildJob
+      displayName: Build Management Pack
+      pool:
+        name: Build Agents
+        demands:
+        - msbuild
+        - visualstudio
+
+        steps:
+        # Build the pack
+
+        - task: VSBuild@1
+          inputs:
+            solution: '$(solution)'
+            platform: '$(buildPlatform)'
+            configuration: '$(buildConfiguration)'
+            clean: true
+
+        - task: CopyFiles@2
+          displayName: 'Copy Files to: $(build.artifactstagingdirectory)'
+          inputs:
+            SourceFolder: '$(system.defaultworkingdirectory)'
+            Contents: '**\bin\$(buildConfiguration)\**'
+            TargetFolder: '$(build.artifactstagingdirectory)'
+            CleanTargetFolder: true
+          condition: succeededOrFailed()
+
+        - task: PublishPipelineArtifact@0
+          displayName: 'Publish Pipeline Build Artifact'
+          inputs:
+            artifactName: '$(artifactName)'
+            targetPath: '$(build.artifactstagingdirectory)'
+
