@@ -5,7 +5,7 @@
     <RootNamespace>CookdownCommunity.ServiceNow.Monitoring</RootNamespace>
     <Name>CookdownCommunity.ServiceNow.Monitoring</Name>
     <ManagementPackName>CookdownCommunity.ServiceNow.Monitoring</ManagementPackName>
-    <Version>1.0.0.1</Version>
+    <Version>1.1.0.20</Version>
     <MpFrameworkVersion>v7.0.2</MpFrameworkVersion>
     <MpFrameworkProfile>OM</MpFrameworkProfile>
     <ProductVersion>1.1.0.0</ProductVersion>
@@ -37,7 +37,7 @@
     </ManagementPackReference>
     <ManagementPackReference Include="Microsoft.SystemCenter.Library">
       <Alias>SC</Alias>
-      <PackageToBundle>false</PackageToBundle>
+      <PackageToBundle>False</PackageToBundle>
     </ManagementPackReference>
     <ManagementPackReference Include="Microsoft.SystemCenter.SyntheticTransactions.Library">
       <HintPath>C:\Program Files (x86)\System Center Visual Studio Authoring Extensions\References\OM2012R2\Microsoft.SystemCenter.SyntheticTransactions.Library.mp</HintPath>
@@ -72,6 +72,8 @@
     <Folder Include="Classes" />
     <Folder Include="Discoveries" />
     <Folder Include="Monitors" />
+    <Folder Include="Presentation" />
+    <Folder Include="Presentation\Views" />
     <Folder Include="Rules" />
     <Folder Include="Modules" />
     <Folder Include="Scripts" />
@@ -110,6 +112,27 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Monitors\WatcherNodeUnitMonitors.mpx">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Presentation\FolderLayout.mpx">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Presentation\Views\DatabasePerf.mpx">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Presentation\Views\InstallationAndSetup.mpx">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Presentation\Views\InstanceState.mpx">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Presentation\Views\NodeState.mpx">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Presentation\Views\UserPerf.mpx">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Presentation\Views\WatchersState.mpx">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Rules\InstancePerformanceRules.mpx">

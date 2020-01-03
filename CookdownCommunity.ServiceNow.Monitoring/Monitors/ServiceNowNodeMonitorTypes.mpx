@@ -67,4 +67,16 @@
       </UnitMonitorType>
     </MonitorTypes>
   </TypeDefinitions>
+  <LanguagePacks>
+    <LanguagePack ID="ENU" IsDefault="true">
+      <DisplayStrings>
+        <DisplayString ElementID="CookdownCommunity.ServiceNow.Monitoring.PerformanceThreshold">
+          <Name>Performance Threshold monitor type</Name>
+        </DisplayString>
+        <DisplayString ElementID="CookdownCommunity.ServiceNow.Monitoring.PerformanceThreshold" SubElementID="Threshold">
+          <Name>Threshold</Name>
+        </DisplayString>
+      </DisplayStrings>
+    </LanguagePack>
+  </LanguagePacks>
 </ManagementPackFragment>
