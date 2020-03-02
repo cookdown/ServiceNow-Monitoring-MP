@@ -110,9 +110,9 @@
       </UnitMonitorConfig>
     </Instance>
     <Instance ID="Instance146bc686bb4c4828a485d3c539e6b420" Type="Microsoft.SystemCenter.Authoring.CodeGeneration.Monitoring.UnitMonitor" Version="1.0.0.0">
-      <UnitMonitorConfig xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+      <UnitMonitorConfig xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
         <MonitorType>CookdownCommunity.ServiceNow.Monitoring.HttpsTCPPortTest.ConnectionTimeMonitor</MonitorType>
-        <MonitorConfig>&lt;DegradedThresholdMS&gt;150&lt;/DegradedThresholdMS&gt;&lt;UnacceptableThresholdMS&gt;300&lt;/UnacceptableThresholdMS&gt;</MonitorConfig>
+        <MonitorConfig>&lt;DegradedThresholdMS&gt;.150&lt;/DegradedThresholdMS&gt;&lt;UnacceptableThresholdMS&gt;.300&lt;/UnacceptableThresholdMS&gt;</MonitorConfig>
         <MonitorOperationalStates>
           <OperationalState>
             <OperationalStateId>Acceptable</OperationalStateId>

@@ -216,12 +216,12 @@
           <MonitorTypeState ID="Unacceptable" NoDetection="false" />
         </MonitorTypeStates>
         <Configuration>
-          <xsd:element minOccurs="1" name="DegradedThresholdMS" type="xsd:integer" xmlns:xsd="http://www.w3.org/2001/XMLSchema" />
-          <xsd:element minOccurs="1" name="UnacceptableThresholdMS" type="xsd:integer" xmlns:xsd="http://www.w3.org/2001/XMLSchema" />
+          <xsd:element minOccurs="1" name="DegradedThresholdMS" type="xsd:double" xmlns:xsd="http://www.w3.org/2001/XMLSchema" />
+          <xsd:element minOccurs="1" name="UnacceptableThresholdMS" type="xsd:double" xmlns:xsd="http://www.w3.org/2001/XMLSchema" />
         </Configuration>
         <OverrideableParameters>
-          <OverrideableParameter ID="DegradedThresholdMS" Selector="$Config/DegradedThresholdMS$" ParameterType="int" />
-          <OverrideableParameter ID="UnacceptableThresholdMS" Selector="$Config/UnacceptableThresholdMS$" ParameterType="int" />
+          <OverrideableParameter ID="DegradedThresholdMS" Selector="$Config/DegradedThresholdMS$" ParameterType="double" />
+          <OverrideableParameter ID="UnacceptableThresholdMS" Selector="$Config/UnacceptableThresholdMS$" ParameterType="double" />
         </OverrideableParameters>
         <MonitorImplementation>
           <MemberModules>
@@ -232,11 +232,11 @@
               <Expression>
                 <SimpleExpression>
                   <ValueExpression>
-                    <XPathQuery Type="Integer">$Data/ConnectionTime$</XPathQuery>
+                    <XPathQuery Type="Double">ConnectionTime</XPathQuery>
                   </ValueExpression>
                   <Operator>Less</Operator>
                   <ValueExpression>
-                    <Value Type="UnsignedInteger">$Config/DegradedThresholdMS$</Value>
+                    <Value Type="Double">$Config/DegradedThresholdMS$</Value>
                   </ValueExpression>
                 </SimpleExpression>
               </Expression>
@@ -247,22 +247,22 @@
                   <Expression>
                     <SimpleExpression>
                       <ValueExpression>
-                        <XPathQuery Type="Integer">$Data/ConnectionTime$</XPathQuery>
+                        <XPathQuery Type="Double">ConnectionTime</XPathQuery>
                       </ValueExpression>
                       <Operator>GreaterEqual</Operator>
                       <ValueExpression>
-                        <Value Type="UnsignedInteger">$Config/DegradedThresholdMS$</Value>
+                        <Value Type="Double">$Config/DegradedThresholdMS$</Value>
                       </ValueExpression>
                     </SimpleExpression>
                   </Expression>
                   <Expression>
                     <SimpleExpression>
                       <ValueExpression>
-                        <XPathQuery Type="Integer">$Data/ConnectionTime$</XPathQuery>
+                        <XPathQuery Type="Double">ConnectionTime</XPathQuery>
                       </ValueExpression>
                       <Operator>Less</Operator>
                       <ValueExpression>
-                        <Value Type="UnsignedInteger">$Config/UnacceptableThresholdMS$</Value>
+                        <Value Type="Double">$Config/UnacceptableThresholdMS$</Value>
                       </ValueExpression>
                     </SimpleExpression>
                   </Expression>
@@ -273,11 +273,11 @@
               <Expression>
                 <SimpleExpression>
                   <ValueExpression>
-                    <XPathQuery Type="Integer">$Data/ConnectionTime$</XPathQuery>
+                    <XPathQuery Type="Double">ConnectionTime</XPathQuery>
                   </ValueExpression>
                   <Operator>GreaterEqual</Operator>
                   <ValueExpression>
-                    <Value Type="UnsignedInteger">$Config/UnacceptableThresholdMS$</Value>
+                    <Value Type="Double">$Config/UnacceptableThresholdMS$</Value>
                   </ValueExpression>
                 </SimpleExpression>
               </Expression>
