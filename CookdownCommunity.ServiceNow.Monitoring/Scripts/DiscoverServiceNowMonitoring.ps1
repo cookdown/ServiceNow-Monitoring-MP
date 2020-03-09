@@ -57,10 +57,10 @@ Function CreateInstanceObject
 	$instance.AddProperty("$MPElement[Name='CookdownCommunity.ServiceNow.Monitoring.ServiceNowInstance']/Offering$", $Stats.xmlstats.'glide.offering')
     
 	DebugDiscovery "[Name='CookdownCommunity.ServiceNow.Monitoring.ServiceNowInstance']/POPStatus" $stats.xmlstats.'glide.pop3.status'.InnerText
-	$instance.AddProperty("$MPElement[Name='CookdownCommunity.ServiceNow.Monitoring.ServiceNowInstance']/POPStatus$", $stats.xmlstats.'glide.pop3.status'.InnerText)
+	$instance.AddProperty("$MPElement[Name='CookdownCommunity.ServiceNow.Monitoring.ServiceNowInstance']/POPStatus$", (ArrayToStrings $stats.xmlstats.'glide.pop3.status'.InnerText))
     
 	DebugDiscovery "[Name='CookdownCommunity.ServiceNow.Monitoring.ServiceNowInstance']/SMTPStatus" $stats.xmlstats.'glide.smtp.status'.InnerText
-	#$instance.AddProperty("$MPElement[Name='CookdownCommunity.ServiceNow.Monitoring.ServiceNowInstance']/SMTPStatus$", $stats.xmlstats.'glide.smtp.status'.InnerText)
+	$instance.AddProperty("$MPElement[Name='CookdownCommunity.ServiceNow.Monitoring.ServiceNowInstance']/SMTPStatus$", (ArrayToStrings $stats.xmlstats.'glide.smtp.status'.InnerText))
     
 	$instance
 }
@@ -147,11 +147,26 @@ Function DebugDiscovery
 	}
 }
 
+Function ArrayToStrings
+{	
+	param($sourceObject)
+	[string]$cleanResult = "";
+
+	foreach ($stringLine in $sourceObject)
+	{
+		$cleanResult = $cleanResult + $stringLine.ToString();
+		$cleanResult = $cleanResult + [System.Environment]::NewLine;
+	}
+
+    $cleanResult
+}
+
+
 #Initialize the Object and create a discovery data unique to this Agent
 $api = New-Object -comObject 'MOM.ScriptAPI'
 [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
 
-$debugDiscovery = [boolean]$debugDiscovery
+$debugDiscovery = [bool]::Parse($debugDiscovery.ToString())
 
 $discoveryData = $api.CreateDiscoveryData(0, $sourceID, $managedEntityID)
 $headers = CreateHeaders -username $snowUserName -password $snowPassword

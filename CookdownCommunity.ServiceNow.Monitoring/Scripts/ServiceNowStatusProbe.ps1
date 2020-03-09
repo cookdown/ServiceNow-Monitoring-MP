@@ -1,5 +1,5 @@
 ﻿#Bring in our parameters
-param($instanceURL, $SnowUsername, $SnowPassword)
+param($instanceURL, $SnowUsername, $SnowPassword, $debugProbe)
 
 Function CreateHeaders
 {
@@ -38,6 +38,9 @@ Function MakeAddPerfPropertyBag
 		  $perfBag.AddValue("Counter",$Counter)
 		  $perfBag.AddValue("Value",$Value)
 		  $perfBag
+
+		  $debugString = "InstanceURL: $InstanceURL`nNodeId: $NodeId`nObject: $Object`nInstance: $Instance`nCounter: $Counter`nValue: $Value"
+		  DebugProbe "Creating performance property bag" $debugString
        }
   }
 }
@@ -54,6 +57,9 @@ Function MakeMonitoringStatusPropertyBag
 		$perfBag.AddValue("InstanceURL",$InstanceURL)
 		$perfBag.AddValue("Success",$Success.ToString())
 		$perfBag
+
+		$debugString = "InstanceURL: $InstanceURL`nSuccess: $Success"
+		DebugProbe "Creating status property bag" $debugString
 }
 
 Function GetClusterStatusFromServiceNow
@@ -106,6 +112,24 @@ Function CreatePerformancePropertyBags
 	MakeAddPerfPropertyBag -InstanceUrl $instance -NodeId $node.node_id -Object "Users" -Counter "Total" -Instance $node.system_id -Value $stats.xmlstats.sessionsummary.total
 }
 
+Function DebugProbe
+{
+	param($messageString,$objectValue = $null)
+
+	#We'll only write out data if we have debug enabled, otherwise, skip it
+	if($debugProbe)
+	{
+		if($objectValue -ne $null)
+        {
+            $oAPI.LogScriptEvent("SNOW Status", 1070, 4, "Status Probe DEBUG:`n$messageString`nWith a value of: $objectValue")
+        }
+        else
+        {
+            $oAPI.LogScriptEvent("SNOW Status", 1070, 4, "Status Probe DEBUG:`n$messageString")
+        }
+
+	}
+}
 
 try
 {
@@ -113,9 +137,13 @@ try
 	$oAPI.LogScriptEvent("SNOW Performance", 1050, 4, $("Collecting performance for {0}" -f $InstanceURL))
 	[Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
     $headers = CreateHeaders -username $SnowUsername -password $SnowPassword
-    $fetchTime = Measure-Command {$clusterNodes = GetClusterStatusFromServiceNow -instanceURL $instanceURL}
+    
+	$debugProbe = [bool]::Parse($debugProbe.ToString())
+	
+	DebugProbe "Connecting to ServiceNow Instance to pull Performance and Status" $instanceURL
+	$fetchTime = Measure-Command {$clusterNodes = GetClusterStatusFromServiceNow -instanceURL $instanceURL}
 
-	MakeAddPerfPropertyBag -InstanceUrl $instance -NodeId "NONE" -Object "Connection" -Counter "Fetch Time (MS)" -Instance "Total" -Value $fetchTime.TotalMilliseconds
+	MakeAddPerfPropertyBag -InstanceUrl $instanceURL -NodeId "NONE" -Object "Connection" -Counter "Fetch Time (MS)" -Instance "Total" -Value $fetchTime.TotalMilliseconds
 
 	# Setup our roll-up Performance
 	$instanceTotal_select = 0
@@ -130,6 +158,7 @@ try
 
     foreach($snowNode in $clusterNodes)
     {
+		DebugProbe "Parsing performance data for a cluster node" $snowNode.node_id
         CreatePerformancePropertyBags -node $snowNode -instance $instance
 
 		# Update the node
@@ -147,19 +176,19 @@ try
 		$instanceTotal_total = $instanceTotal_total + $stats.xmlstats.sessionsummary.total
     }
 
-	MakeAddPerfPropertyBag -InstanceUrl $instance -NodeId "NONE" -Object "Glide Pool DB" -Counter "Selects" -Instance "Total"  -Value $instanceTotal_select
-	MakeAddPerfPropertyBag -InstanceUrl $instance -NodeId "NONE" -Object "Glide Pool DB" -Counter "Selects (Over 1 Second)" -Instance "Total" -Value $instanceTotal_select_onesec
-	MakeAddPerfPropertyBag -InstanceUrl $instance -NodeId "NONE" -Object "Glide Pool DB" -Counter "Selects (Over 10 Sec)" -Instance "Total" -Value $instanceTotal_select_tensec
-	MakeAddPerfPropertyBag -InstanceUrl $instance -NodeId "NONE" -Object "Glide Pool DB" -Counter "Deletes" -Instance "Total" -Value $instanceTotal_delete
-	MakeAddPerfPropertyBag -InstanceUrl $instance -NodeId "NONE" -Object "Glide Pool DB" -Counter "Inserts" -Instance "Total" -Value $instanceTotal_insert
-	MakeAddPerfPropertyBag -InstanceUrl $instance -NodeId "NONE" -Object "Glide Pool DB" -Counter "Updates" -Instance "Total" -Value $instanceTotal_update
-	MakeAddPerfPropertyBag -InstanceUrl $instance -NodeId "NONE" -Object "Users" -Counter "End Users" -Instance "Total" -Value $instanceTotal_end_user
-	MakeAddPerfPropertyBag -InstanceUrl $instance -NodeId "NONE" -Object "Users" -Counter "Logged In" -Instance "Total" -Value $instanceTotal_logged_in
-	MakeAddPerfPropertyBag -InstanceUrl $instance -NodeId "NONE" -Object "Users" -Counter "Total" -Instance "Total" -Value $instanceTotal_total
+	MakeAddPerfPropertyBag -InstanceUrl $instanceURL -NodeId "NONE" -Object "Glide Pool DB" -Counter "Selects" -Instance "Total"  -Value $instanceTotal_select
+	MakeAddPerfPropertyBag -InstanceUrl $instanceURL -NodeId "NONE" -Object "Glide Pool DB" -Counter "Selects (Over 1 Second)" -Instance "Total" -Value $instanceTotal_select_onesec
+	MakeAddPerfPropertyBag -InstanceUrl $instanceURL -NodeId "NONE" -Object "Glide Pool DB" -Counter "Selects (Over 10 Sec)" -Instance "Total" -Value $instanceTotal_select_tensec
+	MakeAddPerfPropertyBag -InstanceUrl $instanceURL -NodeId "NONE" -Object "Glide Pool DB" -Counter "Deletes" -Instance "Total" -Value $instanceTotal_delete
+	MakeAddPerfPropertyBag -InstanceUrl $instanceURL -NodeId "NONE" -Object "Glide Pool DB" -Counter "Inserts" -Instance "Total" -Value $instanceTotal_insert
+	MakeAddPerfPropertyBag -InstanceUrl $instanceURL -NodeId "NONE" -Object "Glide Pool DB" -Counter "Updates" -Instance "Total" -Value $instanceTotal_update
+	MakeAddPerfPropertyBag -InstanceUrl $instanceURL -NodeId "NONE" -Object "Users" -Counter "End Users" -Instance "Total" -Value $instanceTotal_end_user
+	MakeAddPerfPropertyBag -InstanceUrl $instanceURL -NodeId "NONE" -Object "Users" -Counter "Logged In" -Instance "Total" -Value $instanceTotal_logged_in
+	MakeAddPerfPropertyBag -InstanceUrl $instanceURL -NodeId "NONE" -Object "Users" -Counter "Total" -Instance "Total" -Value $instanceTotal_total
 
-    MakeMonitoringStatusPropertyBag -InstanceUrl -Success $true
+    MakeMonitoringStatusPropertyBag -InstanceUrl $instanceURL -Success $true
 }
 catch
 {
-    MakeMonitoringStatusPropertyBag -InstanceUrl -Success $false
+    MakeMonitoringStatusPropertyBag -InstanceUrl $instanceURL -Success $false
 }
