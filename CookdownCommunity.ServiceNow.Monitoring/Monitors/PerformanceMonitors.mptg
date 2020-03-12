@@ -1,7 +1,7 @@
 <TemplateGroup>
   <Instances>
     <Instance ID="Instance1cb8bbbf42bb4bd8ba0ce5a2d4aaa2da" Type="Microsoft.SystemCenter.Authoring.CodeGeneration.Monitoring.UnitMonitor" Version="1.0.0.0">
-      <UnitMonitorConfig xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+      <UnitMonitorConfig xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
         <MonitorType>CookdownCommunity.ServiceNow.Monitoring.PerformanceThreshold</MonitorType>
         <MonitorConfig>&lt;InstanceURL&gt;$Target/Property[Type="CookdownCommunity.ServiceNow.Monitoring.ServiceNowInstance"]/URL$&lt;/InstanceURL&gt;&lt;Object&gt;Connection&lt;/Object&gt;&lt;Counter&gt;Fetch Time (MS)&lt;/Counter&gt;&lt;NodeId&gt;NONE&lt;/NodeId&gt;&lt;Threshold&gt;3500&lt;/Threshold&gt;</MonitorConfig>
         <MonitorOperationalStates>
@@ -37,7 +37,7 @@
       </UnitMonitorConfig>
     </Instance>
     <Instance ID="Instance1d9d977e8e774305953c6941ba39ed3c" Type="Microsoft.SystemCenter.Authoring.CodeGeneration.Monitoring.UnitMonitor" Version="1.0.0.0">
-      <UnitMonitorConfig xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+      <UnitMonitorConfig xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
         <MonitorType>CookdownCommunity.ServiceNow.Monitoring.PerformanceThreshold</MonitorType>
         <MonitorConfig>&lt;InstanceURL&gt;$Target/Host/Property[Type="CookdownCommunity.ServiceNow.Monitoring.ServiceNowInstance"]/URL$&lt;/InstanceURL&gt;&lt;Object&gt;Memory&lt;/Object&gt;&lt;Counter&gt;Percent Free&lt;/Counter&gt;&lt;NodeId&gt;$Target/Property[Type="CookdownCommunity.ServiceNow.Monitoring.ServiceNowNode"]/NodeId$&lt;/NodeId&gt;&lt;Threshold&gt;90&lt;/Threshold&gt;</MonitorConfig>
         <MonitorOperationalStates>
@@ -74,7 +74,7 @@
       </UnitMonitorConfig>
     </Instance>
     <Instance ID="Instance831895d1fa9045e99ff7868e05adc94f" Type="Microsoft.SystemCenter.Authoring.CodeGeneration.Monitoring.UnitMonitor" Version="1.0.0.0">
-      <UnitMonitorConfig xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+      <UnitMonitorConfig xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
         <MonitorType>CookdownCommunity.ServiceNow.Monitoring.PerformanceThreshold</MonitorType>
         <MonitorConfig>&lt;InstanceURL&gt;$Target/Host/Property[Type="CookdownCommunity.ServiceNow.Monitoring.ServiceNowInstance"]/URL$&lt;/InstanceURL&gt;&lt;Object&gt;Scheduler&lt;/Object&gt;&lt;Counter&gt;Queue Length&lt;/Counter&gt;&lt;NodeId&gt;$Target/Property[Type="CookdownCommunity.ServiceNow.Monitoring.ServiceNowNode"]/NodeId$&lt;/NodeId&gt;&lt;Threshold&gt;3&lt;/Threshold&gt;</MonitorConfig>
         <MonitorOperationalStates>
@@ -106,6 +106,47 @@
         <AlertPriority>Normal</AlertPriority>
         <AlertSeverity>MatchMonitorHealth</AlertSeverity>
         <AlertName />
+        <ConfirmDelivery>false</ConfirmDelivery>
+      </UnitMonitorConfig>
+    </Instance>
+    <Instance ID="Instance146bc686bb4c4828a485d3c539e6b420" Type="Microsoft.SystemCenter.Authoring.CodeGeneration.Monitoring.UnitMonitor" Version="1.0.0.0">
+      <UnitMonitorConfig xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+        <MonitorType>CookdownCommunity.ServiceNow.Monitoring.HttpsTCPPortTest.ConnectionTimeMonitor</MonitorType>
+        <MonitorConfig>&lt;DegradedThresholdMS&gt;.150&lt;/DegradedThresholdMS&gt;&lt;UnacceptableThresholdMS&gt;.300&lt;/UnacceptableThresholdMS&gt;</MonitorConfig>
+        <MonitorOperationalStates>
+          <OperationalState>
+            <OperationalStateId>Acceptable</OperationalStateId>
+            <OperationalStateDisplayName>Acceptable</OperationalStateDisplayName>
+            <MonitorTypeStateId>Acceptable</MonitorTypeStateId>
+            <HealthState>Success</HealthState>
+          </OperationalState>
+          <OperationalState>
+            <OperationalStateId>Degraded</OperationalStateId>
+            <OperationalStateDisplayName>Degraded</OperationalStateDisplayName>
+            <MonitorTypeStateId>Degraded</MonitorTypeStateId>
+            <HealthState>Warning</HealthState>
+          </OperationalState>
+          <OperationalState>
+            <OperationalStateId>Unacceptable</OperationalStateId>
+            <OperationalStateDisplayName>Unacceptable</OperationalStateDisplayName>
+            <MonitorTypeStateId>Unacceptable</MonitorTypeStateId>
+            <HealthState>Error</HealthState>
+          </OperationalState>
+        </MonitorOperationalStates>
+        <ParentMonitor>Health!System.Health.PerformanceState</ParentMonitor>
+        <Accessibility>Internal</Accessibility>
+        <Id>ServiceNowConnectionTime</Id>
+        <DisplayName>Watcher Connection Time</DisplayName>
+        <Description>Monitors the connection TCP time from the Watcher Nodes</Description>
+        <Target>CookdownCommunity.ServiceNow.Monitoring.WatcherNode</Target>
+        <Enabled>true</Enabled>
+        <Category>AvailabilityHealth</Category>
+        <Remotable>true</Remotable>
+        <Priority>Normal</Priority>
+        <AlertAutoResolve>true</AlertAutoResolve>
+        <AlertOnState>None</AlertOnState>
+        <AlertPriority>Normal</AlertPriority>
+        <AlertSeverity>MatchMonitorHealth</AlertSeverity>
         <ConfirmDelivery>false</ConfirmDelivery>
       </UnitMonitorConfig>
     </Instance>

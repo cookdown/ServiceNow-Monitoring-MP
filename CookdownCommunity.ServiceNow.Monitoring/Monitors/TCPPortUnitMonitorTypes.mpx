@@ -209,11 +209,113 @@
           </RegularDetections>
         </MonitorImplementation>
       </UnitMonitorType>
+      <UnitMonitorType ID="CookdownCommunity.ServiceNow.Monitoring.HttpsTCPPortTest.ConnectionTimeMonitor" Accessibility="Public">
+        <MonitorTypeStates>
+          <MonitorTypeState ID="Acceptable" NoDetection="false" />
+          <MonitorTypeState ID="Degraded" NoDetection="false" />
+          <MonitorTypeState ID="Unacceptable" NoDetection="false" />
+        </MonitorTypeStates>
+        <Configuration>
+          <xsd:element minOccurs="1" name="DegradedThresholdMS" type="xsd:double" xmlns:xsd="http://www.w3.org/2001/XMLSchema" />
+          <xsd:element minOccurs="1" name="UnacceptableThresholdMS" type="xsd:double" xmlns:xsd="http://www.w3.org/2001/XMLSchema" />
+        </Configuration>
+        <OverrideableParameters>
+          <OverrideableParameter ID="DegradedThresholdMS" Selector="$Config/DegradedThresholdMS$" ParameterType="double" />
+          <OverrideableParameter ID="UnacceptableThresholdMS" Selector="$Config/UnacceptableThresholdMS$" ParameterType="double" />
+        </OverrideableParameters>
+        <MonitorImplementation>
+          <MemberModules>
+            <DataSource ID="DS1" TypeID="CookdownCommunity.ServiceNow.Monitoring.TCPPortCheckDataSource">
+              <InstanceUrlBase>$Target/Property[Type="CookdownCommunity.ServiceNow.Monitoring.WatcherNode"]/InstanceUrlBase$</InstanceUrlBase>
+            </DataSource>
+            <ConditionDetection ID="CDAcceptable" TypeID="System!System.ExpressionFilter">
+              <Expression>
+                <SimpleExpression>
+                  <ValueExpression>
+                    <XPathQuery Type="Double">ConnectionTime</XPathQuery>
+                  </ValueExpression>
+                  <Operator>Less</Operator>
+                  <ValueExpression>
+                    <Value Type="Double">$Config/DegradedThresholdMS$</Value>
+                  </ValueExpression>
+                </SimpleExpression>
+              </Expression>
+            </ConditionDetection>
+            <ConditionDetection ID="CDDegraded" TypeID="System!System.ExpressionFilter">
+              <Expression>
+                <And>
+                  <Expression>
+                    <SimpleExpression>
+                      <ValueExpression>
+                        <XPathQuery Type="Double">ConnectionTime</XPathQuery>
+                      </ValueExpression>
+                      <Operator>GreaterEqual</Operator>
+                      <ValueExpression>
+                        <Value Type="Double">$Config/DegradedThresholdMS$</Value>
+                      </ValueExpression>
+                    </SimpleExpression>
+                  </Expression>
+                  <Expression>
+                    <SimpleExpression>
+                      <ValueExpression>
+                        <XPathQuery Type="Double">ConnectionTime</XPathQuery>
+                      </ValueExpression>
+                      <Operator>Less</Operator>
+                      <ValueExpression>
+                        <Value Type="Double">$Config/UnacceptableThresholdMS$</Value>
+                      </ValueExpression>
+                    </SimpleExpression>
+                  </Expression>
+                </And>
+              </Expression>
+            </ConditionDetection>
+            <ConditionDetection ID="CDUnacceptable" TypeID="System!System.ExpressionFilter">
+              <Expression>
+                <SimpleExpression>
+                  <ValueExpression>
+                    <XPathQuery Type="Double">ConnectionTime</XPathQuery>
+                  </ValueExpression>
+                  <Operator>GreaterEqual</Operator>
+                  <ValueExpression>
+                    <Value Type="Double">$Config/UnacceptableThresholdMS$</Value>
+                  </ValueExpression>
+                </SimpleExpression>
+              </Expression>
+            </ConditionDetection>
+          </MemberModules>
+          <RegularDetections>
+            <RegularDetection MonitorTypeStateID="Acceptable">
+              <Node ID="CDAcceptable">
+                <Node ID="DS1" />
+              </Node>
+            </RegularDetection>
+            <RegularDetection MonitorTypeStateID="Degraded">
+              <Node ID="CDDegraded">
+                <Node ID="DS1" />
+              </Node>
+            </RegularDetection>
+            <RegularDetection MonitorTypeStateID="Unacceptable">
+              <Node ID="CDUnacceptable">
+                <Node ID="DS1" />
+              </Node>
+            </RegularDetection>
+          </RegularDetections>
+        </MonitorImplementation>
+      </UnitMonitorType>
     </MonitorTypes>
   </TypeDefinitions>
   <LanguagePacks>
     <LanguagePack ID="ENU" IsDefault="true">
       <DisplayStrings>
+        <DisplayString ElementID="CookdownCommunity.ServiceNow.Monitoring.HttpsTCPPortTest.ConnectionTimeMonitor" SubElementID="Acceptable">
+          <Name>Acceptable</Name>
+        </DisplayString>
+        <DisplayString ElementID="CookdownCommunity.ServiceNow.Monitoring.HttpsTCPPortTest.ConnectionTimeMonitor" SubElementID="Degraded">
+          <Name>Degraded</Name>
+        </DisplayString>
+        <DisplayString ElementID="CookdownCommunity.ServiceNow.Monitoring.HttpsTCPPortTest.ConnectionTimeMonitor" SubElementID="Unacceptable">
+          <Name>Unacceptable</Name>
+        </DisplayString>
         <DisplayString ElementID="CookdownCommunity.ServiceNow.Monitoring.HttpsTCPPortTest.TimeOutMonitor" SubElementID="OK">
           <Name>OK</Name>
         </DisplayString>

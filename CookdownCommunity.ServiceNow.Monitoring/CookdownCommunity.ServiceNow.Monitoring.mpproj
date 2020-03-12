@@ -5,7 +5,7 @@
     <RootNamespace>CookdownCommunity.ServiceNow.Monitoring</RootNamespace>
     <Name>CookdownCommunity.ServiceNow.Monitoring</Name>
     <ManagementPackName>CookdownCommunity.ServiceNow.Monitoring</ManagementPackName>
-    <Version>1.1.0.20</Version>
+    <Version>1.1.0.200</Version>
     <MpFrameworkVersion>v7.0.2</MpFrameworkVersion>
     <MpFrameworkProfile>OM</MpFrameworkProfile>
     <ProductVersion>1.1.0.0</ProductVersion>

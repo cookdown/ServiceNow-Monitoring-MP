@@ -25,7 +25,7 @@
     <LanguagePack ID="ENU" IsDefault="true">
       <DisplayStrings>
         <DisplayString ElementID="CookdownCommunity.ServiceNow.Monitoring.HttpsTCPPortTest.ConnectionTime">
-          <Name>Test  SNOW instance TCP Port Connection Time Performance Collection</Name>
+          <Name>Test SNOW instance TCP Port Connection Time Performance Collection</Name>
           <Description>This performance collection rule collects the time it takes to connect to cookdowndev.service-now.com on port 443.</Description>
         </DisplayString>
       </DisplayStrings>
