@@ -170,6 +170,7 @@ $debugDiscovery = [bool]::Parse($debugDiscovery.ToString())
 
 $discoveryData = $api.CreateDiscoveryData(0, $sourceID, $managedEntityID)
 $headers = CreateHeaders -username $snowUserName -password $snowPassword
+[string]$ActiveInstance = "Not started";
 
 try
 {
@@ -177,6 +178,7 @@ try
     {
 	    $api.LogScriptEvent("SNOW Discovery", 1013, 4, $("working on cluster {0}." -f $instance))    
 	    $instance = $instance.Trim().ToLower()
+		$ActiveInstance = $instance;
         $clusterNodes = GetClusterStatusFromServiceNow -instanceURL $instance
 	    DebugDiscovery "retrieved cluster nodes count = $($clusterNodes.count)"
 		
@@ -213,5 +215,5 @@ try
 }
 catch
 {
-    $api.LogScriptEvent("Cookdown SNOW Discovery", 1015, 1, $("Discovery Failed with error $($_.Exception.Message)"))
+    $api.LogScriptEvent("Cookdown SNOW Discovery", 1015, 1, $("Discovery Failed with error $($_.Exception.Message)`n`nDiscovery was trying to process $ActiveInstance"))
 }

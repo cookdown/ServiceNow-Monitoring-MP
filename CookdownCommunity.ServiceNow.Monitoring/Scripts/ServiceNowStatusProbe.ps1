@@ -131,10 +131,11 @@ Function DebugProbe
 	}
 }
 
+# Create the API object and then we'll start our performance collection
+$oAPI = New-Object -comObject 'MOM.ScriptAPI'
+
 try
 {
-	$oAPI = New-Object -comObject 'MOM.ScriptAPI'
-	$oAPI.LogScriptEvent("SNOW Performance", 1050, 4, $("Collecting performance for {0}" -f $InstanceURL))
 	[Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
     $headers = CreateHeaders -username $SnowUsername -password $SnowPassword
     
@@ -187,8 +188,10 @@ try
 	MakeAddPerfPropertyBag -InstanceUrl $instanceURL -NodeId "NONE" -Object "Users" -Counter "Total" -Instance "Total" -Value $instanceTotal_total
 
     MakeMonitoringStatusPropertyBag -InstanceUrl $instanceURL -Success $true
+	$oAPI.LogScriptEvent("SNOW Performance", 1052, 4, $("Performance for {0} collected successfully" -f $InstanceURL))
 }
-catch
+catch 
 {
     MakeMonitoringStatusPropertyBag -InstanceUrl $instanceURL -Success $false
+	$oAPI.LogScriptEvent("SNOW Performance", 1055, 1, $("Performance for {0} could not be collected.`n`nError Message:`n{1}" -f $InstanceURL, $_))
 }
