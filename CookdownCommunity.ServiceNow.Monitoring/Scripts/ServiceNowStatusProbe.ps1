@@ -24,11 +24,11 @@ Function MakeAddPerfPropertyBag
     [string] $Counter = "",
     [double] $Value = $null
     )
-    
-  if ($Value -ne $null) 
+
+  if ($Value -ne $null)
   {
     if ($Value -ne '')
-       {  
+       {
 		  $perfBag = $oAPI.CreatePropertyBag()
 		  $perfBag.AddValue("Type","Performance")
 		  $perfBag.AddValue("InstanceURL",$InstanceURL)
@@ -72,29 +72,27 @@ Function GetClusterStatusFromServiceNow
 
 Function CreatePerformancePropertyBags
 {
-    param($node, $instance)
-    $ioStats = [xml]$node.iostats
-    $stats = [xml]$node.stats
+    param($node, $instance, $ioStats, $stats)
 
-	$glidePool = $ioStats.xmlstats.iostats.pool | ? {$_.name -eq 'glide'}    
+	$glidePool = $ioStats.xmlstats.iostats.pool | ? {$_.name -eq 'glide'}
 
 	MakeAddPerfPropertyBag -InstanceUrl $instance -NodeId $node.node_id -Object "Memory" -Counter "Total" -Instance $node.system_id -Value $stats.xmlstats.'system.memory.total'
 	MakeAddPerfPropertyBag -InstanceUrl $instance -NodeId $node.node_id -Object "Memory" -Counter "In Use" -Instance $node.system_id -Value $stats.xmlstats.'system.memory.in.use'
 	MakeAddPerfPropertyBag -InstanceUrl $instance -NodeId $node.node_id -Object "Memory" -Counter "Percent Free" -Instance $node.system_id -Value $stats.xmlstats.'system.memory.pct.free'
 	MakeAddPerfPropertyBag -InstanceUrl $instance -NodeId $node.node_id -Object "Memory" -Counter "Max" -Instance $node.system_id -Value $stats.xmlstats.'system.memory.max'.InnerText
 
-	MakeAddPerfPropertyBag -InstanceUrl $instance -NodeId $node.node_id -Object "Servlet" -Counter "Cache Flushes" -Instance $node.system_id -Value $stats.xmlstats.'servlet.cache.flushes'             
-	MakeAddPerfPropertyBag -InstanceUrl $instance -NodeId $node.node_id -Object "Servlet" -Counter "Uptime" -Instance $node.system_id -Value $stats.xmlstats.'servlet.uptime'                    
-	MakeAddPerfPropertyBag -InstanceUrl $instance -NodeId $node.node_id -Object "Servlet" -Counter "Transactions" -Instance $node.system_id -Value $stats.xmlstats.'servlet.transactions'              
-	MakeAddPerfPropertyBag -InstanceUrl $instance -NodeId $node.node_id -Object "Servlet" -Counter "Errors Handled" -Instance $node.system_id -Value $stats.xmlstats.'servlet.errors.handled'            
-	MakeAddPerfPropertyBag -InstanceUrl $instance -NodeId $node.node_id -Object "Servlet" -Counter "Processor Transactions" -Instance $node.system_id -Value $stats.xmlstats.'servlet.processor.transactions'    
-	MakeAddPerfPropertyBag -InstanceUrl $instance -NodeId $node.node_id -Object "Servlet" -Counter "Cancelled Transactions" -Instance $node.system_id -Value $stats.xmlstats.'servlet.cancelled.transactions'    
-	MakeAddPerfPropertyBag -InstanceUrl $instance -NodeId $node.node_id -Object "Servlet" -Counter "Active Sessions" -Instance $node.system_id -Value $stats.xmlstats.'servlet.active.sessions' 
-          
-	MakeAddPerfPropertyBag -InstanceUrl $instance -NodeId $node.node_id -Object "Scheduler" -Counter "Worker Count" -Instance $node.system_id -Value $stats.xmlstats.'scheduler.worker.count'            
-	MakeAddPerfPropertyBag -InstanceUrl $instance -NodeId $node.node_id -Object "Scheduler" -Counter "Queue Length" -Instance $node.system_id -Value $stats.xmlstats.'scheduler.queue.length'            
-	MakeAddPerfPropertyBag -InstanceUrl $instance -NodeId $node.node_id -Object "Scheduler" -Counter "Mean Queue Age" -Instance $node.system_id -Value $stats.xmlstats.'scheduler.mean.queue.age'          
-	MakeAddPerfPropertyBag -InstanceUrl $instance -NodeId $node.node_id -Object "Scheduler" -Counter "Total Jobs" -Instance $node.system_id -Value $stats.xmlstats.'scheduler.total.jobs'              
+	MakeAddPerfPropertyBag -InstanceUrl $instance -NodeId $node.node_id -Object "Servlet" -Counter "Cache Flushes" -Instance $node.system_id -Value $stats.xmlstats.'servlet.cache.flushes'
+	MakeAddPerfPropertyBag -InstanceUrl $instance -NodeId $node.node_id -Object "Servlet" -Counter "Uptime" -Instance $node.system_id -Value $stats.xmlstats.'servlet.uptime'
+	MakeAddPerfPropertyBag -InstanceUrl $instance -NodeId $node.node_id -Object "Servlet" -Counter "Transactions" -Instance $node.system_id -Value $stats.xmlstats.'servlet.transactions'
+	MakeAddPerfPropertyBag -InstanceUrl $instance -NodeId $node.node_id -Object "Servlet" -Counter "Errors Handled" -Instance $node.system_id -Value $stats.xmlstats.'servlet.errors.handled'
+	MakeAddPerfPropertyBag -InstanceUrl $instance -NodeId $node.node_id -Object "Servlet" -Counter "Processor Transactions" -Instance $node.system_id -Value $stats.xmlstats.'servlet.processor.transactions'
+	MakeAddPerfPropertyBag -InstanceUrl $instance -NodeId $node.node_id -Object "Servlet" -Counter "Cancelled Transactions" -Instance $node.system_id -Value $stats.xmlstats.'servlet.cancelled.transactions'
+	MakeAddPerfPropertyBag -InstanceUrl $instance -NodeId $node.node_id -Object "Servlet" -Counter "Active Sessions" -Instance $node.system_id -Value $stats.xmlstats.'servlet.active.sessions'
+
+	MakeAddPerfPropertyBag -InstanceUrl $instance -NodeId $node.node_id -Object "Scheduler" -Counter "Worker Count" -Instance $node.system_id -Value $stats.xmlstats.'scheduler.worker.count'
+	MakeAddPerfPropertyBag -InstanceUrl $instance -NodeId $node.node_id -Object "Scheduler" -Counter "Queue Length" -Instance $node.system_id -Value $stats.xmlstats.'scheduler.queue.length'
+	MakeAddPerfPropertyBag -InstanceUrl $instance -NodeId $node.node_id -Object "Scheduler" -Counter "Mean Queue Age" -Instance $node.system_id -Value $stats.xmlstats.'scheduler.mean.queue.age'
+	MakeAddPerfPropertyBag -InstanceUrl $instance -NodeId $node.node_id -Object "Scheduler" -Counter "Total Jobs" -Instance $node.system_id -Value $stats.xmlstats.'scheduler.total.jobs'
 	MakeAddPerfPropertyBag -InstanceUrl $instance -NodeId $node.node_id -Object "Scheduler" -Counter "Total Burst Workers" -Instance $node.system_id -Value $stats.xmlstats.'scheduler.total.burst.workers'
 
 	MakeAddPerfPropertyBag -InstanceUrl $instance -NodeId $node.node_id -Object "Glide Pool DB" -Counter "Selects" -Instance $node.system_id -Value $glidePool.select
@@ -138,9 +136,9 @@ try
 {
 	[Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
     $headers = CreateHeaders -username $SnowUsername -password $SnowPassword
-    
+
 	$debugProbe = [bool]::Parse($debugProbe.ToString())
-	
+
 	DebugProbe "Connecting to ServiceNow Instance to pull Performance and Status" $instanceURL
 	$fetchTime = Measure-Command {$clusterNodes = GetClusterStatusFromServiceNow -instanceURL $instanceURL}
 
@@ -159,13 +157,28 @@ try
 
     foreach($snowNode in $clusterNodes)
     {
+
+		DebugProbe "Getting performance data for a cluster node" $snowNode.node_id
+
+		#Get Stats
+		If ($snowNode | Get-Member -name 'node_stats') {
+			$NodeStats = (Invoke-RestMethod -Uri $snowNode.'node_stats'.link -Headers $headers -Method GET).Result
+			$ioStats = [xml]$NodeStats.iostats
+			$stats = [xml]$NodeStats.stats
+			#If node_stats we're on Paris or later
+		}
+		Else {
+			$ioStats = [xml]$snowNode.iostats
+			$stats = [xml]$snowNode.stats
+			#If stats we're on Orlando or earlier
+		}
+
 		DebugProbe "Parsing performance data for a cluster node" $snowNode.node_id
-        CreatePerformancePropertyBags -node $snowNode -instance $instance
+
+        CreatePerformancePropertyBags -node $snowNode -instance $instance -ioStats $ioStats -stats $stats
 
 		# Update the node
-		$ioStats = [xml]$snowNode.iostats
-		$stats = [xml]$snowNode.stats
-		$glidePoolData = $ioStats.xmlstats.iostats.pool | ? {$_.name -eq 'glide'}   
+		$glidePoolData = $ioStats.xmlstats.iostats.pool | ? {$_.name -eq 'glide'}
 		$instanceTotal_select = $instanceTotal_select + $glidePoolData.select
 		$instanceTotal_select_onesec = $instanceTotal_select_onesec + $glidePoolData.select_onesec
 		$instanceTotal_select_tensec = $instanceTotal_select_tensec + $glidePoolData.select_tensec
@@ -190,7 +203,7 @@ try
     MakeMonitoringStatusPropertyBag -InstanceUrl $instanceURL -Success $true
 	$oAPI.LogScriptEvent("SNOW Performance", 1052, 4, $("Performance for {0} collected successfully" -f $InstanceURL))
 }
-catch 
+catch
 {
     MakeMonitoringStatusPropertyBag -InstanceUrl $instanceURL -Success $false
 	$oAPI.LogScriptEvent("SNOW Performance", 1055, 1, $("Performance for {0} could not be collected.`n`nError Message:`n{1}" -f $InstanceURL, $_))

@@ -3,7 +3,7 @@
   <Manifest>
     <Identity>
       <ID>CookdownCommunity.ServiceNow.Monitoring</ID>
-      <Version>1.0.0.8</Version>
+      <Version>1.1.0.427</Version>
     </Identity>
     <Name>CookdownCommunity.ServiceNow.Monitoring</Name>
     <References>
@@ -97,10 +97,12 @@
           <xsd:element name="LocationName" type="xsd:string" xmlns:xsd="http://www.w3.org/2001/XMLSchema" />
           <xsd:element name="InstanceUrls" type="xsd:string" xmlns:xsd="http://www.w3.org/2001/XMLSchema" />
           <xsd:element name="ComputerName" type="xsd:string" xmlns:xsd="http://www.w3.org/2001/XMLSchema" />
+          <xsd:element name="DebugDiscovery" type="xsd:boolean" xmlns:xsd="http://www.w3.org/2001/XMLSchema" />
         </Configuration>
         <OverrideableParameters>
           <OverrideableParameter ID="LocationName" Selector="$Config/LocationName$" ParameterType="string" />
           <OverrideableParameter ID="InstanceUrls" Selector="$Config/InstanceUrls$" ParameterType="string" />
+          <OverrideableParameter ID="DebugDiscovery" Selector="$Config/DebugDiscovery$" ParameterType="bool" />
         </OverrideableParameters>
         <ModuleImplementation Isolation="Any">
           <Composite>
@@ -109,131 +111,233 @@
                 <IntervalSeconds>43200</IntervalSeconds>
                 <SyncTime />
                 <ScriptName>DiscoverServiceNowMonitoring.ps1</ScriptName>
-                <ScriptBody>
-                  #Bring in our parameters
-                  param($sourceID, $managedEntityID, $location, $instanceUrls, $computerName, $snowUserName, $snowPassword)
+                <ScriptBody><![CDATA[#Bring in our parameters
+param($sourceID, $managedEntityID, $location, $instanceUrls, $computerName, $debugDiscovery, $snowUserName, $snowPassword)
 
-                  Function CreateHeaders
-                  {
-                  param($username, $password)
-                  # Build auth header
-                  $base64AuthInfo = [Convert]::ToBase64String([Text.Encoding]::ASCII.GetBytes(("{0}:{1}" -f $username, $password)))
+Function CreateHeaders
+{
+	param($username, $password)
+	# Build auth header
+	$base64AuthInfo = [Convert]::ToBase64String([Text.Encoding]::ASCII.GetBytes(("{0}:{1}" -f $username, $password)))
 
-                  # Set proper headers
-                  $headers = New-Object "System.Collections.Generic.Dictionary[[String],[String]]"
-                  $headers.Add('Authorization',('Basic {0}' -f $base64AuthInfo))
-                  $headers.Add('Accept','application/json')
-                  $headers
-                  }
+	# Set proper headers
+	$headers = New-Object "System.Collections.Generic.Dictionary[[String],[String]]"
+	$headers.Add('Authorization',('Basic {0}' -f $base64AuthInfo))
+	$headers.Add('Accept','application/json')
+	$headers
+}
 
-                  Function GetClusterStatusFromServiceNow
-                  {
-                  param($instanceURL)
-                  $statsEndpoint = $instanceURL + "api/now/table/sys_cluster_state"
-                  $results = Invoke-RESTMethod -Uri $statsEndpoint -Headers $headers -Method GET -ErrorAction Stop
-                  $results.result
-                  }
+Function GetClusterStatusFromServiceNow
+{
+    param($instanceURL)
+    $statsEndpoint = $instanceURL + "api/now/table/sys_cluster_state"
+	DebugDiscovery "Querying ServiceNow table for discovery data" $statsEndpoint
+    $results = Invoke-RESTMethod -Uri $statsEndpoint -Headers $headers -Method GET -ErrorAction Stop
+	DebugDiscovery "Sucessfully queried data from ServiceNow table"
+    $results.result
+}
 
-                  Function CreateInstanceObject
-                  {
-                  param($sourceNode,$sourceURL)
+Function CreateInstanceObject
+{
+    param($sourceNode,$sourceURL)
 
-                  $stats = [xml]$sourceNode.stats
-                  $instance = $discoveryData.CreateClassInstance("$MPElement[Name='CookdownCommunity.ServiceNow.Monitoring.ServiceNowInstance']$")
-                  $instance.AddProperty("$MPElement[Name='CookdownCommunity.ServiceNow.Monitoring.ServiceNowInstance']/URL$", $sourceURL)
-                  $instance.AddProperty("$MPElement[Name='CookdownCommunity.ServiceNow.Monitoring.ServiceNowInstance']/Name$", $Stats.xmlstats.instance_name)
-                  $instance.AddProperty("$MPElement[Name='CookdownCommunity.ServiceNow.Monitoring.ServiceNowInstance']/Type$", $Stats.xmlstats.instance_type)
-                  $instance.AddProperty("$MPElement[Name='CookdownCommunity.ServiceNow.Monitoring.ServiceNowInstance']/Version$", $Stats.xmlstats.'glide.build.name')
-                  $instance.AddProperty("$MPElement[Name='CookdownCommunity.ServiceNow.Monitoring.ServiceNowInstance']/Build$", $Stats.xmlstats.'glide.build.tag')
-                  $instance.AddProperty("$MPElement[Name='CookdownCommunity.ServiceNow.Monitoring.ServiceNowInstance']/DatabaseVersion$", $stats.xmlstats.'db.product_version')
-                  $instance.AddProperty("$MPElement[Name='CookdownCommunity.ServiceNow.Monitoring.ServiceNowInstance']/Offering$", $Stats.xmlstats.'glide.offering')
-                  $instance.AddProperty("$MPElement[Name='CookdownCommunity.ServiceNow.Monitoring.ServiceNowInstance']/POPStatus$", $stats.xmlstats.'glide.pop3.status'.InnerText)
-                  $instance.AddProperty("$MPElement[Name='CookdownCommunity.ServiceNow.Monitoring.ServiceNowInstance']/SMTPStatus$", $stats.xmlstats.'glide.smtp.status'.InnerText)
-                  $instance.AddProperty("$MPElement[Name='System!System.Entity']/DisplayName$", $Stats.xmlstats.instance_name)
-                  $instance
-                  }
+	If ($sourceNode | Get-Member -name 'node_stats') {
+        $stats = [xml](Invoke-RestMethod -Uri $sourceNode.'node_stats'.link -Headers $headers -Method GET -ErrorAction Stop).Result.stats
+        #If node_stats we're on Paris or later
+    }
+    Else {
+        $stats = [xml]$sourceNode.stats
+        #If stats we're on Orlando or earlier
+	}
 
-                  Function CreateNodeObject
-                  {
-                  param($sourceNode,$sourceURL)
+	DebugDiscovery "Parsing XML Response from Server"
 
-                  $stats = [xml]$sourceNode.stats
-                  $node = $discoveryData.CreateClassInstance("$MPElement[Name='CookdownCommunity.ServiceNow.Monitoring.ServiceNowNode']$")
-                  $node.AddProperty("$MPElement[Name='CookdownCommunity.ServiceNow.Monitoring.ServiceNowInstance']/URL$", $sourceURL)
-                  $node.AddProperty("$MPElement[Name='CookdownCommunity.ServiceNow.Monitoring.ServiceNowNode']/NodeId$", $sourceNode.node_id)
-                  $node.AddProperty("$MPElement[Name='CookdownCommunity.ServiceNow.Monitoring.ServiceNowNode']/SystemId$", $sourceNode.system_id)
-                  $node.AddProperty("$MPElement[Name='CookdownCommunity.ServiceNow.Monitoring.ServiceNowNode']/CreatedOn$", $sourceNode.sys_created_on)
-                  $node.AddProperty("$MPElement[Name='CookdownCommunity.ServiceNow.Monitoring.ServiceNowNode']/AllowInbound$", $sourceNode.allow_inbound)
-                  $node.AddProperty("$MPElement[Name='CookdownCommunity.ServiceNow.Monitoring.ServiceNowNode']/ReadyToFailover$", $sourceNode.ready_to_failover)
-                  $node.AddProperty("$MPElement[Name='System!System.Entity']/DisplayName$", $sourceNode.system_id)
-                  $node
-                  }
+    $instance = $discoveryData.CreateClassInstance("$MPElement[Name='CookdownCommunity.ServiceNow.Monitoring.ServiceNowInstance']$")
 
-                  Function CreateWatcherNode
-                  {
-                  param($computerName,$sourceURL)
-                  $watcherNode = $discoveryData.CreateClassInstance("$MPElement[Name='CookdownCommunity.ServiceNow.Monitoring.WatcherNode']$")
-                  $watcherNode.AddProperty("$MPElement[Name='Windows!Microsoft.Windows.Computer']/PrincipalName$", $computerName)
-                  $watcherNode.AddProperty("$MPElement[Name='CookdownCommunity.ServiceNow.Monitoring.WatcherNode']/Instance$", $sourceURL)
-                  $watcherNode.AddProperty("$MPElement[Name='CookdownCommunity.ServiceNow.Monitoring.WatcherNode']/InstanceUrlBase$", $sourceURL.Replace("https://","").Replace("/",""))
-                  $watcherNode.AddProperty("$MPElement[Name='CookdownCommunity.ServiceNow.Monitoring.WatcherNode']/Location$", $location)
-                  $watcherNode.AddProperty("$MPElement[Name='System!System.Entity']/DisplayName$", $location)
-                  $watcherNode
-                  }
+	DebugDiscovery "[Name='CookdownCommunity.ServiceNow.Monitoring.ServiceNowInstance']/URL" $sourceURL
+	$instance.AddProperty("$MPElement[Name='CookdownCommunity.ServiceNow.Monitoring.ServiceNowInstance']/URL$", $sourceURL)
 
-                  Function CreateWatcherRelationship
-                  {
-                  param($instanceObject,$watcherObject)
-                  $watcherRelationship = $discoveryData.CreateRelationshipInstance("$MPElement[Name='CookdownCommunity.ServiceNow.Monitoring.InstanceContainsWatchers']$")
-                  $watcherRelationship.Source = $instanceObject
-                  $watcherRelationship.Target = $watcherObject
-                  $watcherRelationship
-                  }
+    DebugDiscovery "[Name='CookdownCommunity.ServiceNow.Monitoring.ServiceNowInstance']/Name" $Stats.xmlstats.instance_name
+	$instance.AddProperty("$MPElement[Name='CookdownCommunity.ServiceNow.Monitoring.ServiceNowInstance']/Name$", $Stats.xmlstats.instance_name)
 
-                  #Initialize the Object and create a discovery data unique to this Agent
-                  $api = New-Object -comObject 'MOM.ScriptAPI'
-                  [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
+	DebugDiscovery "[Name='System!System.Entity']/DisplayName" $Stats.xmlstats.instance_name.ToString()
+	$instance.AddProperty("$MPElement[Name='System!System.Entity']/DisplayName$", $Stats.xmlstats.instance_name)
 
-                  $discoveryData = $api.CreateDiscoveryData(0, $sourceID, $managedEntityID)
-                  $headers = CreateHeaders -username $snowUserName -password $snowPassword
+	DebugDiscovery "[Name='CookdownCommunity.ServiceNow.Monitoring.ServiceNowInstance']/Type" $Stats.xmlstats.instance_type
+	$instance.AddProperty("$MPElement[Name='CookdownCommunity.ServiceNow.Monitoring.ServiceNowInstance']/Type$", $Stats.xmlstats.instance_type)
 
-                  try
-                  {
-                  foreach($instance in $instanceUrls.Trim().Split(","))
-                  {
-                  $api.LogScriptEvent("SNOW Discovery", 1033, 4, $("working on cluster {0}." -f $instance))
-                  $instance = $instance.Trim().ToLower()
-                  $clusterNodes = GetClusterStatusFromServiceNow -instanceURL $instance
-                  $api.LogScriptEvent("SNOW Discovery", 1033, 4, $("retrieved cluster nodes count = {0}" -f $clusterNodes.count))
-                  # Discover instance
-                  $serviceNowInstance = CreateInstanceObject -sourceNode $clusterNodes[0] -sourceURL $instance
-                  $discoveryData.AddInstance($serviceNowInstance)
+	DebugDiscovery "[Name='CookdownCommunity.ServiceNow.Monitoring.ServiceNowInstance']/Version" $Stats.xmlstats.'glide.build.name'
+	$instance.AddProperty("$MPElement[Name='CookdownCommunity.ServiceNow.Monitoring.ServiceNowInstance']/Version$", $Stats.xmlstats.'glide.build.name')
 
-                  #Add watcher
-                  $watcherNode = CreateWatcherNode -computerName $computerName -sourceURL $instance
-                  $discoveryData.AddInstance($watcherNode)
+	DebugDiscovery "[Name='CookdownCommunity.ServiceNow.Monitoring.ServiceNowInstance']/Build" $Stats.xmlstats.'glide.build.tag'
+	$instance.AddProperty("$MPElement[Name='CookdownCommunity.ServiceNow.Monitoring.ServiceNowInstance']/Build$", $Stats.xmlstats.'glide.build.tag')
 
-                  #Relate watcher to instance
-                  $watcherRelationship = CreateWatcherRelationship -instanceObject $serviceNowInstance -watcherObject $watcherNode
-                  $discoveryData.AddInstance($watcherRelationship)
+	DebugDiscovery "[Name='CookdownCommunity.ServiceNow.Monitoring.ServiceNowInstance']/DatabaseVersion" $stats.xmlstats.'db.product_version'
+	$instance.AddProperty("$MPElement[Name='CookdownCommunity.ServiceNow.Monitoring.ServiceNowInstance']/DatabaseVersion$", $stats.xmlstats.'db.product_version')
 
-                  #Add Nodes
-                  foreach($snowNode in $clusterNodes)
-                  {
-                  $node = CreateNodeObject -sourceNode $snowNode -sourceURL $instance
-                  $discoveryData.AddInstance($node)
-                  $api.LogScriptEvent("SNOW Discovery", 1011, 0, $("Created node {0}" -f $snowNode.system_id))
-                  }
-                  }
+	DebugDiscovery "[Name='CookdownCommunity.ServiceNow.Monitoring.ServiceNowInstance']/Offering" $Stats.xmlstats.'glide.offering'
+	$instance.AddProperty("$MPElement[Name='CookdownCommunity.ServiceNow.Monitoring.ServiceNowInstance']/Offering$", $Stats.xmlstats.'glide.offering')
 
-                  $api.LogScriptEvent("Cookdown SNOW Discovery", 1012, 0, $("Discovery Completed sucessfully"))
-                  $discoveryData
-                  }
-                  catch
-                  {
-                  $api.LogScriptEvent("Cookdown SNOW Discovery", 1015, 1, $("Discovery Failed with error $($_.Exception.Message)"))
-                  }
-                </ScriptBody>
+	DebugDiscovery "[Name='CookdownCommunity.ServiceNow.Monitoring.ServiceNowInstance']/POPStatus" $stats.xmlstats.'glide.pop3.status'.InnerText
+	$instance.AddProperty("$MPElement[Name='CookdownCommunity.ServiceNow.Monitoring.ServiceNowInstance']/POPStatus$", (ArrayToStrings $stats.xmlstats.'glide.pop3.status'.InnerText))
+
+	DebugDiscovery "[Name='CookdownCommunity.ServiceNow.Monitoring.ServiceNowInstance']/SMTPStatus" $stats.xmlstats.'glide.smtp.status'.InnerText
+	$instance.AddProperty("$MPElement[Name='CookdownCommunity.ServiceNow.Monitoring.ServiceNowInstance']/SMTPStatus$", (ArrayToStrings $stats.xmlstats.'glide.smtp.status'.InnerText))
+
+	$instance
+}
+
+Function CreateNodeObject
+{
+    param($sourceNode,$sourceURL)
+
+    $node = $discoveryData.CreateClassInstance("$MPElement[Name='CookdownCommunity.ServiceNow.Monitoring.ServiceNowNode']$")
+
+	DebugDiscovery "[Name='CookdownCommunity.ServiceNow.Monitoring.ServiceNowInstance']/URL" $sourceURL
+	$node.AddProperty("$MPElement[Name='CookdownCommunity.ServiceNow.Monitoring.ServiceNowInstance']/URL$", $sourceURL)
+
+	DebugDiscovery "[Name='CookdownCommunity.ServiceNow.Monitoring.ServiceNowNode']/NodeId" $sourceNode.node_id
+    $node.AddProperty("$MPElement[Name='CookdownCommunity.ServiceNow.Monitoring.ServiceNowNode']/NodeId$", $sourceNode.node_id)
+
+    DebugDiscovery "[Name='CookdownCommunity.ServiceNow.Monitoring.ServiceNowNode']/SystemId" $sourceNode.system_id
+	$node.AddProperty("$MPElement[Name='CookdownCommunity.ServiceNow.Monitoring.ServiceNowNode']/SystemId$", $sourceNode.system_id)
+
+	DebugDiscovery "[Name='CookdownCommunity.ServiceNow.Monitoring.ServiceNowNode']/CreatedOn" $sourceNode.sys_created_on
+	$node.AddProperty("$MPElement[Name='CookdownCommunity.ServiceNow.Monitoring.ServiceNowNode']/CreatedOn$", $sourceNode.sys_created_on)
+
+	DebugDiscovery "[Name='CookdownCommunity.ServiceNow.Monitoring.ServiceNowNode']/AllowInbound" $sourceNode.allow_inbound
+    $node.AddProperty("$MPElement[Name='CookdownCommunity.ServiceNow.Monitoring.ServiceNowNode']/AllowInbound$", $sourceNode.allow_inbound)
+
+	DebugDiscovery "[Name='CookdownCommunity.ServiceNow.Monitoring.ServiceNowNode']/ReadyToFailover" $sourceNode.ready_to_failover
+    $node.AddProperty("$MPElement[Name='CookdownCommunity.ServiceNow.Monitoring.ServiceNowNode']/ReadyToFailover$", $sourceNode.ready_to_failover)
+
+	DebugDiscovery "[Name='System!System.Entity']/DisplayName" $sourceNode.system_id
+	$node.AddProperty("$MPElement[Name='System!System.Entity']/DisplayName$", $sourceNode.system_id)
+    $node
+}
+
+Function CreateWatcherNode
+{
+    param($computerName,$sourceURL)
+
+    $watcherNode = $discoveryData.CreateClassInstance("$MPElement[Name='CookdownCommunity.ServiceNow.Monitoring.WatcherNode']$")
+
+	DebugDiscovery "[Name='Windows!Microsoft.Windows.Computer']/PrincipalName" $computerName
+	$watcherNode.AddProperty("$MPElement[Name='Windows!Microsoft.Windows.Computer']/PrincipalName$", $computerName)
+
+	DebugDiscovery "[Name='CookdownCommunity.ServiceNow.Monitoring.WatcherNode']/Instance" $sourceURL
+    $watcherNode.AddProperty("$MPElement[Name='CookdownCommunity.ServiceNow.Monitoring.WatcherNode']/Instance$", $sourceURL)
+
+	DebugDiscovery "[Name='CookdownCommunity.ServiceNow.Monitoring.WatcherNode']/InstanceUrlBase" $sourceURL.Replace("https://","").Replace("/","")
+	$watcherNode.AddProperty("$MPElement[Name='CookdownCommunity.ServiceNow.Monitoring.WatcherNode']/InstanceUrlBase$", $sourceURL.Replace("https://","").Replace("/",""))
+
+	DebugDiscovery "[Name='CookdownCommunity.ServiceNow.Monitoring.WatcherNode']/Location$" $location
+	$watcherNode.AddProperty("$MPElement[Name='CookdownCommunity.ServiceNow.Monitoring.WatcherNode']/Location$", $location)
+
+	DebugDiscovery "[Name='System!System.Entity']/DisplayName" $location
+	$watcherNode.AddProperty("$MPElement[Name='System!System.Entity']/DisplayName$", $location)
+    $watcherNode
+}
+
+Function CreateWatcherRelationship
+{
+	param($instanceObject,$watcherObject)
+    $watcherRelationship = $discoveryData.CreateRelationshipInstance("$MPElement[Name='CookdownCommunity.ServiceNow.Monitoring.InstanceContainsWatchers']$")
+    $watcherRelationship.Source = $instanceObject
+    $watcherRelationship.Target = $watcherObject
+    $watcherRelationship
+}
+
+Function DebugDiscovery
+{
+	param($messageString,$objectValue = $null)
+
+	#We'll only write out data if we have debug enabled, otherwise, skip it
+	if($debugDiscovery)
+	{
+		if($objectValue -ne $null)
+        {
+            $api.LogScriptEvent("SNOW Discovery", 1020, 4, "Discovery DEBUG:`n$messageString`nWith a value of: $objectValue")
+        }
+        else
+        {
+            $api.LogScriptEvent("SNOW Discovery", 1020, 4, "Discovery DEBUG:`n$messageString")
+        }
+
+	}
+}
+
+Function ArrayToStrings
+{
+	param($sourceObject)
+	[string]$cleanResult = "";
+
+	foreach ($stringLine in $sourceObject)
+	{
+		$cleanResult = $cleanResult + $stringLine.ToString();
+		$cleanResult = $cleanResult + [System.Environment]::NewLine;
+	}
+
+    $cleanResult
+}
+
+
+#Initialize the Object and create a discovery data unique to this Agent
+$api = New-Object -comObject 'MOM.ScriptAPI'
+[Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
+
+$debugDiscovery = [bool]::Parse($debugDiscovery.ToString())
+
+$discoveryData = $api.CreateDiscoveryData(0, $sourceID, $managedEntityID)
+$headers = CreateHeaders -username $snowUserName -password $snowPassword
+[string]$ActiveInstance = "Not started";
+
+try
+{
+    foreach($instance in $instanceUrls.Trim().Split(","))
+    {
+	    $api.LogScriptEvent("SNOW Discovery", 1013, 4, $("working on cluster {0}." -f $instance))
+	    $instance = $instance.Trim().ToLower()
+		$ActiveInstance = $instance;
+        $clusterNodes = GetClusterStatusFromServiceNow -instanceURL $instance
+	    DebugDiscovery "retrieved cluster nodes count = $($clusterNodes.count)"
+
+        # Discover instance
+		DebugDiscovery "Creating object for ServiceNow Instance" $instance
+        $serviceNowInstance = CreateInstanceObject -sourceNode $clusterNodes[0] -sourceURL $instance
+		DebugDiscovery "Adding Instance Object to Discovery Payload"
+        $discoveryData.AddInstance($serviceNowInstance)
+
+        #Add watcher
+		DebugDiscovery "Creating object for Watcher Node" $computerName
+        $watcherNode = CreateWatcherNode -computerName $computerName -sourceURL $instance
+		DebugDiscovery "Adding Watcher Node Object to Disovery Payload"
+        $discoveryData.AddInstance($watcherNode)
+
+        #Relate watcher to instance
+		DebugDiscovery "Creating Relationship between Instance and Watcher Node"
+        $watcherRelationship = CreateWatcherRelationship -instanceObject $serviceNowInstance -watcherObject $watcherNode
+		DebugDiscovery "Adding Relationship to Payload"
+        $discoveryData.AddInstance($watcherRelationship)
+
+        #Add Nodes
+        foreach($snowNode in $clusterNodes)
+        {
+			DebugDiscovery "Creating object for ServiceNow Node" $snowNode.node_id
+            $node = CreateNodeObject -sourceNode $snowNode -sourceURL $instance
+			DebugDiscovery "Adding ServiceNow Node object to Paload" $snowNode.node_id
+            $discoveryData.AddInstance($node)
+        }
+    }
+
+    $api.LogScriptEvent("Cookdown SNOW Discovery", 1012, 0, $("Discovery Completed sucessfully"))
+    $discoveryData
+}
+catch
+{
+    $api.LogScriptEvent("Cookdown SNOW Discovery", 1015, 1, $("Discovery Failed with error $($_.Exception.Message)`n`nDiscovery was trying to process $ActiveInstance"))
+}
+]]></ScriptBody>
                 <Parameters>
                   <Parameter>
                     <Name>sourceID</Name>
@@ -254,6 +358,10 @@
                   <Parameter>
                     <Name>computerName</Name>
                     <Value>$Config/ComputerName$</Value>
+                  </Parameter>
+                  <Parameter>
+                    <Name>debugDiscovery</Name>
+                    <Value>$Config/DebugDiscovery$</Value>
                   </Parameter>
                   <Parameter>
                     <Name>snowUserName</Name>
@@ -308,7 +416,11 @@
           <xsd:element name="InstanceURL" type="xsd:string" xmlns:xsd="http://www.w3.org/2001/XMLSchema" />
           <xsd:element name="SnowUsername" type="xsd:string" xmlns:xsd="http://www.w3.org/2001/XMLSchema" />
           <xsd:element name="SnowPassword" type="xsd:string" xmlns:xsd="http://www.w3.org/2001/XMLSchema" />
+          <xsd:element name="DebugProbe" type="xsd:boolean" xmlns:xsd="http://www.w3.org/2001/XMLSchema" />
         </Configuration>
+        <OverrideableParameters>
+          <OverrideableParameter ID="DebugProbe" Selector="$Config/DebugProbe$" ParameterType="bool" />
+        </OverrideableParameters>
         <ModuleImplementation Isolation="Any">
           <Composite>
             <MemberModules>
@@ -318,173 +430,217 @@
               </DataSource>
               <ProbeAction ID="GetStatusBags" TypeID="Windows!Microsoft.Windows.PowerShellPropertyBagProbe">
                 <ScriptName>ServiceNowStatusProbe.ps1</ScriptName>
-                <ScriptBody>
-                  #Bring in our parameters
-                  param($instanceURL, $SnowUsername, $SnowPassword)
+                <ScriptBody><![CDATA[#Bring in our parameters
+param($instanceURL, $SnowUsername, $SnowPassword, $debugProbe)
 
-                  Function CreateHeaders
-                  {
-                  param($username, $password)
-                  # Build auth header
-                  $base64AuthInfo = [Convert]::ToBase64String([Text.Encoding]::ASCII.GetBytes(("{0}:{1}" -f $username, $password)))
+Function CreateHeaders
+{
+	param($username, $password)
+	# Build auth header
+	$base64AuthInfo = [Convert]::ToBase64String([Text.Encoding]::ASCII.GetBytes(("{0}:{1}" -f $username, $password)))
 
-                  # Set proper headers
-                  $headers = New-Object "System.Collections.Generic.Dictionary[[String],[String]]"
-                  $headers.Add('Authorization',('Basic {0}' -f $base64AuthInfo))
-                  $headers.Add('Accept','application/json')
-                  $headers
-                  }
+	# Set proper headers
+	$headers = New-Object "System.Collections.Generic.Dictionary[[String],[String]]"
+	$headers.Add('Authorization',('Basic {0}' -f $base64AuthInfo))
+	$headers.Add('Accept','application/json')
+	$headers
+}
 
-                  Function MakeAddPerfPropertyBag
-                  {
-                  param(
-                  [string] $InstanceURL,
-                  [string] $NodeId,
-                  [string] $Object = "",
-                  [string] $Instance = "",
-                  [string] $Counter = "",
-                  [double] $Value = $null
-                  )
+Function MakeAddPerfPropertyBag
+{
+  param(
+    [string] $InstanceURL,
+    [string] $NodeId,
+    [string] $Object = "",
+    [string] $Instance = "",
+    [string] $Counter = "",
+    [double] $Value = $null
+    )
 
-                  if ($Value -ne $null)
-                  {
-                  if ($Value -ne '')
-                  {
-                  $perfBag = $oAPI.CreatePropertyBag()
-                  $perfBag.AddValue("Type","Performance")
-                  $perfBag.AddValue("InstanceURL",$InstanceURL)
-                  $perfBag.AddValue("NodeId",$NodeId)
-                  $perfBag.AddValue("Object",$Object)
-                  $perfBag.AddValue("Instance",$Instance)
-                  $perfBag.AddValue("Counter",$Counter)
-                  $perfBag.AddValue("Value",$Value)
-                  $perfBag
-                  }
-                  }
-                  }
+  if ($Value -ne $null)
+  {
+    if ($Value -ne '')
+       {
+		  $perfBag = $oAPI.CreatePropertyBag()
+		  $perfBag.AddValue("Type","Performance")
+		  $perfBag.AddValue("InstanceURL",$InstanceURL)
+		  $perfBag.AddValue("NodeId",$NodeId)
+		  $perfBag.AddValue("Object",$Object)
+		  $perfBag.AddValue("Instance",$Instance)
+		  $perfBag.AddValue("Counter",$Counter)
+		  $perfBag.AddValue("Value",$Value)
+		  $perfBag
 
-                  Function MakeMonitoringStatusPropertyBag
-                  {
-                  param(
-                  [string] $InstanceURL,
-                  [bool] $Success
-                  )
+		  $debugString = "InstanceURL: $InstanceURL`nNodeId: $NodeId`nObject: $Object`nInstance: $Instance`nCounter: $Counter`nValue: $Value"
+		  DebugProbe "Creating performance property bag" $debugString
+       }
+  }
+}
 
-                  $perfBag = $oAPI.CreatePropertyBag()
-                  $perfBag.AddValue("Type","Monitoring")
-                  $perfBag.AddValue("InstanceURL",$InstanceURL)
-                  $perfBag.AddValue("Success",$Success.ToString())
-                  $perfBag
-                  }
+Function MakeMonitoringStatusPropertyBag
+{
+	param(
+		[string] $InstanceURL,
+		[bool] $Success
+	)
 
-                  Function GetClusterStatusFromServiceNow
-                  {
-                  param($instanceURL)
-                  $statsEndpoint = $instanceURL + "api/now/table/sys_cluster_state"
-                  $results = Invoke-RESTMethod -Uri $statsEndpoint -Headers $headers -Method GET
-                  $results.result
-                  }
+		$perfBag = $oAPI.CreatePropertyBag()
+		$perfBag.AddValue("Type","Monitoring")
+		$perfBag.AddValue("InstanceURL",$InstanceURL)
+		$perfBag.AddValue("Success",$Success.ToString())
+		$perfBag
 
-                  Function CreatePerformancePropertyBags
-                  {
-                  param($node, $instance)
-                  $ioStats = [xml]$node.iostats
-                  $stats = [xml]$node.stats
+		$debugString = "InstanceURL: $InstanceURL`nSuccess: $Success"
+		DebugProbe "Creating status property bag" $debugString
+}
 
-                  $glidePool = $ioStats.xmlstats.iostats.pool | ? {$_.name -eq 'glide'}
+Function GetClusterStatusFromServiceNow
+{
+    param($instanceURL)
+    $statsEndpoint = $instanceURL + "api/now/table/sys_cluster_state"
+    $results = Invoke-RESTMethod -Uri $statsEndpoint -Headers $headers -Method GET
+    $results.result
+}
 
-                  MakeAddPerfPropertyBag -InstanceUrl $instance -NodeId $node.node_id -Object "Memory" -Counter "Total" -Instance $node.system_id -Value $stats.xmlstats.'system.memory.total'
-                  MakeAddPerfPropertyBag -InstanceUrl $instance -NodeId $node.node_id -Object "Memory" -Counter "In Use" -Instance $node.system_id -Value $stats.xmlstats.'system.memory.in.use'
-                  MakeAddPerfPropertyBag -InstanceUrl $instance -NodeId $node.node_id -Object "Memory" -Counter "Percent Free" -Instance $node.system_id -Value $stats.xmlstats.'system.memory.pct.free'
-                  MakeAddPerfPropertyBag -InstanceUrl $instance -NodeId $node.node_id -Object "Memory" -Counter "Max" -Instance $node.system_id -Value $stats.xmlstats.'system.memory.max'.InnerText
+Function CreatePerformancePropertyBags
+{
+    param($node, $instance, $ioStats, $stats)
 
-                  MakeAddPerfPropertyBag -InstanceUrl $instance -NodeId $node.node_id -Object "Servlet" -Counter "Cache Flushes" -Instance $node.system_id -Value $stats.xmlstats.'servlet.cache.flushes'
-                  MakeAddPerfPropertyBag -InstanceUrl $instance -NodeId $node.node_id -Object "Servlet" -Counter "Uptime" -Instance $node.system_id -Value $stats.xmlstats.'servlet.uptime'
-                  MakeAddPerfPropertyBag -InstanceUrl $instance -NodeId $node.node_id -Object "Servlet" -Counter "Transactions" -Instance $node.system_id -Value $stats.xmlstats.'servlet.transactions'
-                  MakeAddPerfPropertyBag -InstanceUrl $instance -NodeId $node.node_id -Object "Servlet" -Counter "Errors Handled" -Instance $node.system_id -Value $stats.xmlstats.'servlet.errors.handled'
-                  MakeAddPerfPropertyBag -InstanceUrl $instance -NodeId $node.node_id -Object "Servlet" -Counter "Processor Transactions" -Instance $node.system_id -Value $stats.xmlstats.'servlet.processor.transactions'
-                  MakeAddPerfPropertyBag -InstanceUrl $instance -NodeId $node.node_id -Object "Servlet" -Counter "Cancelled Transactions" -Instance $node.system_id -Value $stats.xmlstats.'servlet.cancelled.transactions'
-                  MakeAddPerfPropertyBag -InstanceUrl $instance -NodeId $node.node_id -Object "Servlet" -Counter "Active Sessions" -Instance $node.system_id -Value $stats.xmlstats.'servlet.active.sessions'
+	$glidePool = $ioStats.xmlstats.iostats.pool | ? {$_.name -eq 'glide'}
 
-                  MakeAddPerfPropertyBag -InstanceUrl $instance -NodeId $node.node_id -Object "Scheduler" -Counter "Worker Count" -Instance $node.system_id -Value $stats.xmlstats.'scheduler.worker.count'
-                  MakeAddPerfPropertyBag -InstanceUrl $instance -NodeId $node.node_id -Object "Scheduler" -Counter "Queue Length" -Instance $node.system_id -Value $stats.xmlstats.'scheduler.queue.length'
-                  MakeAddPerfPropertyBag -InstanceUrl $instance -NodeId $node.node_id -Object "Scheduler" -Counter "Mean Queue Age" -Instance $node.system_id -Value $stats.xmlstats.'scheduler.mean.queue.age'
-                  MakeAddPerfPropertyBag -InstanceUrl $instance -NodeId $node.node_id -Object "Scheduler" -Counter "Total Jobs" -Instance $node.system_id -Value $stats.xmlstats.'scheduler.total.jobs'
-                  MakeAddPerfPropertyBag -InstanceUrl $instance -NodeId $node.node_id -Object "Scheduler" -Counter "Total Burst Workers" -Instance $node.system_id -Value $stats.xmlstats.'scheduler.total.burst.workers'
+	MakeAddPerfPropertyBag -InstanceUrl $instance -NodeId $node.node_id -Object "Memory" -Counter "Total" -Instance $node.system_id -Value $stats.xmlstats.'system.memory.total'
+	MakeAddPerfPropertyBag -InstanceUrl $instance -NodeId $node.node_id -Object "Memory" -Counter "In Use" -Instance $node.system_id -Value $stats.xmlstats.'system.memory.in.use'
+	MakeAddPerfPropertyBag -InstanceUrl $instance -NodeId $node.node_id -Object "Memory" -Counter "Percent Free" -Instance $node.system_id -Value $stats.xmlstats.'system.memory.pct.free'
+	MakeAddPerfPropertyBag -InstanceUrl $instance -NodeId $node.node_id -Object "Memory" -Counter "Max" -Instance $node.system_id -Value $stats.xmlstats.'system.memory.max'.InnerText
 
-                  MakeAddPerfPropertyBag -InstanceUrl $instance -NodeId $node.node_id -Object "Glide Pool DB" -Counter "Selects" -Instance $node.system_id -Value $glidePool.select
-                  MakeAddPerfPropertyBag -InstanceUrl $instance -NodeId $node.node_id -Object "Glide Pool DB" -Counter "Selects (Over 1 Second)" -Instance $node.system_id -Value $glidePool.select_onesec
-                  MakeAddPerfPropertyBag -InstanceUrl $instance -NodeId $node.node_id -Object "Glide Pool DB" -Counter "Selects (Over 10 Sec)" -Instance $node.system_id -Value $glidePool.select_tensec
-                  MakeAddPerfPropertyBag -InstanceUrl $instance -NodeId $node.node_id -Object "Glide Pool DB" -Counter "Deletes" -Instance $node.system_id -Value $glidePool.delete
-                  MakeAddPerfPropertyBag -InstanceUrl $instance -NodeId $node.node_id -Object "Glide Pool DB" -Counter "Inserts" -Instance $node.system_id -Value $glidePool.insert
-                  MakeAddPerfPropertyBag -InstanceUrl $instance -NodeId $node.node_id -Object "Glide Pool DB" -Counter "Updates" -Instance $node.system_id -Value $glidePool.update
+	MakeAddPerfPropertyBag -InstanceUrl $instance -NodeId $node.node_id -Object "Servlet" -Counter "Cache Flushes" -Instance $node.system_id -Value $stats.xmlstats.'servlet.cache.flushes'
+	MakeAddPerfPropertyBag -InstanceUrl $instance -NodeId $node.node_id -Object "Servlet" -Counter "Uptime" -Instance $node.system_id -Value $stats.xmlstats.'servlet.uptime'
+	MakeAddPerfPropertyBag -InstanceUrl $instance -NodeId $node.node_id -Object "Servlet" -Counter "Transactions" -Instance $node.system_id -Value $stats.xmlstats.'servlet.transactions'
+	MakeAddPerfPropertyBag -InstanceUrl $instance -NodeId $node.node_id -Object "Servlet" -Counter "Errors Handled" -Instance $node.system_id -Value $stats.xmlstats.'servlet.errors.handled'
+	MakeAddPerfPropertyBag -InstanceUrl $instance -NodeId $node.node_id -Object "Servlet" -Counter "Processor Transactions" -Instance $node.system_id -Value $stats.xmlstats.'servlet.processor.transactions'
+	MakeAddPerfPropertyBag -InstanceUrl $instance -NodeId $node.node_id -Object "Servlet" -Counter "Cancelled Transactions" -Instance $node.system_id -Value $stats.xmlstats.'servlet.cancelled.transactions'
+	MakeAddPerfPropertyBag -InstanceUrl $instance -NodeId $node.node_id -Object "Servlet" -Counter "Active Sessions" -Instance $node.system_id -Value $stats.xmlstats.'servlet.active.sessions'
 
-                  MakeAddPerfPropertyBag -InstanceUrl $instance -NodeId $node.node_id -Object "JVM" -Counter "Classes Loaded" -Instance $node.system_id -Value $stats.xmlstats.'jvm.classes.loaded'
-                  MakeAddPerfPropertyBag -InstanceUrl $instance -NodeId $node.node_id -Object "JVM" -Counter "Classes Unloaded" -Instance $node.system_id -Value $stats.xmlstats.'jvm.classes.unloaded'
+	MakeAddPerfPropertyBag -InstanceUrl $instance -NodeId $node.node_id -Object "Scheduler" -Counter "Worker Count" -Instance $node.system_id -Value $stats.xmlstats.'scheduler.worker.count'
+	MakeAddPerfPropertyBag -InstanceUrl $instance -NodeId $node.node_id -Object "Scheduler" -Counter "Queue Length" -Instance $node.system_id -Value $stats.xmlstats.'scheduler.queue.length'
+	MakeAddPerfPropertyBag -InstanceUrl $instance -NodeId $node.node_id -Object "Scheduler" -Counter "Mean Queue Age" -Instance $node.system_id -Value $stats.xmlstats.'scheduler.mean.queue.age'
+	MakeAddPerfPropertyBag -InstanceUrl $instance -NodeId $node.node_id -Object "Scheduler" -Counter "Total Jobs" -Instance $node.system_id -Value $stats.xmlstats.'scheduler.total.jobs'
+	MakeAddPerfPropertyBag -InstanceUrl $instance -NodeId $node.node_id -Object "Scheduler" -Counter "Total Burst Workers" -Instance $node.system_id -Value $stats.xmlstats.'scheduler.total.burst.workers'
 
-                  MakeAddPerfPropertyBag -InstanceUrl $instance -NodeId $node.node_id -Object "Users" -Counter "End Users" -Instance $node.system_id -Value $stats.xmlstats.sessionsummary.end_user
-                  MakeAddPerfPropertyBag -InstanceUrl $instance -NodeId $node.node_id -Object "Users" -Counter "Logged In" -Instance $node.system_id -Value $stats.xmlstats.sessionsummary.logged_in
-                  MakeAddPerfPropertyBag -InstanceUrl $instance -NodeId $node.node_id -Object "Users" -Counter "Total" -Instance $node.system_id -Value $stats.xmlstats.sessionsummary.total
-                  }
+	MakeAddPerfPropertyBag -InstanceUrl $instance -NodeId $node.node_id -Object "Glide Pool DB" -Counter "Selects" -Instance $node.system_id -Value $glidePool.select
+	MakeAddPerfPropertyBag -InstanceUrl $instance -NodeId $node.node_id -Object "Glide Pool DB" -Counter "Selects (Over 1 Second)" -Instance $node.system_id -Value $glidePool.select_onesec
+	MakeAddPerfPropertyBag -InstanceUrl $instance -NodeId $node.node_id -Object "Glide Pool DB" -Counter "Selects (Over 10 Sec)" -Instance $node.system_id -Value $glidePool.select_tensec
+	MakeAddPerfPropertyBag -InstanceUrl $instance -NodeId $node.node_id -Object "Glide Pool DB" -Counter "Deletes" -Instance $node.system_id -Value $glidePool.delete
+	MakeAddPerfPropertyBag -InstanceUrl $instance -NodeId $node.node_id -Object "Glide Pool DB" -Counter "Inserts" -Instance $node.system_id -Value $glidePool.insert
+	MakeAddPerfPropertyBag -InstanceUrl $instance -NodeId $node.node_id -Object "Glide Pool DB" -Counter "Updates" -Instance $node.system_id -Value $glidePool.update
 
+	MakeAddPerfPropertyBag -InstanceUrl $instance -NodeId $node.node_id -Object "JVM" -Counter "Classes Loaded" -Instance $node.system_id -Value $stats.xmlstats.'jvm.classes.loaded'
+	MakeAddPerfPropertyBag -InstanceUrl $instance -NodeId $node.node_id -Object "JVM" -Counter "Classes Unloaded" -Instance $node.system_id -Value $stats.xmlstats.'jvm.classes.unloaded'
 
-                  try
-                  {
-                  $oAPI = New-Object -comObject 'MOM.ScriptAPI'
-                  $oAPI.LogScriptEvent("SNOW Performance", 1050, 4, $("Collecting performance for {0}" -f $InstanceURL))
-                  [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
-                  $headers = CreateHeaders -username $SnowUsername -password $SnowPassword
-                  $fetchTime = Measure-Command {$clusterNodes = GetClusterStatusFromServiceNow -instanceURL $instanceURL}
+	MakeAddPerfPropertyBag -InstanceUrl $instance -NodeId $node.node_id -Object "Users" -Counter "End Users" -Instance $node.system_id -Value $stats.xmlstats.sessionsummary.end_user
+	MakeAddPerfPropertyBag -InstanceUrl $instance -NodeId $node.node_id -Object "Users" -Counter "Logged In" -Instance $node.system_id -Value $stats.xmlstats.sessionsummary.logged_in
+	MakeAddPerfPropertyBag -InstanceUrl $instance -NodeId $node.node_id -Object "Users" -Counter "Total" -Instance $node.system_id -Value $stats.xmlstats.sessionsummary.total
+}
 
-                  MakeAddPerfPropertyBag -InstanceUrl $instance -NodeId "NONE" -Object "Connection" -Counter "Fetch Time (MS)" -Instance "Total" -Value $fetchTime.TotalMilliseconds
+Function DebugProbe
+{
+	param($messageString,$objectValue = $null)
 
-                  # Setup our roll-up Performance
-                  $instanceTotal_select = 0
-                  $instanceTotal_select_onesec = 0
-                  $instanceTotal_select_tensec = 0
-                  $instanceTotal_delete = 0
-                  $instanceTotal_insert = 0
-                  $instanceTotal_update = 0
-                  $instanceTotal_end_user = 0
-                  $instanceTotal_logged_in = 0
-                  $instanceTotal_total = 0
+	#We'll only write out data if we have debug enabled, otherwise, skip it
+	if($debugProbe)
+	{
+		if($objectValue -ne $null)
+        {
+            $oAPI.LogScriptEvent("SNOW Status", 1070, 4, "Status Probe DEBUG:`n$messageString`nWith a value of: $objectValue")
+        }
+        else
+        {
+            $oAPI.LogScriptEvent("SNOW Status", 1070, 4, "Status Probe DEBUG:`n$messageString")
+        }
 
-                  foreach($snowNode in $clusterNodes)
-                  {
-                  CreatePerformancePropertyBags -node $snowNode -instance $instance
+	}
+}
 
-                  # Update the node
-                  $ioStats = [xml]$snowNode.iostats
-                  $stats = [xml]$snowNode.stats
-                  $glidePoolData = $ioStats.xmlstats.iostats.pool | ? {$_.name -eq 'glide'}
-                  $instanceTotal_select = $instanceTotal_select + $glidePoolData.select
-                  $instanceTotal_select_onesec = $instanceTotal_select_onesec + $glidePoolData.select_onesec
-                  $instanceTotal_select_tensec = $instanceTotal_select_tensec + $glidePoolData.select_tensec
-                  $instanceTotal_delete = $instanceTotal_delete + $glidePoolData.delete
-                  $instanceTotal_insert = $instanceTotal_insert + $glidePoolData.insert
-                  $instanceTotal_update = $instanceTotal_update + $glidePoolData.update
-                  $instanceTotal_end_user = $instanceTotal_end_user + $stats.xmlstats.sessionsummary.end_user
-                  $instanceTotal_logged_in = $instanceTotal_logged_in + $stats.xmlstats.sessionsummary.logged_in
-                  $instanceTotal_total = $instanceTotal_total + $stats.xmlstats.sessionsummary.total
-                  }
+# Create the API object and then we'll start our performance collection
+$oAPI = New-Object -comObject 'MOM.ScriptAPI'
 
-                  MakeAddPerfPropertyBag -InstanceUrl $instance -NodeId "NONE" -Object "Glide Pool DB" -Counter "Selects" -Instance "Total"  -Value $instanceTotal_select
-                  MakeAddPerfPropertyBag -InstanceUrl $instance -NodeId "NONE" -Object "Glide Pool DB" -Counter "Selects (Over 1 Second)" -Instance "Total" -Value $instanceTotal_select_onesec
-                  MakeAddPerfPropertyBag -InstanceUrl $instance -NodeId "NONE" -Object "Glide Pool DB" -Counter "Selects (Over 10 Sec)" -Instance "Total" -Value $instanceTotal_select_tensec
-                  MakeAddPerfPropertyBag -InstanceUrl $instance -NodeId "NONE" -Object "Glide Pool DB" -Counter "Deletes" -Instance "Total" -Value $instanceTotal_delete
-                  MakeAddPerfPropertyBag -InstanceUrl $instance -NodeId "NONE" -Object "Glide Pool DB" -Counter "Inserts" -Instance "Total" -Value $instanceTotal_insert
-                  MakeAddPerfPropertyBag -InstanceUrl $instance -NodeId "NONE" -Object "Glide Pool DB" -Counter "Updates" -Instance "Total" -Value $instanceTotal_update
-                  MakeAddPerfPropertyBag -InstanceUrl $instance -NodeId "NONE" -Object "Users" -Counter "End Users" -Instance "Total" -Value $instanceTotal_end_user
-                  MakeAddPerfPropertyBag -InstanceUrl $instance -NodeId "NONE" -Object "Users" -Counter "Logged In" -Instance "Total" -Value $instanceTotal_logged_in
-                  MakeAddPerfPropertyBag -InstanceUrl $instance -NodeId "NONE" -Object "Users" -Counter "Total" -Instance "Total" -Value $instanceTotal_total
+try
+{
+	[Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
+    $headers = CreateHeaders -username $SnowUsername -password $SnowPassword
 
-                  MakeMonitoringStatusPropertyBag -InstanceUrl -Success $true
-                  }
-                  catch
-                  {
-                  MakeMonitoringStatusPropertyBag -InstanceUrl -Success $false
-                  }
-                </ScriptBody>
+	$debugProbe = [bool]::Parse($debugProbe.ToString())
+
+	DebugProbe "Connecting to ServiceNow Instance to pull Performance and Status" $instanceURL
+	$fetchTime = Measure-Command {$clusterNodes = GetClusterStatusFromServiceNow -instanceURL $instanceURL}
+
+	MakeAddPerfPropertyBag -InstanceUrl $instanceURL -NodeId "NONE" -Object "Connection" -Counter "Fetch Time (MS)" -Instance "Total" -Value $fetchTime.TotalMilliseconds
+
+	# Setup our roll-up Performance
+	$instanceTotal_select = 0
+	$instanceTotal_select_onesec = 0
+	$instanceTotal_select_tensec = 0
+	$instanceTotal_delete = 0
+	$instanceTotal_insert = 0
+	$instanceTotal_update = 0
+	$instanceTotal_end_user = 0
+	$instanceTotal_logged_in = 0
+	$instanceTotal_total = 0
+
+    foreach($snowNode in $clusterNodes)
+    {
+
+		DebugProbe "Getting performance data for a cluster node" $snowNode.node_id
+
+		#Get Stats
+		If ($snowNode | Get-Member -name 'node_stats') {
+			$NodeStats = (Invoke-RestMethod -Uri $snowNode.'node_stats'.link -Headers $headers -Method GET).Result
+			$ioStats = [xml]$NodeStats.iostats
+			$stats = [xml]$NodeStats.stats
+			#If node_stats we're on Paris or later
+		}
+		Else {
+			$ioStats = [xml]$snowNode.iostats
+			$stats = [xml]$snowNode.stats
+			#If stats we're on Orlando or earlier
+		}
+
+		DebugProbe "Parsing performance data for a cluster node" $snowNode.node_id
+
+        CreatePerformancePropertyBags -node $snowNode -instance $instance -ioStats $ioStats -stats $stats
+
+		# Update the node
+		$glidePoolData = $ioStats.xmlstats.iostats.pool | ? {$_.name -eq 'glide'}
+		$instanceTotal_select = $instanceTotal_select + $glidePoolData.select
+		$instanceTotal_select_onesec = $instanceTotal_select_onesec + $glidePoolData.select_onesec
+		$instanceTotal_select_tensec = $instanceTotal_select_tensec + $glidePoolData.select_tensec
+		$instanceTotal_delete = $instanceTotal_delete + $glidePoolData.delete
+		$instanceTotal_insert = $instanceTotal_insert + $glidePoolData.insert
+		$instanceTotal_update = $instanceTotal_update + $glidePoolData.update
+		$instanceTotal_end_user = $instanceTotal_end_user + $stats.xmlstats.sessionsummary.end_user
+		$instanceTotal_logged_in = $instanceTotal_logged_in + $stats.xmlstats.sessionsummary.logged_in
+		$instanceTotal_total = $instanceTotal_total + $stats.xmlstats.sessionsummary.total
+    }
+
+	MakeAddPerfPropertyBag -InstanceUrl $instanceURL -NodeId "NONE" -Object "Glide Pool DB" -Counter "Selects" -Instance "Total"  -Value $instanceTotal_select
+	MakeAddPerfPropertyBag -InstanceUrl $instanceURL -NodeId "NONE" -Object "Glide Pool DB" -Counter "Selects (Over 1 Second)" -Instance "Total" -Value $instanceTotal_select_onesec
+	MakeAddPerfPropertyBag -InstanceUrl $instanceURL -NodeId "NONE" -Object "Glide Pool DB" -Counter "Selects (Over 10 Sec)" -Instance "Total" -Value $instanceTotal_select_tensec
+	MakeAddPerfPropertyBag -InstanceUrl $instanceURL -NodeId "NONE" -Object "Glide Pool DB" -Counter "Deletes" -Instance "Total" -Value $instanceTotal_delete
+	MakeAddPerfPropertyBag -InstanceUrl $instanceURL -NodeId "NONE" -Object "Glide Pool DB" -Counter "Inserts" -Instance "Total" -Value $instanceTotal_insert
+	MakeAddPerfPropertyBag -InstanceUrl $instanceURL -NodeId "NONE" -Object "Glide Pool DB" -Counter "Updates" -Instance "Total" -Value $instanceTotal_update
+	MakeAddPerfPropertyBag -InstanceUrl $instanceURL -NodeId "NONE" -Object "Users" -Counter "End Users" -Instance "Total" -Value $instanceTotal_end_user
+	MakeAddPerfPropertyBag -InstanceUrl $instanceURL -NodeId "NONE" -Object "Users" -Counter "Logged In" -Instance "Total" -Value $instanceTotal_logged_in
+	MakeAddPerfPropertyBag -InstanceUrl $instanceURL -NodeId "NONE" -Object "Users" -Counter "Total" -Instance "Total" -Value $instanceTotal_total
+
+    MakeMonitoringStatusPropertyBag -InstanceUrl $instanceURL -Success $true
+	$oAPI.LogScriptEvent("SNOW Performance", 1052, 4, $("Performance for {0} collected successfully" -f $InstanceURL))
+}
+catch
+{
+    MakeMonitoringStatusPropertyBag -InstanceUrl $instanceURL -Success $false
+	$oAPI.LogScriptEvent("SNOW Performance", 1055, 1, $("Performance for {0} could not be collected.`n`nError Message:`n{1}" -f $InstanceURL, $_))
+}
+]]></ScriptBody>
                 <Parameters>
                   <Parameter>
                     <Name>InstanceURL</Name>
@@ -497,6 +653,10 @@
                   <Parameter>
                     <Name>SnowPassword</Name>
                     <Value>$Config/SnowPassword$</Value>
+                  </Parameter>
+                  <Parameter>
+                    <Name>debugProbe</Name>
+                    <Value>$Config/DebugProbe$</Value>
                   </Parameter>
                 </Parameters>
                 <TimeoutSeconds>120</TimeoutSeconds>
@@ -525,6 +685,7 @@
                 <InstanceURL>$Config/InstanceURL$</InstanceURL>
                 <SnowUsername>$RunAs[Name="CookdownCommunity.ServiceNow.Monitoring.APIProbeAccount"]/UserName$</SnowUsername>
                 <SnowPassword>$RunAs[Name="CookdownCommunity.ServiceNow.Monitoring.APIProbeAccount"]/Password$</SnowPassword>
+                <DebugProbe>false</DebugProbe>
               </DataSource>
               <ConditionDetection ID="Filter" TypeID="System!System.ExpressionFilter">
                 <Expression>
@@ -868,6 +1029,99 @@
           </RegularDetections>
         </MonitorImplementation>
       </UnitMonitorType>
+      <UnitMonitorType ID="CookdownCommunity.ServiceNow.Monitoring.HttpsTCPPortTest.ConnectionTimeMonitor" Accessibility="Public">
+        <MonitorTypeStates>
+          <MonitorTypeState ID="Acceptable" NoDetection="false" />
+          <MonitorTypeState ID="Degraded" NoDetection="false" />
+          <MonitorTypeState ID="Unacceptable" NoDetection="false" />
+        </MonitorTypeStates>
+        <Configuration>
+          <xsd:element minOccurs="1" name="DegradedThresholdMS" type="xsd:double" xmlns:xsd="http://www.w3.org/2001/XMLSchema" />
+          <xsd:element minOccurs="1" name="UnacceptableThresholdMS" type="xsd:double" xmlns:xsd="http://www.w3.org/2001/XMLSchema" />
+        </Configuration>
+        <OverrideableParameters>
+          <OverrideableParameter ID="DegradedThresholdMS" Selector="$Config/DegradedThresholdMS$" ParameterType="double" />
+          <OverrideableParameter ID="UnacceptableThresholdMS" Selector="$Config/UnacceptableThresholdMS$" ParameterType="double" />
+        </OverrideableParameters>
+        <MonitorImplementation>
+          <MemberModules>
+            <DataSource ID="DS1" TypeID="CookdownCommunity.ServiceNow.Monitoring.TCPPortCheckDataSource">
+              <InstanceUrlBase>$Target/Property[Type="CookdownCommunity.ServiceNow.Monitoring.WatcherNode"]/InstanceUrlBase$</InstanceUrlBase>
+            </DataSource>
+            <ConditionDetection ID="CDAcceptable" TypeID="System!System.ExpressionFilter">
+              <Expression>
+                <SimpleExpression>
+                  <ValueExpression>
+                    <XPathQuery Type="Double">ConnectionTime</XPathQuery>
+                  </ValueExpression>
+                  <Operator>Less</Operator>
+                  <ValueExpression>
+                    <Value Type="Double">$Config/DegradedThresholdMS$</Value>
+                  </ValueExpression>
+                </SimpleExpression>
+              </Expression>
+            </ConditionDetection>
+            <ConditionDetection ID="CDDegraded" TypeID="System!System.ExpressionFilter">
+              <Expression>
+                <And>
+                  <Expression>
+                    <SimpleExpression>
+                      <ValueExpression>
+                        <XPathQuery Type="Double">ConnectionTime</XPathQuery>
+                      </ValueExpression>
+                      <Operator>GreaterEqual</Operator>
+                      <ValueExpression>
+                        <Value Type="Double">$Config/DegradedThresholdMS$</Value>
+                      </ValueExpression>
+                    </SimpleExpression>
+                  </Expression>
+                  <Expression>
+                    <SimpleExpression>
+                      <ValueExpression>
+                        <XPathQuery Type="Double">ConnectionTime</XPathQuery>
+                      </ValueExpression>
+                      <Operator>Less</Operator>
+                      <ValueExpression>
+                        <Value Type="Double">$Config/UnacceptableThresholdMS$</Value>
+                      </ValueExpression>
+                    </SimpleExpression>
+                  </Expression>
+                </And>
+              </Expression>
+            </ConditionDetection>
+            <ConditionDetection ID="CDUnacceptable" TypeID="System!System.ExpressionFilter">
+              <Expression>
+                <SimpleExpression>
+                  <ValueExpression>
+                    <XPathQuery Type="Double">ConnectionTime</XPathQuery>
+                  </ValueExpression>
+                  <Operator>GreaterEqual</Operator>
+                  <ValueExpression>
+                    <Value Type="Double">$Config/UnacceptableThresholdMS$</Value>
+                  </ValueExpression>
+                </SimpleExpression>
+              </Expression>
+            </ConditionDetection>
+          </MemberModules>
+          <RegularDetections>
+            <RegularDetection MonitorTypeStateID="Acceptable">
+              <Node ID="CDAcceptable">
+                <Node ID="DS1" />
+              </Node>
+            </RegularDetection>
+            <RegularDetection MonitorTypeStateID="Degraded">
+              <Node ID="CDDegraded">
+                <Node ID="DS1" />
+              </Node>
+            </RegularDetection>
+            <RegularDetection MonitorTypeStateID="Unacceptable">
+              <Node ID="CDUnacceptable">
+                <Node ID="DS1" />
+              </Node>
+            </RegularDetection>
+          </RegularDetections>
+        </MonitorImplementation>
+      </UnitMonitorType>
     </MonitorTypes>
   </TypeDefinitions>
   <Monitoring>
@@ -888,6 +1142,7 @@
           <LocationName></LocationName>
           <InstanceUrls></InstanceUrls>
           <ComputerName>$Target/Property[Type="Windows!Microsoft.Windows.Computer"]/PrincipalName$</ComputerName>
+          <DebugDiscovery>false</DebugDiscovery>
         </DataSource>
       </Discovery>
     </Discoveries>
@@ -1467,7 +1722,7 @@
       </Rule>
     </Rules>
     <Monitors>
-      <UnitMonitor ID="CookdownCommunity.ServiceNow.Monitoring.InstanceFetchTime" Accessibility="Public" Enabled="true" Target="CookdownCommunity.ServiceNow.Monitoring.ServiceNowInstance" ParentMonitorID="Health!System.Health.PerformanceState" Remotable="true" Priority="Normal" TypeID="CookdownCommunity.ServiceNow.Monitoring.PerformanceThreshold" ConfirmDelivery="false">
+      <UnitMonitor ID="CookdownCommunity.ServiceNow.Monitoring.InstanceFetchTime" Accessibility="Internal" Enabled="true" Target="CookdownCommunity.ServiceNow.Monitoring.ServiceNowInstance" ParentMonitorID="Health!System.Health.PerformanceState" Remotable="true" Priority="Normal" TypeID="CookdownCommunity.ServiceNow.Monitoring.PerformanceThreshold" ConfirmDelivery="false">
         <Category>AvailabilityHealth</Category>
         <OperationalStates>
           <OperationalState ID="UnderThreshold" MonitorTypeStateID="UnderThreshold" HealthState="Success" />
@@ -1481,7 +1736,7 @@
           <Threshold>3500</Threshold>
         </Configuration>
       </UnitMonitor>
-      <UnitMonitor ID="CookdownCommunity.ServiceNow.Monitoring.NodeMemoryUtilization" Accessibility="Public" Enabled="true" Target="CookdownCommunity.ServiceNow.Monitoring.ServiceNowNode" ParentMonitorID="Health!System.Health.PerformanceState" Remotable="true" Priority="Normal" TypeID="CookdownCommunity.ServiceNow.Monitoring.PerformanceThreshold" ConfirmDelivery="false">
+      <UnitMonitor ID="CookdownCommunity.ServiceNow.Monitoring.NodeMemoryUtilization" Accessibility="Internal" Enabled="true" Target="CookdownCommunity.ServiceNow.Monitoring.ServiceNowNode" ParentMonitorID="Health!System.Health.PerformanceState" Remotable="true" Priority="Normal" TypeID="CookdownCommunity.ServiceNow.Monitoring.PerformanceThreshold" ConfirmDelivery="false">
         <Category>AvailabilityHealth</Category>
         <AlertSettings AlertMessage="CookdownCommunity.ServiceNow.Monitoring.NodeMemoryUtilization.AlertMessage">
           <AlertOnState>Error</AlertOnState>
@@ -1501,7 +1756,7 @@
           <Threshold>90</Threshold>
         </Configuration>
       </UnitMonitor>
-      <UnitMonitor ID="CookdownCommunity.ServiceNow.Monitoring.NodeScheduleQueue" Accessibility="Public" Enabled="true" Target="CookdownCommunity.ServiceNow.Monitoring.ServiceNowNode" ParentMonitorID="Health!System.Health.PerformanceState" Remotable="true" Priority="Normal" TypeID="CookdownCommunity.ServiceNow.Monitoring.PerformanceThreshold" ConfirmDelivery="false">
+      <UnitMonitor ID="CookdownCommunity.ServiceNow.Monitoring.NodeScheduleQueue" Accessibility="Internal" Enabled="true" Target="CookdownCommunity.ServiceNow.Monitoring.ServiceNowNode" ParentMonitorID="Health!System.Health.PerformanceState" Remotable="true" Priority="Normal" TypeID="CookdownCommunity.ServiceNow.Monitoring.PerformanceThreshold" ConfirmDelivery="false">
         <Category>AvailabilityHealth</Category>
         <OperationalStates>
           <OperationalState ID="UnderThreshold" MonitorTypeStateID="UnderThreshold" HealthState="Success" />
@@ -1513,6 +1768,166 @@
           <Counter>Queue Length</Counter>
           <NodeId>$Target/Property[Type="CookdownCommunity.ServiceNow.Monitoring.ServiceNowNode"]/NodeId$</NodeId>
           <Threshold>3</Threshold>
+        </Configuration>
+      </UnitMonitor>
+      <UnitMonitor ID="CookdownCommunity.ServiceNow.Monitoring.ServiceNowConnectionTime" Accessibility="Internal" Enabled="true" Target="CookdownCommunity.ServiceNow.Monitoring.WatcherNode" ParentMonitorID="Health!System.Health.PerformanceState" Remotable="true" Priority="Normal" TypeID="CookdownCommunity.ServiceNow.Monitoring.HttpsTCPPortTest.ConnectionTimeMonitor" ConfirmDelivery="false">
+        <Category>AvailabilityHealth</Category>
+        <OperationalStates>
+          <OperationalState ID="Acceptable" MonitorTypeStateID="Acceptable" HealthState="Success" />
+          <OperationalState ID="Degraded" MonitorTypeStateID="Degraded" HealthState="Warning" />
+          <OperationalState ID="Unacceptable" MonitorTypeStateID="Unacceptable" HealthState="Error" />
+        </OperationalStates>
+        <Configuration>
+          <DegradedThresholdMS>.150</DegradedThresholdMS>
+          <UnacceptableThresholdMS>.300</UnacceptableThresholdMS>
+        </Configuration>
+      </UnitMonitor>
+      <UnitMonitor ID="CookdownCommunity.ServiceNow.Monitoring.ServiceNowPerformanceCollection" Accessibility="Internal" Enabled="true" Target="CookdownCommunity.ServiceNow.Monitoring.WatcherNode" ParentMonitorID="Health!System.Health.ConfigurationState" Remotable="true" Priority="Normal" TypeID="Windows!Microsoft.Windows.2SingleEventLog2StateMonitorType" ConfirmDelivery="false">
+        <Category>AvailabilityHealth</Category>
+        <AlertSettings AlertMessage="CookdownCommunity.ServiceNow.Monitoring.ServiceNowPerformanceCollection.AlertMessage">
+          <AlertOnState>Error</AlertOnState>
+          <AutoResolve>true</AutoResolve>
+          <AlertPriority>Normal</AlertPriority>
+          <AlertSeverity>MatchMonitorHealth</AlertSeverity>
+          <AlertParameters>
+            <AlertParameter1>$Data/Context/EventDescription$</AlertParameter1>
+          </AlertParameters>
+        </AlertSettings>
+        <OperationalStates>
+          <OperationalState ID="FirstEventRaised" MonitorTypeStateID="FirstEventRaised" HealthState="Success" />
+          <OperationalState ID="SecondEventRaised" MonitorTypeStateID="SecondEventRaised" HealthState="Error" />
+        </OperationalStates>
+        <Configuration>
+          <FirstComputerName>.</FirstComputerName>
+          <FirstLogName>Operations Manager</FirstLogName>
+          <FirstExpression>
+            <And>
+              <Expression>
+                <SimpleExpression>
+                  <ValueExpression>
+                    <XPathQuery Type="UnsignedInteger">EventDisplayNumber</XPathQuery>
+                  </ValueExpression>
+                  <Operator>Equal</Operator>
+                  <ValueExpression>
+                    <Value Type="UnsignedInteger">1052</Value>
+                  </ValueExpression>
+                </SimpleExpression>
+              </Expression>
+              <Expression>
+                <SimpleExpression>
+                  <ValueExpression>
+                    <XPathQuery Type="String">PublisherName</XPathQuery>
+                  </ValueExpression>
+                  <Operator>Equal</Operator>
+                  <ValueExpression>
+                    <Value Type="String">Health Service Script</Value>
+                  </ValueExpression>
+                </SimpleExpression>
+              </Expression>
+            </And>
+          </FirstExpression>
+          <SecondComputerName>.</SecondComputerName>
+          <SecondLogName>Operations Manager</SecondLogName>
+          <SecondExpression>
+            <And>
+              <Expression>
+                <SimpleExpression>
+                  <ValueExpression>
+                    <XPathQuery Type="UnsignedInteger">EventDisplayNumber</XPathQuery>
+                  </ValueExpression>
+                  <Operator>Equal</Operator>
+                  <ValueExpression>
+                    <Value Type="UnsignedInteger">1055</Value>
+                  </ValueExpression>
+                </SimpleExpression>
+              </Expression>
+              <Expression>
+                <SimpleExpression>
+                  <ValueExpression>
+                    <XPathQuery Type="String">PublisherName</XPathQuery>
+                  </ValueExpression>
+                  <Operator>Equal</Operator>
+                  <ValueExpression>
+                    <Value Type="String">Health Service Script</Value>
+                  </ValueExpression>
+                </SimpleExpression>
+              </Expression>
+            </And>
+          </SecondExpression>
+        </Configuration>
+      </UnitMonitor>
+      <UnitMonitor ID="CookdownCommunity.ServiceNow.Monitoring.ServiceNowAPIDiscovery" Accessibility="Internal" Enabled="true" Target="CookdownCommunity.ServiceNow.Monitoring.WatcherNode" ParentMonitorID="Health!System.Health.ConfigurationState" Remotable="true" Priority="Normal" TypeID="Windows!Microsoft.Windows.2SingleEventLog2StateMonitorType" ConfirmDelivery="false">
+        <Category>AvailabilityHealth</Category>
+        <AlertSettings AlertMessage="CookdownCommunity.ServiceNow.Monitoring.ServiceNowAPIDiscovery.AlertMessage">
+          <AlertOnState>Error</AlertOnState>
+          <AutoResolve>true</AutoResolve>
+          <AlertPriority>Normal</AlertPriority>
+          <AlertSeverity>MatchMonitorHealth</AlertSeverity>
+          <AlertParameters>
+            <AlertParameter1>$Data/Context/EventDescription$</AlertParameter1>
+          </AlertParameters>
+        </AlertSettings>
+        <OperationalStates>
+          <OperationalState ID="FirstEventRaised" MonitorTypeStateID="FirstEventRaised" HealthState="Success" />
+          <OperationalState ID="SecondEventRaised" MonitorTypeStateID="SecondEventRaised" HealthState="Error" />
+        </OperationalStates>
+        <Configuration>
+          <FirstComputerName>.</FirstComputerName>
+          <FirstLogName>Operations Manager</FirstLogName>
+          <FirstExpression>
+            <And>
+              <Expression>
+                <SimpleExpression>
+                  <ValueExpression>
+                    <XPathQuery Type="UnsignedInteger">EventDisplayNumber</XPathQuery>
+                  </ValueExpression>
+                  <Operator>Equal</Operator>
+                  <ValueExpression>
+                    <Value Type="UnsignedInteger">1012</Value>
+                  </ValueExpression>
+                </SimpleExpression>
+              </Expression>
+              <Expression>
+                <SimpleExpression>
+                  <ValueExpression>
+                    <XPathQuery Type="String">PublisherName</XPathQuery>
+                  </ValueExpression>
+                  <Operator>Equal</Operator>
+                  <ValueExpression>
+                    <Value Type="String">Health Service Script</Value>
+                  </ValueExpression>
+                </SimpleExpression>
+              </Expression>
+            </And>
+          </FirstExpression>
+          <SecondComputerName>.</SecondComputerName>
+          <SecondLogName>Operations Manager</SecondLogName>
+          <SecondExpression>
+            <And>
+              <Expression>
+                <SimpleExpression>
+                  <ValueExpression>
+                    <XPathQuery Type="UnsignedInteger">EventDisplayNumber</XPathQuery>
+                  </ValueExpression>
+                  <Operator>Equal</Operator>
+                  <ValueExpression>
+                    <Value Type="UnsignedInteger">1015</Value>
+                  </ValueExpression>
+                </SimpleExpression>
+              </Expression>
+              <Expression>
+                <SimpleExpression>
+                  <ValueExpression>
+                    <XPathQuery Type="String">PublisherName</XPathQuery>
+                  </ValueExpression>
+                  <Operator>Equal</Operator>
+                  <ValueExpression>
+                    <Value Type="String">Health Service Script</Value>
+                  </ValueExpression>
+                </SimpleExpression>
+              </Expression>
+            </And>
+          </SecondExpression>
         </Configuration>
       </UnitMonitor>
       <UnitMonitor ID="CookdownCommunity.ServiceNow.Monitoring.HttpsTCPPortTest.TimeOutMonitor" Accessibility="Public" Enabled="true" Target="CookdownCommunity.ServiceNow.Monitoring.WatcherNode" ParentMonitorID="Health!System.Health.AvailabilityState" Remotable="true" Priority="Normal" TypeID="CookdownCommunity.ServiceNow.Monitoring.HttpsTCPPortTest.TimeOut" ConfirmDelivery="false">
@@ -1589,8 +2004,342 @@
     </Monitors>
   </Monitoring>
   <Presentation>
+    <Views>
+      <View ID="CookdownCommunity.ServiceNow.Monitoring.Presentation.Views.DatabasePerf" Accessibility="Public" Enabled="true" Target="System!System.Entity" TypeID="SC!Microsoft.SystemCenter.PerformanceViewType" Visible="true">
+        <Category>Operations</Category>
+        <Criteria>
+          <Object>Glide Pool DB</Object>
+          <Instance>Total</Instance>
+        </Criteria>
+        <Presentation>
+          <SortedColumnIndex>0</SortedColumnIndex>
+          <SortOrder>0</SortOrder>
+          <StartTime>2019-12-25T00:00:00+00:00</StartTime>
+          <EndTime>2019-12-25T23:59:59+00:00</EndTime>
+          <DynamicTimeTicks>864000000000</DynamicTimeTicks>
+          <IsDynamic>true</IsDynamic>
+          <Is3DMode>false</Is3DMode>
+          <ShowAlerts>false</ShowAlerts>
+          <ShowMaintenanceMode>false</ShowMaintenanceMode>
+          <BaselineMode>false</BaselineMode>
+          <ShowPointLabels>false</ShowPointLabels>
+          <EnableSmartLabels>true</EnableSmartLabels>
+          <RightAngleAxes>false</RightAngleAxes>
+          <ClusterSeries>false</ClusterSeries>
+          <Title />
+          <TitleFont>Microsoft Sans Serif,12,Regular</TitleFont>
+          <ChartFont>Microsoft Sans Serif,8.25,Regular</ChartFont>
+          <ShowBands>false</ShowBands>
+          <BandColor>-1579033</BandColor>
+          <ChartType>Line</ChartType>
+          <Depth>100</Depth>
+          <GapDepth>100</GapDepth>
+          <Perspective>10</Perspective>
+          <GraphXRotation>0</GraphXRotation>
+          <GraphYRotation>0</GraphYRotation>
+          <XLabelAngle>0</XLabelAngle>
+          <LabelColor>-16777216</LabelColor>
+          <LabelFont>Microsoft Sans Serif,8.25,Regular</LabelFont>
+          <XAxisVisible>True</XAxisVisible>
+          <XShowMajorGridlines>false</XShowMajorGridlines>
+          <XShowMinorGridlines>false</XShowMinorGridlines>
+          <ShowInterlaceStrips>false</ShowInterlaceStrips>
+          <XInterlaceColor>16777215</XInterlaceColor>
+          <XShowSideMargin>true</XShowSideMargin>
+          <XAxisFont>Microsoft Sans Serif,8.25,Regular</XAxisFont>
+          <AutoAxis>true</AutoAxis>
+          <AxisMax>100</AxisMax>
+          <AxisMin>0</AxisMin>
+          <YAxisVisible>True</YAxisVisible>
+          <YShowMajorGridlines>true</YShowMajorGridlines>
+          <YShowMinorGridlines>false</YShowMinorGridlines>
+          <YShowInterlaceStrips>false</YShowInterlaceStrips>
+          <YShowSideMargin>true</YShowSideMargin>
+          <YAxisFont>Microsoft Sans Serif,8.25,Regular</YAxisFont>
+          <BackgroundColor1>-1</BackgroundColor1>
+          <BackgroundColor2>-1</BackgroundColor2>
+          <GradientType>None</GradientType>
+          <Series />
+        </Presentation>
+        <Target />
+      </View>
+      <View ID="CookdownCommunity.ServiceNow.Monitoring.Presentation.Views.InstallationSetup" Accessibility="Public" Enabled="true" Target="System!System.Entity" TypeID="SC!Microsoft.SystemCenter.UrlViewType" Visible="true">
+        <Category>Operations</Category>
+        <Criteria>
+          <Url>https://go.cookdown.com/ServiceNow-Monitoring-Mp-Docs</Url>
+        </Criteria>
+        <Presentation />
+        <Target />
+      </View>
+      <View ID="CookdownCommunity.ServiceNow.Monitoring.Presentation.Views.InstancesState" Accessibility="Public" Enabled="true" Target="CookdownCommunity.ServiceNow.Monitoring.ServiceNowInstance" TypeID="SC!Microsoft.SystemCenter.StateViewType" Visible="true">
+        <Category>Operations</Category>
+        <Criteria>
+          <InMaintenanceMode>false</InMaintenanceMode>
+        </Criteria>
+        <Presentation>
+          <ColumnInfo Index="0" SortIndex="0" Width="100" Grouped="false" Sorted="true" IsSortable="true" Visible="true" SortOrder="Descending">
+            <Name>State</Name>
+            <Id>CookdownCommunity.ServiceNow.Monitoring.ServiceNowInstance-*-70df842a-cf71-59b7-bdf3-71adc8366cb9-*-Health</Id>
+          </ColumnInfo>
+          <ColumnInfo Index="20" SortIndex="-1" Width="22" Grouped="false" Sorted="false" IsSortable="true" Visible="true" SortOrder="Ascending">
+            <Name>In Maintenance Mode</Name>
+            <Id>InMaintenanceMode</Id>
+          </ColumnInfo>
+          <ColumnInfo Index="1" SortIndex="-1" Width="100" Grouped="false" Sorted="false" IsSortable="true" Visible="true" SortOrder="Ascending">
+            <Name>Name</Name>
+            <Id>Name</Id>
+          </ColumnInfo>
+          <ColumnInfo Index="2" SortIndex="-1" Width="100" Grouped="false" Sorted="false" IsSortable="true" Visible="false" SortOrder="Ascending">
+            <Name>Path</Name>
+            <Id>Path</Id>
+          </ColumnInfo>
+          <ColumnInfo Index="3" SortIndex="-1" Width="100" Grouped="false" Sorted="false" IsSortable="true" Visible="false" SortOrder="Ascending">
+            <Name>Display Name</Name>
+            <Id>System.Entity/DisplayName</Id>
+          </ColumnInfo>
+          <ColumnInfo Index="4" SortIndex="-1" Width="100" Grouped="false" Sorted="false" IsSortable="true" Visible="false" SortOrder="Ascending">
+            <Name>Service Description</Name>
+            <Id>System.Service/ServiceDescription</Id>
+          </ColumnInfo>
+          <ColumnInfo Index="5" SortIndex="-1" Width="100" Grouped="false" Sorted="false" IsSortable="true" Visible="false" SortOrder="Ascending">
+            <Name>Business Detailed Description</Name>
+            <Id>System.Service/BusinessDetailedDescription</Id>
+          </ColumnInfo>
+          <ColumnInfo Index="6" SortIndex="-1" Width="100" Grouped="false" Sorted="false" IsSortable="false" Visible="false" SortOrder="Ascending">
+            <Name>Is Business Service</Name>
+            <Id>System.Service/IsBusinessService</Id>
+          </ColumnInfo>
+          <ColumnInfo Index="7" SortIndex="-1" Width="100" Grouped="false" Sorted="false" IsSortable="true" Visible="false" SortOrder="Ascending">
+            <Name>Owned By Organization</Name>
+            <Id>System.Service/OwnedByOrganization</Id>
+          </ColumnInfo>
+          <ColumnInfo Index="8" SortIndex="-1" Width="100" Grouped="false" Sorted="false" IsSortable="false" Visible="false" SortOrder="Ascending">
+            <Name>Priority</Name>
+            <Id>System.Service/Priority</Id>
+          </ColumnInfo>
+          <ColumnInfo Index="9" SortIndex="-1" Width="100" Grouped="false" Sorted="false" IsSortable="false" Visible="false" SortOrder="Ascending">
+            <Name>Status</Name>
+            <Id>System.Service/Status</Id>
+          </ColumnInfo>
+          <ColumnInfo Index="10" SortIndex="-1" Width="100" Grouped="false" Sorted="false" IsSortable="false" Visible="false" SortOrder="Ascending">
+            <Name>Classification</Name>
+            <Id>System.Service/Classification</Id>
+          </ColumnInfo>
+          <ColumnInfo Index="11" SortIndex="-1" Width="100" Grouped="false" Sorted="false" IsSortable="true" Visible="false" SortOrder="Ascending">
+            <Name>Availability Schedule</Name>
+            <Id>System.Service/AvailabilitySchedule</Id>
+          </ColumnInfo>
+          <ColumnInfo Index="12" SortIndex="-1" Width="250" Grouped="false" Sorted="false" IsSortable="true" Visible="true" SortOrder="Ascending">
+            <Name>URL</Name>
+            <Id>CookdownCommunity.ServiceNow.Monitoring.ServiceNowInstance/URL</Id>
+          </ColumnInfo>
+          <ColumnInfo Index="13" SortIndex="-1" Width="100" Grouped="false" Sorted="false" IsSortable="true" Visible="false" SortOrder="Ascending">
+            <Name>Name</Name>
+            <Id>CookdownCommunity.ServiceNow.Monitoring.ServiceNowInstance/Name</Id>
+          </ColumnInfo>
+          <ColumnInfo Index="14" SortIndex="-1" Width="100" Grouped="false" Sorted="false" IsSortable="true" Visible="false" SortOrder="Ascending">
+            <Name>Instance Type</Name>
+            <Id>CookdownCommunity.ServiceNow.Monitoring.ServiceNowInstance/Type</Id>
+          </ColumnInfo>
+          <ColumnInfo Index="15" SortIndex="-1" Width="100" Grouped="false" Sorted="false" IsSortable="true" Visible="true" SortOrder="Ascending">
+            <Name>Version</Name>
+            <Id>CookdownCommunity.ServiceNow.Monitoring.ServiceNowInstance/Version</Id>
+          </ColumnInfo>
+          <ColumnInfo Index="16" SortIndex="-1" Width="100" Grouped="false" Sorted="false" IsSortable="true" Visible="false" SortOrder="Ascending">
+            <Name>Database Version</Name>
+            <Id>CookdownCommunity.ServiceNow.Monitoring.ServiceNowInstance/DatabaseVersion</Id>
+          </ColumnInfo>
+          <ColumnInfo Index="17" SortIndex="-1" Width="300" Grouped="false" Sorted="false" IsSortable="true" Visible="true" SortOrder="Ascending">
+            <Name>Build</Name>
+            <Id>CookdownCommunity.ServiceNow.Monitoring.ServiceNowInstance/Build</Id>
+          </ColumnInfo>
+          <ColumnInfo Index="18" SortIndex="-1" Width="100" Grouped="false" Sorted="false" IsSortable="true" Visible="false" SortOrder="Ascending">
+            <Name>ServiceNow Offering</Name>
+            <Id>CookdownCommunity.ServiceNow.Monitoring.ServiceNowInstance/Offering</Id>
+          </ColumnInfo>
+          <ColumnInfo Index="19" SortIndex="-1" Width="100" Grouped="false" Sorted="false" IsSortable="true" Visible="false" SortOrder="Ascending">
+            <Name>POP Status</Name>
+            <Id>CookdownCommunity.ServiceNow.Monitoring.ServiceNowInstance/POPStatus</Id>
+          </ColumnInfo>
+          <ColumnInfo Index="21" SortIndex="-1" Width="100" Grouped="false" Sorted="false" IsSortable="true" Visible="false" SortOrder="Ascending">
+            <Name>SMTP Status</Name>
+            <Id>CookdownCommunity.ServiceNow.Monitoring.ServiceNowInstance/SMTPStatus</Id>
+          </ColumnInfo>
+          <ColumnInfo Index="22" SortIndex="-1" Width="100" Grouped="false" Sorted="false" IsSortable="true" Visible="false" SortOrder="Ascending">
+            <Name>ServiceNow Watcher</Name>
+            <Id>CookdownCommunity.ServiceNow.Monitoring.WatcherNode</Id>
+          </ColumnInfo>
+          <ColumnInfo Index="23" SortIndex="-1" Width="100" Grouped="false" Sorted="false" IsSortable="true" Visible="false" SortOrder="Ascending">
+            <Name>ServiceNow Node</Name>
+            <Id>CookdownCommunity.ServiceNow.Monitoring.ServiceNowNode</Id>
+          </ColumnInfo>
+        </Presentation>
+        <Target />
+      </View>
+      <View ID="CookdownCommunity.ServiceNow.Monitoring.Presentation.Views.NodesState" Accessibility="Public" Enabled="true" Target="CookdownCommunity.ServiceNow.Monitoring.ServiceNowNode" TypeID="SC!Microsoft.SystemCenter.StateViewType" Visible="true">
+        <Category>Operations</Category>
+        <Criteria>
+          <InMaintenanceMode>false</InMaintenanceMode>
+        </Criteria>
+        <Presentation>
+          <ColumnInfo Index="0" SortIndex="0" Width="100" Grouped="false" Sorted="false" IsSortable="true" Visible="true" SortOrder="Descending">
+            <Name>State</Name>
+            <Id>CookdownCommunity.ServiceNow.Monitoring.ServiceNowNode-*-a4c851e3-1447-6012-99aa-4f56bfdbf1e1-*-Health</Id>
+          </ColumnInfo>
+          <ColumnInfo Index="5" SortIndex="-1" Width="22" Grouped="false" Sorted="false" IsSortable="true" Visible="true" SortOrder="Ascending">
+            <Name>In Maintenance Mode</Name>
+            <Id>InMaintenanceMode</Id>
+          </ColumnInfo>
+          <ColumnInfo Index="1" SortIndex="-1" Width="300" Grouped="false" Sorted="false" IsSortable="true" Visible="true" SortOrder="Ascending">
+            <Name>Name</Name>
+            <Id>Name</Id>
+          </ColumnInfo>
+          <ColumnInfo Index="2" SortIndex="-1" Width="250" Grouped="false" Sorted="false" IsSortable="true" Visible="true" SortOrder="Ascending">
+            <Name>Path</Name>
+            <Id>Path</Id>
+          </ColumnInfo>
+          <ColumnInfo Index="6" SortIndex="-1" Width="100" Grouped="false" Sorted="false" IsSortable="true" Visible="false" SortOrder="Ascending">
+            <Name>Display Name</Name>
+            <Id>System.Entity/DisplayName</Id>
+          </ColumnInfo>
+          <ColumnInfo Index="7" SortIndex="-1" Width="100" Grouped="false" Sorted="false" IsSortable="true" Visible="false" SortOrder="Ascending">
+            <Name>Node ID</Name>
+            <Id>CookdownCommunity.ServiceNow.Monitoring.ServiceNowNode/NodeId</Id>
+          </ColumnInfo>
+          <ColumnInfo Index="8" SortIndex="-1" Width="100" Grouped="false" Sorted="false" IsSortable="true" Visible="false" SortOrder="Ascending">
+            <Name>System ID</Name>
+            <Id>CookdownCommunity.ServiceNow.Monitoring.ServiceNowNode/SystemId</Id>
+          </ColumnInfo>
+          <ColumnInfo Index="9" SortIndex="-1" Width="100" Grouped="false" Sorted="false" IsSortable="false" Visible="false" SortOrder="Ascending">
+            <Name>Created On</Name>
+            <Id>CookdownCommunity.ServiceNow.Monitoring.ServiceNowNode/CreatedOn</Id>
+          </ColumnInfo>
+          <ColumnInfo Index="3" SortIndex="-1" Width="100" Grouped="false" Sorted="false" IsSortable="false" Visible="true" SortOrder="Ascending">
+            <Name>Allow Inbound</Name>
+            <Id>CookdownCommunity.ServiceNow.Monitoring.ServiceNowNode/AllowInbound</Id>
+          </ColumnInfo>
+          <ColumnInfo Index="4" SortIndex="-1" Width="100" Grouped="false" Sorted="false" IsSortable="false" Visible="true" SortOrder="Ascending">
+            <Name>Ready for Failover?</Name>
+            <Id>CookdownCommunity.ServiceNow.Monitoring.ServiceNowNode/ReadyToFailover</Id>
+          </ColumnInfo>
+        </Presentation>
+        <Target />
+      </View>
+      <View ID="CookdownCommunity.ServiceNow.Monitoring.Presentation.Views.UserPerf" Accessibility="Public" Enabled="true" Target="CookdownCommunity.ServiceNow.Monitoring.ServiceNowInstance" TypeID="SC!Microsoft.SystemCenter.PerformanceViewType" Visible="true">
+        <Category>Operations</Category>
+        <Criteria>
+          <Object>Users</Object>
+          <Instance>Total</Instance>
+        </Criteria>
+        <Presentation>
+          <SortedColumnIndex>0</SortedColumnIndex>
+          <SortOrder>0</SortOrder>
+          <StartTime>2019-12-25T00:00:00+00:00</StartTime>
+          <EndTime>2019-12-25T23:59:59+00:00</EndTime>
+          <DynamicTimeTicks>864000000000</DynamicTimeTicks>
+          <IsDynamic>true</IsDynamic>
+          <Is3DMode>false</Is3DMode>
+          <ShowAlerts>false</ShowAlerts>
+          <ShowMaintenanceMode>false</ShowMaintenanceMode>
+          <BaselineMode>false</BaselineMode>
+          <ShowPointLabels>false</ShowPointLabels>
+          <EnableSmartLabels>true</EnableSmartLabels>
+          <RightAngleAxes>false</RightAngleAxes>
+          <ClusterSeries>false</ClusterSeries>
+          <Title />
+          <TitleFont>Microsoft Sans Serif,12,Regular</TitleFont>
+          <ChartFont>Microsoft Sans Serif,8.25,Regular</ChartFont>
+          <ShowBands>false</ShowBands>
+          <BandColor>-1579033</BandColor>
+          <ChartType>Line</ChartType>
+          <Depth>100</Depth>
+          <GapDepth>100</GapDepth>
+          <Perspective>10</Perspective>
+          <GraphXRotation>0</GraphXRotation>
+          <GraphYRotation>0</GraphYRotation>
+          <XLabelAngle>0</XLabelAngle>
+          <LabelColor>-16777216</LabelColor>
+          <LabelFont>Microsoft Sans Serif,8.25,Regular</LabelFont>
+          <XAxisVisible>True</XAxisVisible>
+          <XShowMajorGridlines>false</XShowMajorGridlines>
+          <XShowMinorGridlines>false</XShowMinorGridlines>
+          <ShowInterlaceStrips>false</ShowInterlaceStrips>
+          <XInterlaceColor>16777215</XInterlaceColor>
+          <XShowSideMargin>true</XShowSideMargin>
+          <XAxisFont>Microsoft Sans Serif,8.25,Regular</XAxisFont>
+          <AutoAxis>true</AutoAxis>
+          <AxisMax>100</AxisMax>
+          <AxisMin>0</AxisMin>
+          <YAxisVisible>True</YAxisVisible>
+          <YShowMajorGridlines>true</YShowMajorGridlines>
+          <YShowMinorGridlines>false</YShowMinorGridlines>
+          <YShowInterlaceStrips>false</YShowInterlaceStrips>
+          <YShowSideMargin>true</YShowSideMargin>
+          <YAxisFont>Microsoft Sans Serif,8.25,Regular</YAxisFont>
+          <BackgroundColor1>-1</BackgroundColor1>
+          <BackgroundColor2>-1</BackgroundColor2>
+          <GradientType>None</GradientType>
+          <Series />
+        </Presentation>
+        <Target />
+      </View>
+      <View ID="CookdownCommunity.ServiceNow.Monitoring.Presentation.Views.WatchersState" Accessibility="Public" Enabled="true" Target="CookdownCommunity.ServiceNow.Monitoring.WatcherNode" TypeID="SC!Microsoft.SystemCenter.StateViewType" Visible="true">
+        <Category>Operations</Category>
+        <Criteria>
+          <InMaintenanceMode>false</InMaintenanceMode>
+        </Criteria>
+        <Presentation>
+          <ColumnInfo Index="0" SortIndex="0" Width="100" Grouped="false" Sorted="true" IsSortable="true" Visible="true" SortOrder="Descending">
+            <Name>State</Name>
+            <Id>CookdownCommunity.ServiceNow.Monitoring.WatcherNode-*-b81c7051-1405-a274-0088-80f11332bd84-*-Health</Id>
+          </ColumnInfo>
+          <ColumnInfo Index="7" SortIndex="-1" Width="22" Grouped="false" Sorted="false" IsSortable="true" Visible="true" SortOrder="Ascending">
+            <Name>In Maintenance Mode</Name>
+            <Id>InMaintenanceMode</Id>
+          </ColumnInfo>
+          <ColumnInfo Index="1" SortIndex="-1" Width="100" Grouped="false" Sorted="false" IsSortable="true" Visible="true" SortOrder="Ascending">
+            <Name>Name</Name>
+            <Id>Name</Id>
+          </ColumnInfo>
+          <ColumnInfo Index="2" SortIndex="-1" Width="250" Grouped="false" Sorted="false" IsSortable="true" Visible="true" SortOrder="Ascending">
+            <Name>Path</Name>
+            <Id>Path</Id>
+          </ColumnInfo>
+          <ColumnInfo Index="3" SortIndex="-1" Width="100" Grouped="false" Sorted="false" IsSortable="true" Visible="false" SortOrder="Ascending">
+            <Name>Display Name</Name>
+            <Id>System.Entity/DisplayName</Id>
+          </ColumnInfo>
+          <ColumnInfo Index="4" SortIndex="-1" Width="250" Grouped="false" Sorted="false" IsSortable="true" Visible="true" SortOrder="Ascending">
+            <Name>Watching Instance</Name>
+            <Id>CookdownCommunity.ServiceNow.Monitoring.WatcherNode/Instance</Id>
+          </ColumnInfo>
+          <ColumnInfo Index="5" SortIndex="-1" Width="100" Grouped="false" Sorted="false" IsSortable="true" Visible="false" SortOrder="Ascending">
+            <Name>Tested Base URL</Name>
+            <Id>CookdownCommunity.ServiceNow.Monitoring.WatcherNode/InstanceUrlBase</Id>
+          </ColumnInfo>
+          <ColumnInfo Index="6" SortIndex="-1" Width="100" Grouped="false" Sorted="false" IsSortable="true" Visible="true" SortOrder="Ascending">
+            <Name>Watcher Location</Name>
+            <Id>CookdownCommunity.ServiceNow.Monitoring.WatcherNode/Location</Id>
+          </ColumnInfo>
+        </Presentation>
+        <Target />
+      </View>
+    </Views>
+    <Folders>
+      <Folder ID="CookdownCommunity.ServiceNow.Monitoring.Presentation.Folders.ServiceNowMonitoring" Accessibility="Public" ParentFolder="SC!Microsoft.SystemCenter.Monitoring.ViewFolder.Root" />
+    </Folders>
+    <FolderItems>
+      <FolderItem ElementID="CookdownCommunity.ServiceNow.Monitoring.Presentation.Views.InstallationSetup" ID="i452b81f8a8a445c89e4dec7e3894a9d4" Folder="CookdownCommunity.ServiceNow.Monitoring.Presentation.Folders.ServiceNowMonitoring" />
+      <FolderItem ElementID="CookdownCommunity.ServiceNow.Monitoring.Presentation.Views.InstancesState" ID="i7522e6a85e804d42a849920a5df7878e" Folder="CookdownCommunity.ServiceNow.Monitoring.Presentation.Folders.ServiceNowMonitoring" />
+      <FolderItem ElementID="CookdownCommunity.ServiceNow.Monitoring.Presentation.Views.NodesState" ID="i34d04e93678740e5aa9d7349636f1f9b" Folder="CookdownCommunity.ServiceNow.Monitoring.Presentation.Folders.ServiceNowMonitoring" />
+      <FolderItem ElementID="CookdownCommunity.ServiceNow.Monitoring.Presentation.Views.UserPerf" ID="ie5b206ca6add4621835aa050eb8e42aa" Folder="CookdownCommunity.ServiceNow.Monitoring.Presentation.Folders.ServiceNowMonitoring" />
+      <FolderItem ElementID="CookdownCommunity.ServiceNow.Monitoring.Presentation.Views.DatabasePerf" ID="iffa3f75a943c473e80d382757daa3838" Folder="CookdownCommunity.ServiceNow.Monitoring.Presentation.Folders.ServiceNowMonitoring" />
+      <FolderItem ElementID="CookdownCommunity.ServiceNow.Monitoring.Presentation.Views.WatchersState" ID="i486652930c5e4300a014d91fa6d5b671" Folder="CookdownCommunity.ServiceNow.Monitoring.Presentation.Folders.ServiceNowMonitoring" />
+    </FolderItems>
     <StringResources>
       <StringResource ID="CookdownCommunity.ServiceNow.Monitoring.NodeMemoryUtilization.AlertMessage" />
+      <StringResource ID="CookdownCommunity.ServiceNow.Monitoring.ServiceNowPerformanceCollection.AlertMessage" />
+      <StringResource ID="CookdownCommunity.ServiceNow.Monitoring.ServiceNowAPIDiscovery.AlertMessage" />
       <StringResource ID="CookdownCommunity.ServiceNow.Monitoring.HttpsTCPPortTest.TimeOutMonitor.AlertMessage" />
       <StringResource ID="CookdownCommunity.ServiceNow.Monitoring.HttpsTCPPortTest.ConnectionRefusedMonitor.AlertMessage" />
       <StringResource ID="CookdownCommunity.ServiceNow.Monitoring.HttpsTCPPortTest.HostUnreachableMonitor.AlertMessage" />
@@ -1737,11 +2486,76 @@
           <Name>Queue Long</Name>
           <Description>Queue Long</Description>
         </DisplayString>
+        <DisplayString ElementID="CookdownCommunity.ServiceNow.Monitoring.ServiceNowConnectionTime">
+          <Name>Watcher Connection Time</Name>
+          <Description>Monitors the connection TCP time from the Watcher Nodes</Description>
+        </DisplayString>
+        <DisplayString ElementID="CookdownCommunity.ServiceNow.Monitoring.ServiceNowConnectionTime" SubElementID="Acceptable">
+          <Name>Acceptable</Name>
+          <Description>Acceptable</Description>
+        </DisplayString>
+        <DisplayString ElementID="CookdownCommunity.ServiceNow.Monitoring.ServiceNowConnectionTime" SubElementID="Degraded">
+          <Name>Degraded</Name>
+          <Description>Degraded</Description>
+        </DisplayString>
+        <DisplayString ElementID="CookdownCommunity.ServiceNow.Monitoring.ServiceNowConnectionTime" SubElementID="Unacceptable">
+          <Name>Unacceptable</Name>
+          <Description>Unacceptable</Description>
+        </DisplayString>
+        <DisplayString ElementID="CookdownCommunity.ServiceNow.Monitoring.ServiceNowPerformanceCollection">
+          <Name>ServiceNow API Performance Collection</Name>
+          <Description>ServiceNow Performance Collection success and failure is monitored by this.</Description>
+        </DisplayString>
+        <DisplayString ElementID="CookdownCommunity.ServiceNow.Monitoring.ServiceNowPerformanceCollection.AlertMessage">
+          <Name>ServiceNow Performance Collection has Failed</Name>
+          <Description>One or more of the ServiceNow instances configured for this watcher failed during performance collection.
+Please check the event log for additional events, additionally you can enable the 'DiscoveryProbe' option for further details.
+
+Erroring events content:
+{0}</Description>
+        </DisplayString>
+        <DisplayString ElementID="CookdownCommunity.ServiceNow.Monitoring.ServiceNowPerformanceCollection" SubElementID="FirstEventRaised">
+          <Name>Collection Sucessful</Name>
+          <Description>Collection Sucessful</Description>
+        </DisplayString>
+        <DisplayString ElementID="CookdownCommunity.ServiceNow.Monitoring.ServiceNowPerformanceCollection" SubElementID="SecondEventRaised">
+          <Name>Collection Failure</Name>
+          <Description>Collection Failure</Description>
+        </DisplayString>
+        <DisplayString ElementID="CookdownCommunity.ServiceNow.Monitoring.ServiceNowAPIDiscovery">
+          <Name>ServiceNow API Discovery</Name>
+          <Description>ServiceNow Discovery success and failure is monitored by this.</Description>
+        </DisplayString>
+        <DisplayString ElementID="CookdownCommunity.ServiceNow.Monitoring.ServiceNowAPIDiscovery.AlertMessage">
+          <Name>ServiceNow Discovery has Failed</Name>
+          <Description>One or more of the ServiceNow instances configured for this watcher failed during discovery.
+Please check the event log for additional events, additionally you can enable the 'DiscoveryDebug' option for further details.
+
+Erroring event content:
+ {0}</Description>
+        </DisplayString>
+        <DisplayString ElementID="CookdownCommunity.ServiceNow.Monitoring.ServiceNowAPIDiscovery" SubElementID="FirstEventRaised">
+          <Name>Discovery Sucessful</Name>
+          <Description>Discovery Sucessful</Description>
+        </DisplayString>
+        <DisplayString ElementID="CookdownCommunity.ServiceNow.Monitoring.ServiceNowAPIDiscovery" SubElementID="SecondEventRaised">
+          <Name>Discovery Failure</Name>
+          <Description>Discovery Failure</Description>
+        </DisplayString>
         <DisplayString ElementID="CookdownCommunity.ServiceNow.Monitoring.PerformanceThreshold">
           <Name>Performance Threshold monitor type</Name>
         </DisplayString>
         <DisplayString ElementID="CookdownCommunity.ServiceNow.Monitoring.PerformanceThreshold" SubElementID="Threshold">
           <Name>Threshold</Name>
+        </DisplayString>
+        <DisplayString ElementID="CookdownCommunity.ServiceNow.Monitoring.HttpsTCPPortTest.ConnectionTimeMonitor" SubElementID="Acceptable">
+          <Name>Acceptable</Name>
+        </DisplayString>
+        <DisplayString ElementID="CookdownCommunity.ServiceNow.Monitoring.HttpsTCPPortTest.ConnectionTimeMonitor" SubElementID="Degraded">
+          <Name>Degraded</Name>
+        </DisplayString>
+        <DisplayString ElementID="CookdownCommunity.ServiceNow.Monitoring.HttpsTCPPortTest.ConnectionTimeMonitor" SubElementID="Unacceptable">
+          <Name>Unacceptable</Name>
         </DisplayString>
         <DisplayString ElementID="CookdownCommunity.ServiceNow.Monitoring.HttpsTCPPortTest.TimeOutMonitor" SubElementID="OK">
           <Name>OK</Name>
@@ -1838,6 +2652,30 @@
         </DisplayString>
         <DisplayString ElementID="CookdownCommunity.ServiceNow.Monitoring.HttpsTCPPortTest.HostUnreachable" SubElementID="NoHostUnreachableFailure">
           <Name>Host Reachable (Success)</Name>
+        </DisplayString>
+        <DisplayString ElementID="CookdownCommunity.ServiceNow.Monitoring.Presentation.Folders.ServiceNowMonitoring">
+          <Name>ServiceNow Monitoring [Community]</Name>
+        </DisplayString>
+        <DisplayString ElementID="CookdownCommunity.ServiceNow.Monitoring.Presentation.Views.DatabasePerf">
+          <Name>DB Activity</Name>
+          <Description>Shows the instance wide performance for the database activity</Description>
+        </DisplayString>
+        <DisplayString ElementID="CookdownCommunity.ServiceNow.Monitoring.Presentation.Views.InstallationSetup">
+          <Name>Installation and Setup</Name>
+          <Description>Installation and setup documentation for the ServiceNow monitoring MP from the Cookdown Community</Description>
+        </DisplayString>
+        <DisplayString ElementID="CookdownCommunity.ServiceNow.Monitoring.Presentation.Views.InstancesState">
+          <Name>Instances</Name>
+        </DisplayString>
+        <DisplayString ElementID="CookdownCommunity.ServiceNow.Monitoring.Presentation.Views.NodesState">
+          <Name>Nodes</Name>
+        </DisplayString>
+        <DisplayString ElementID="CookdownCommunity.ServiceNow.Monitoring.Presentation.Views.UserPerf">
+          <Name>User Activity</Name>
+          <Description>Performance collection on User Activity</Description>
+        </DisplayString>
+        <DisplayString ElementID="CookdownCommunity.ServiceNow.Monitoring.Presentation.Views.WatchersState">
+          <Name>Watchers</Name>
         </DisplayString>
         <DisplayString ElementID="CookdownCommunity.ServiceNow.Monitoring.Performance.InstanceTotal.GlidePoolDB_Selects">
           <Name>Collect Instance Performance (Glide Pool DB : Selects)</Name>
@@ -1988,7 +2826,7 @@
           <Description></Description>
         </DisplayString>
         <DisplayString ElementID="CookdownCommunity.ServiceNow.Monitoring.HttpsTCPPortTest.ConnectionTime">
-          <Name>Test  SNOW instance TCP Port Connection Time Performance Collection</Name>
+          <Name>Test SNOW instance TCP Port Connection Time Performance Collection</Name>
           <Description>This performance collection rule collects the time it takes to connect to cookdowndev.service-now.com on port 443.</Description>
         </DisplayString>
         <DisplayString ElementID="CookdownCommunity.ServiceNow.Monitoring.FetchStatusDataSource">
