@@ -66,7 +66,7 @@ Function GetClusterStatusFromServiceNow
 {
     param($instanceURL)
     $statsEndpoint = $instanceURL + "api/now/table/sys_cluster_state"
-    $results = Invoke-RESTMethod -Uri $statsEndpoint -Headers $headers -Method GET
+    $results = Invoke-RESTMethod @splat -Uri $statsEndpoint
     $results.result
 }
 
@@ -74,7 +74,7 @@ Function CreatePerformancePropertyBags
 {
     param($node, $instance, $ioStats, $stats)
 
-	$glidePool = $ioStats.xmlstats.iostats.pool | ? {$_.name -eq 'glide'}
+	$glidePool = $ioStats.xmlstats.iostats.pool | Where-Object {$_.name -eq 'glide'}
 
 	MakeAddPerfPropertyBag -InstanceUrl $instance -NodeId $node.node_id -Object "Memory" -Counter "Total" -Instance $node.system_id -Value $stats.xmlstats.'system.memory.total'
 	MakeAddPerfPropertyBag -InstanceUrl $instance -NodeId $node.node_id -Object "Memory" -Counter "In Use" -Instance $node.system_id -Value $stats.xmlstats.'system.memory.in.use'
@@ -117,7 +117,7 @@ Function DebugProbe
 	#We'll only write out data if we have debug enabled, otherwise, skip it
 	if($debugProbe)
 	{
-		if($objectValue -ne $null)
+		if($null -ne $objectValue)
         {
             $oAPI.LogScriptEvent("SNOW Status", 1070, 4, "Status Probe DEBUG:`n$messageString`nWith a value of: $objectValue")
         }
@@ -135,9 +135,37 @@ $oAPI = New-Object -comObject 'MOM.ScriptAPI'
 try
 {
 	[Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
-    $headers = CreateHeaders -username $SnowUsername -password $SnowPassword
 
 	$debugProbe = [bool]::Parse($debugProbe.ToString())
+
+	DebugProbe "SNow Status Probe running under $(whoami)"
+
+	$RegPath = 'SOFTWARE\CookdownManagementPacks\SNOWMonitoring'
+
+	Try {
+		$KeyProperties = Get-ItemProperty "HKLM:\$RegPath" -ErrorAction Stop
+	}
+	Catch {
+		$KeyProperties = Get-ItemProperty "HKCU:\$RegPath" -ErrorAction Continue
+	}
+
+	$Splat = @{
+		Headers = (CreateHeaders -username $snowUserName -password $snowPassword)
+		Method = 'Get'
+		ErrorAction = 'Stop'
+	}
+
+	If ($debugProbe) {
+		$Splat.add('Verbose',$True)
+	}
+
+	If ($KeyProperties.ProxyURL) {
+		$Splat.add('proxy',$KeyProperties.ProxyURL)
+		DebugProbe "Using Proxy" $KeyProperties.ProxyURL
+	}
+	#Create a splat to use with our calls to SNOW
+
+	DebugProbe "Creating performance property bag"
 
 	DebugProbe "Connecting to ServiceNow Instance to pull Performance and Status" $instanceURL
 	$fetchTime = Measure-Command {$clusterNodes = GetClusterStatusFromServiceNow -instanceURL $instanceURL}
@@ -162,7 +190,7 @@ try
 
 		#Get Stats
 		If ($snowNode | Get-Member -name 'node_stats') {
-			$NodeStats = (Invoke-RestMethod -Uri $snowNode.'node_stats'.link -Headers $headers -Method GET).Result
+			$NodeStats = (Invoke-RestMethod @Splat -Uri $snowNode.'node_stats'.link).Result
 			$ioStats = [xml]$NodeStats.iostats
 			$stats = [xml]$NodeStats.stats
 			#If node_stats we're on Paris or later

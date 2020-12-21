@@ -5,6 +5,7 @@
           <Property ID="Instance" Type="string" AutoIncrement="false" Key="true" CaseSensitive="false" MaxLength="256" MinLength="0" Required="false" Scale="0" />
           <Property ID="InstanceUrlBase" Type="string" AutoIncrement="false" Key="false" CaseSensitive="false" MaxLength="256" MinLength="0" Required="false" Scale="0" />
           <Property ID="Location" Type="string" AutoIncrement="false" Key="false" CaseSensitive="false" MaxLength="256" MinLength="0" Required="false" Scale="0" />
+          <Property ID="ProxyURL" Type="string" AutoIncrement="false" Key="false" CaseSensitive="false" MaxLength="256" MinLength="0" Required="false" Scale="0" />
         </ClassType>
       </ClassTypes>
     </EntityTypes>
@@ -23,6 +24,9 @@
         </DisplayString>
         <DisplayString ElementID="CookdownCommunity.ServiceNow.Monitoring.WatcherNode" SubElementID="InstanceUrlBase">
           <Name>Tested Base URL</Name>
+        </DisplayString>
+        <DisplayString ElementID="CookdownCommunity.ServiceNow.Monitoring.WatcherNode" SubElementID="ProxyURL">
+          <Name>Configured Proxy URL</Name>
         </DisplayString>
       </DisplayStrings>
     </LanguagePack>

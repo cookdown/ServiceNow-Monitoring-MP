@@ -1,5 +1,5 @@
 ﻿#Bring in our parameters
-param($sourceID, $managedEntityID, $location, $instanceUrls, $computerName, $debugDiscovery, $snowUserName, $snowPassword)
+param($sourceID, $managedEntityID, $location, $instanceUrls, $computerName, $debugDiscovery, $snowUserName, $snowPassword, $ProxyURL)
 
 Function CreateHeaders
 {
@@ -19,7 +19,7 @@ Function GetClusterStatusFromServiceNow
     param($instanceURL)
     $statsEndpoint = $instanceURL + "api/now/table/sys_cluster_state"
 	DebugDiscovery "Querying ServiceNow table for discovery data" $statsEndpoint
-    $results = Invoke-RESTMethod -Uri $statsEndpoint -Headers $headers -Method GET -ErrorAction Stop
+    $results = Invoke-RESTMethod @Splat -Uri $statsEndpoint
 	DebugDiscovery "Sucessfully queried data from ServiceNow table"
     $results.result
 }
@@ -29,7 +29,7 @@ Function CreateInstanceObject
     param($sourceNode,$sourceURL)
 
 	If ($sourceNode | Get-Member -name 'node_stats') {
-        $stats = [xml](Invoke-RestMethod -Uri $sourceNode.'node_stats'.link -Headers $headers -Method GET -ErrorAction Stop).Result.stats
+        $stats = [xml](Invoke-RestMethod @Splat -Uri $sourceNode.'node_stats'.link).Result.stats
         #If node_stats we're on Paris or later
     }
     Else {
@@ -121,6 +121,9 @@ Function CreateWatcherNode
 	DebugDiscovery "[Name='CookdownCommunity.ServiceNow.Monitoring.WatcherNode']/Location$" $location
 	$watcherNode.AddProperty("$MPElement[Name='CookdownCommunity.ServiceNow.Monitoring.WatcherNode']/Location$", $location)
 
+	DebugDiscovery "[Name='CookdownCommunity.ServiceNow.Monitoring.WatcherNode']/ProxyURL$" $ProxyURL
+	$watcherNode.AddProperty("$MPElement[Name='CookdownCommunity.ServiceNow.Monitoring.WatcherNode']/ProxyURL$", $ProxyURL)
+
 	DebugDiscovery "[Name='System!System.Entity']/DisplayName" $location
 	$watcherNode.AddProperty("$MPElement[Name='System!System.Entity']/DisplayName$", $location)
     $watcherNode
@@ -142,7 +145,7 @@ Function DebugDiscovery
 	#We'll only write out data if we have debug enabled, otherwise, skip it
 	if($debugDiscovery)
 	{
-		if($objectValue -ne $null)
+		if($null -ne $objectValue)
         {
             $api.LogScriptEvent("SNOW Discovery", 1020, 4, "Discovery DEBUG:`n$messageString`nWith a value of: $objectValue")
         }
@@ -176,8 +179,31 @@ $api = New-Object -comObject 'MOM.ScriptAPI'
 $debugDiscovery = [bool]::Parse($debugDiscovery.ToString())
 
 $discoveryData = $api.CreateDiscoveryData(0, $sourceID, $managedEntityID)
-$headers = CreateHeaders -username $snowUserName -password $snowPassword
+
+debugdiscovery "SNow Discovery running under $(whoami)"
+
 [string]$ActiveInstance = "Not started";
+
+$Splat = @{
+	Headers = (CreateHeaders -username $snowUserName -password $snowPassword)
+	Method = 'Get'
+	ErrorAction = 'Stop'
+}
+
+If ($debugDiscovery) {
+	$Splat.add('Verbose',$True)
+}
+
+If ($ProxyURL) {
+	$Splat.add('proxy',$ProxyURL)
+	DebugDiscovery "Using a proxy" $ProxyURL
+
+	#If we need to do proxy credentials could also implement that with a different RunasProfile.
+	#Set up a new RunAs Profile feeding in the creds and parse them into a pscredential object.
+		#[pscredential]::new($ProxyUsername,($ProxyPassword | ConvertTo-SecureString -AsPlainText -Force))
+	#If exists feed into the splat (under ProxyCredential). If not we're good to go.
+}
+#Create a splat to use with our calls to SNOW
 
 try
 {
