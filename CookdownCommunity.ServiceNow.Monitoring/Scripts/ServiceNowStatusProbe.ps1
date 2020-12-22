@@ -1,5 +1,5 @@
 ﻿#Bring in our parameters
-param($instanceURL, $SnowUsername, $SnowPassword, $debugProbe)
+param($instanceURL, $SnowUsername, $SnowPassword, $debugProbe, $proxyUserName, $ProxyPassword)
 
 Function CreateHeaders
 {
@@ -162,6 +162,11 @@ try
 	If ($KeyProperties.ProxyURL) {
 		$Splat.add('proxy',$KeyProperties.ProxyURL)
 		DebugProbe "Using Proxy" $KeyProperties.ProxyURL
+
+		If ((-not [string]::IsNullOrWhiteSpace($proxyUserName)) -and (-not ([string]::IsNullOrWhiteSpace($ProxyPassword)))) {
+			$Splat.add('ProxyCredential',([pscredential]::new($ProxyUsername,($ProxyPassword | ConvertTo-SecureString -AsPlainText -Force))))
+			DebugProbe "Using proxy credentials"
+		}
 	}
 	#Create a splat to use with our calls to SNOW
 

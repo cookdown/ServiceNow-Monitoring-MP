@@ -162,10 +162,16 @@
                   <maml:para>There is a firewall between the watcher node and the target IP or device</maml:para>
                 </maml:listItem>
                 <maml:listItem>
+                  <maml:para>There is a proxy required between the watcher node and the target IP or device</maml:para>
+                </maml:listItem>
+                <maml:listItem>
                   <maml:para>IPSec is required between the watcher node and the target IP or device</maml:para>
                 </maml:listItem>
                 <maml:listItem>
                   <maml:para>The target IP:Port is actually not available</maml:para>
+                </maml:listItem>
+                <maml:listItem>
+                  <maml:para>There is a proxy required between the watcher node and the target IP or device</maml:para>
                 </maml:listItem>
               </maml:list>
             </section>

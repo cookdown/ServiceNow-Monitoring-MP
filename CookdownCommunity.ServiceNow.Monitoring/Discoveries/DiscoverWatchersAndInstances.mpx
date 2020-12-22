@@ -59,6 +59,14 @@
                     <Value>$RunAs[Name="CookdownCommunity.ServiceNow.Monitoring.APIProbeAccount"]/Password$</Value>
                   </Parameter>
                   <Parameter>
+                    <Name>proxyUserName</Name>
+                    <Value>$RunAs[Name="CookdownCommunity.ServiceNow.Monitoring.ProxyAccount"]/UserName$</Value>
+                  </Parameter>
+                  <Parameter>
+                    <Name>proxyPassword</Name>
+                    <Value>$RunAs[Name="CookdownCommunity.ServiceNow.Monitoring.ProxyAccount"]/Password$</Value>
+                  </Parameter>
+                  <Parameter>
                     <Name>ProxyURL</Name>
                     <Value>$Config/ProxyURL$</Value>
                   </Parameter>

@@ -2,6 +2,7 @@
   <TypeDefinitions>
     <SecureReferences>
       <SecureReference ID="CookdownCommunity.ServiceNow.Monitoring.APIProbeAccount" Accessibility="Public" Context="System!System.Entity"/>
+      <SecureReference ID="CookdownCommunity.ServiceNow.Monitoring.ProxyAccount" Accessibility="Public" Context="System!System.Entity"/>
     </SecureReferences>
   </TypeDefinitions>
   <LanguagePacks>
@@ -10,6 +11,10 @@
         <DisplayString ElementID="CookdownCommunity.ServiceNow.Monitoring.APIProbeAccount">
           <Name>Cookdown: ServiceNow Monitoring API Probe Account</Name>
           <Description>This account is used for pulling data from ServiceNow in discoveries as well as performance workflows</Description>
+        </DisplayString>
+              <DisplayString ElementID="CookdownCommunity.ServiceNow.Monitoring.ProxyAccount">
+          <Name>Cookdown: ServiceNow Monitoring Proxy Credentials</Name>
+          <Description>This is an optional account used for connecting to proxies if they require additional authentication</Description>
         </DisplayString>
       </DisplayStrings>
     </LanguagePack>

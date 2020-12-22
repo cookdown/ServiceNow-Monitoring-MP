@@ -9,6 +9,8 @@
             <Object>Memory</Object>
             <Counter>In Use</Counter>
             <NodeId>$Target/Property[Type="CookdownCommunity.ServiceNow.Monitoring.ServiceNowNode"]/NodeId$</NodeId>
+            <ProxyUsername>$Config/ProxyUsername$</ProxyUsername>
+            <ProxyPassword>$Config/ProxyPassword$</ProxyPassword>
           </DataSource>
         </DataSources>
         <WriteActions>
@@ -24,6 +26,8 @@
             <Object>Memory</Object>
             <Counter>Percent Free</Counter>
             <NodeId>$Target/Property[Type="CookdownCommunity.ServiceNow.Monitoring.ServiceNowNode"]/NodeId$</NodeId>
+            <ProxyUsername>$Config/ProxyUsername$</ProxyUsername>
+            <ProxyPassword>$Config/ProxyPassword$</ProxyPassword>
           </DataSource>
         </DataSources>
         <WriteActions>
@@ -39,6 +43,8 @@
             <Object>Memory</Object>
             <Counter>Total</Counter>
             <NodeId>$Target/Property[Type="CookdownCommunity.ServiceNow.Monitoring.ServiceNowNode"]/NodeId$</NodeId>
+            <ProxyUsername>$Config/ProxyUsername$</ProxyUsername>
+            <ProxyPassword>$Config/ProxyPassword$</ProxyPassword>
           </DataSource>
         </DataSources>
         <WriteActions>
@@ -54,6 +60,8 @@
             <Object>Memory</Object>
             <Counter>Max</Counter>
             <NodeId>$Target/Property[Type="CookdownCommunity.ServiceNow.Monitoring.ServiceNowNode"]/NodeId$</NodeId>
+            <ProxyUsername>$Config/ProxyUsername$</ProxyUsername>
+            <ProxyPassword>$Config/ProxyPassword$</ProxyPassword>
           </DataSource>
         </DataSources>
         <WriteActions>
@@ -69,6 +77,8 @@
             <Object>Servlet</Object>
             <Counter>Cache Flushes</Counter>
             <NodeId>$Target/Property[Type="CookdownCommunity.ServiceNow.Monitoring.ServiceNowNode"]/NodeId$</NodeId>
+            <ProxyUsername>$Config/ProxyUsername$</ProxyUsername>
+            <ProxyPassword>$Config/ProxyPassword$</ProxyPassword>
           </DataSource>
         </DataSources>
         <WriteActions>
@@ -84,6 +94,8 @@
             <Object>Servlet</Object>
             <Counter>Uptime</Counter>
             <NodeId>$Target/Property[Type="CookdownCommunity.ServiceNow.Monitoring.ServiceNowNode"]/NodeId$</NodeId>
+            <ProxyUsername>$Config/ProxyUsername$</ProxyUsername>
+            <ProxyPassword>$Config/ProxyPassword$</ProxyPassword>
           </DataSource>
         </DataSources>
         <WriteActions>
@@ -99,6 +111,8 @@
             <Object>Servlet</Object>
             <Counter>Transactions</Counter>
             <NodeId>$Target/Property[Type="CookdownCommunity.ServiceNow.Monitoring.ServiceNowNode"]/NodeId$</NodeId>
+            <ProxyUsername>$Config/ProxyUsername$</ProxyUsername>
+            <ProxyPassword>$Config/ProxyPassword$</ProxyPassword>
           </DataSource>
         </DataSources>
         <WriteActions>
@@ -114,6 +128,8 @@
             <Object>Servlet</Object>
             <Counter>Errors Handled</Counter>
             <NodeId>$Target/Property[Type="CookdownCommunity.ServiceNow.Monitoring.ServiceNowNode"]/NodeId$</NodeId>
+            <ProxyUsername>$Config/ProxyUsername$</ProxyUsername>
+            <ProxyPassword>$Config/ProxyPassword$</ProxyPassword>
           </DataSource>
         </DataSources>
         <WriteActions>
@@ -129,6 +145,8 @@
             <Object>Servlet</Object>
             <Counter>Processor Transactions</Counter>
             <NodeId>$Target/Property[Type="CookdownCommunity.ServiceNow.Monitoring.ServiceNowNode"]/NodeId$</NodeId>
+            <ProxyUsername>$Config/ProxyUsername$</ProxyUsername>
+            <ProxyPassword>$Config/ProxyPassword$</ProxyPassword>
           </DataSource>
         </DataSources>
         <WriteActions>
@@ -144,6 +162,8 @@
             <Object>Servlet</Object>
             <Counter>Cancelled Transactions</Counter>
             <NodeId>$Target/Property[Type="CookdownCommunity.ServiceNow.Monitoring.ServiceNowNode"]/NodeId$</NodeId>
+            <ProxyUsername>$Config/ProxyUsername$</ProxyUsername>
+            <ProxyPassword>$Config/ProxyPassword$</ProxyPassword>
           </DataSource>
         </DataSources>
         <WriteActions>
@@ -159,6 +179,8 @@
             <Object>Servlet</Object>
             <Counter>Active Sessions</Counter>
             <NodeId>$Target/Property[Type="CookdownCommunity.ServiceNow.Monitoring.ServiceNowNode"]/NodeId$</NodeId>
+            <ProxyUsername>$Config/ProxyUsername$</ProxyUsername>
+            <ProxyPassword>$Config/ProxyPassword$</ProxyPassword>
           </DataSource>
         </DataSources>
         <WriteActions>
@@ -174,6 +196,8 @@
             <Object>Scheduler</Object>
             <Counter>Worker Count</Counter>
             <NodeId>$Target/Property[Type="CookdownCommunity.ServiceNow.Monitoring.ServiceNowNode"]/NodeId$</NodeId>
+            <ProxyUsername>$Config/ProxyUsername$</ProxyUsername>
+            <ProxyPassword>$Config/ProxyPassword$</ProxyPassword>
           </DataSource>
         </DataSources>
         <WriteActions>
@@ -189,6 +213,8 @@
             <Object>Scheduler</Object>
             <Counter>Queue Length</Counter>
             <NodeId>$Target/Property[Type="CookdownCommunity.ServiceNow.Monitoring.ServiceNowNode"]/NodeId$</NodeId>
+            <ProxyUsername>$Config/ProxyUsername$</ProxyUsername>
+            <ProxyPassword>$Config/ProxyPassword$</ProxyPassword>
           </DataSource>
         </DataSources>
         <WriteActions>
@@ -204,6 +230,8 @@
             <Object>Scheduler</Object>
             <Counter>Mean Queue Age</Counter>
             <NodeId>$Target/Property[Type="CookdownCommunity.ServiceNow.Monitoring.ServiceNowNode"]/NodeId$</NodeId>
+            <ProxyUsername>$Config/ProxyUsername$</ProxyUsername>
+            <ProxyPassword>$Config/ProxyPassword$</ProxyPassword>
           </DataSource>
         </DataSources>
         <WriteActions>
@@ -219,6 +247,8 @@
             <Object>Scheduler</Object>
             <Counter>Total Jobs</Counter>
             <NodeId>$Target/Property[Type="CookdownCommunity.ServiceNow.Monitoring.ServiceNowNode"]/NodeId$</NodeId>
+            <ProxyUsername>$Config/ProxyUsername$</ProxyUsername>
+            <ProxyPassword>$Config/ProxyPassword$</ProxyPassword>
           </DataSource>
         </DataSources>
         <WriteActions>
@@ -234,6 +264,8 @@
             <Object>Scheduler</Object>
             <Counter>Total Burst Workers</Counter>
             <NodeId>$Target/Property[Type="CookdownCommunity.ServiceNow.Monitoring.ServiceNowNode"]/NodeId$</NodeId>
+            <ProxyUsername>$Config/ProxyUsername$</ProxyUsername>
+            <ProxyPassword>$Config/ProxyPassword$</ProxyPassword>
           </DataSource>
         </DataSources>
         <WriteActions>
@@ -249,6 +281,8 @@
             <Object>Glide Pool DB</Object>
             <Counter>Selects</Counter>
             <NodeId>$Target/Property[Type="CookdownCommunity.ServiceNow.Monitoring.ServiceNowNode"]/NodeId$</NodeId>
+            <ProxyUsername>$Config/ProxyUsername$</ProxyUsername>
+            <ProxyPassword>$Config/ProxyPassword$</ProxyPassword>
           </DataSource>
         </DataSources>
         <WriteActions>
@@ -264,6 +298,8 @@
             <Object>Glide Pool DB</Object>
             <Counter>Selects (Over 1 Second)</Counter>
             <NodeId>$Target/Property[Type="CookdownCommunity.ServiceNow.Monitoring.ServiceNowNode"]/NodeId$</NodeId>
+            <ProxyUsername>$Config/ProxyUsername$</ProxyUsername>
+            <ProxyPassword>$Config/ProxyPassword$</ProxyPassword>
           </DataSource>
         </DataSources>
         <WriteActions>
@@ -279,6 +315,8 @@
             <Object>Glide Pool DB</Object>
             <Counter>Selects (Over 10 Sec)</Counter>
             <NodeId>$Target/Property[Type="CookdownCommunity.ServiceNow.Monitoring.ServiceNowNode"]/NodeId$</NodeId>
+            <ProxyUsername>$Config/ProxyUsername$</ProxyUsername>
+            <ProxyPassword>$Config/ProxyPassword$</ProxyPassword>
           </DataSource>
         </DataSources>
         <WriteActions>
@@ -294,6 +332,8 @@
             <Object>Glide Pool DB</Object>
             <Counter>Deletes</Counter>
             <NodeId>$Target/Property[Type="CookdownCommunity.ServiceNow.Monitoring.ServiceNowNode"]/NodeId$</NodeId>
+            <ProxyUsername>$Config/ProxyUsername$</ProxyUsername>
+            <ProxyPassword>$Config/ProxyPassword$</ProxyPassword>
           </DataSource>
         </DataSources>
         <WriteActions>
@@ -309,6 +349,8 @@
             <Object>Glide Pool DB</Object>
             <Counter>Inserts</Counter>
             <NodeId>$Target/Property[Type="CookdownCommunity.ServiceNow.Monitoring.ServiceNowNode"]/NodeId$</NodeId>
+            <ProxyUsername>$Config/ProxyUsername$</ProxyUsername>
+            <ProxyPassword>$Config/ProxyPassword$</ProxyPassword>
           </DataSource>
         </DataSources>
         <WriteActions>
@@ -324,6 +366,8 @@
             <Object>Glide Pool DB</Object>
             <Counter>Updates</Counter>
             <NodeId>$Target/Property[Type="CookdownCommunity.ServiceNow.Monitoring.ServiceNowNode"]/NodeId$</NodeId>
+            <ProxyUsername>$Config/ProxyUsername$</ProxyUsername>
+            <ProxyPassword>$Config/ProxyPassword$</ProxyPassword>
           </DataSource>
         </DataSources>
         <WriteActions>
@@ -339,6 +383,8 @@
             <Object>JVM</Object>
             <Counter>Classes Loaded</Counter>
             <NodeId>$Target/Property[Type="CookdownCommunity.ServiceNow.Monitoring.ServiceNowNode"]/NodeId$</NodeId>
+            <ProxyUsername>$Config/ProxyUsername$</ProxyUsername>
+            <ProxyPassword>$Config/ProxyPassword$</ProxyPassword>
           </DataSource>
         </DataSources>
         <WriteActions>
@@ -354,6 +400,8 @@
             <Object>JVM</Object>
             <Counter>Classes Unloaded</Counter>
             <NodeId>$Target/Property[Type="CookdownCommunity.ServiceNow.Monitoring.ServiceNowNode"]/NodeId$</NodeId>
+            <ProxyUsername>$Config/ProxyUsername$</ProxyUsername>
+            <ProxyPassword>$Config/ProxyPassword$</ProxyPassword>
           </DataSource>
         </DataSources>
         <WriteActions>
@@ -369,6 +417,8 @@
             <Object>Users</Object>
             <Counter>End Users</Counter>
             <NodeId>$Target/Property[Type="CookdownCommunity.ServiceNow.Monitoring.ServiceNowNode"]/NodeId$</NodeId>
+            <ProxyUsername>$Config/ProxyUsername$</ProxyUsername>
+            <ProxyPassword>$Config/ProxyPassword$</ProxyPassword>
           </DataSource>
         </DataSources>
         <WriteActions>
@@ -384,6 +434,8 @@
             <Object>Users</Object>
             <Counter>Logged In</Counter>
             <NodeId>$Target/Property[Type="CookdownCommunity.ServiceNow.Monitoring.ServiceNowNode"]/NodeId$</NodeId>
+            <ProxyUsername>$Config/ProxyUsername$</ProxyUsername>
+            <ProxyPassword>$Config/ProxyPassword$</ProxyPassword>
           </DataSource>
         </DataSources>
         <WriteActions>
@@ -399,6 +451,8 @@
             <Object>Users</Object>
             <Counter>Total</Counter>
             <NodeId>$Target/Property[Type="CookdownCommunity.ServiceNow.Monitoring.ServiceNowNode"]/NodeId$</NodeId>
+            <ProxyUsername>$Config/ProxyUsername$</ProxyUsername>
+            <ProxyPassword>$Config/ProxyPassword$</ProxyPassword>
           </DataSource>
         </DataSources>
         <WriteActions>

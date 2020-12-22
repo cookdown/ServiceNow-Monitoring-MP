@@ -1,5 +1,5 @@
 ﻿#Bring in our parameters
-param($sourceID, $managedEntityID, $location, $instanceUrls, $computerName, $debugDiscovery, $snowUserName, $snowPassword, $ProxyURL)
+param($sourceID, $managedEntityID, $location, $instanceUrls, $computerName, $debugDiscovery, $snowUserName, $snowPassword, $proxyUserName, $ProxyPassword, $ProxyURL)
 
 Function CreateHeaders
 {
@@ -198,10 +198,10 @@ If ($ProxyURL) {
 	$Splat.add('proxy',$ProxyURL)
 	DebugDiscovery "Using a proxy" $ProxyURL
 
-	#If we need to do proxy credentials could also implement that with a different RunasProfile.
-	#Set up a new RunAs Profile feeding in the creds and parse them into a pscredential object.
-		#[pscredential]::new($ProxyUsername,($ProxyPassword | ConvertTo-SecureString -AsPlainText -Force))
-	#If exists feed into the splat (under ProxyCredential). If not we're good to go.
+	If ((-not [string]::IsNullOrWhiteSpace($proxyUserName)) -and (-not ([string]::IsNullOrWhiteSpace($ProxyPassword)))) {
+		$Splat.add('ProxyCredential',([pscredential]::new($ProxyUsername,($ProxyPassword | ConvertTo-SecureString -AsPlainText -Force))))
+		DebugDiscovery "Using proxy credentials"
+	}
 }
 #Create a splat to use with our calls to SNOW
 

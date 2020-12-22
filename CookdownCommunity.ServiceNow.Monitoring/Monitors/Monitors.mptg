@@ -3,7 +3,7 @@
     <Instance ID="Instance1cb8bbbf42bb4bd8ba0ce5a2d4aaa2da" Type="Microsoft.SystemCenter.Authoring.CodeGeneration.Monitoring.UnitMonitor" Version="1.0.0.0">
       <UnitMonitorConfig xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
         <MonitorType>CookdownCommunity.ServiceNow.Monitoring.PerformanceThreshold</MonitorType>
-        <MonitorConfig>&lt;InstanceURL&gt;$Target/Property[Type="CookdownCommunity.ServiceNow.Monitoring.ServiceNowInstance"]/URL$&lt;/InstanceURL&gt;&lt;Object&gt;Connection&lt;/Object&gt;&lt;Counter&gt;Fetch Time (MS)&lt;/Counter&gt;&lt;NodeId&gt;NONE&lt;/NodeId&gt;&lt;Threshold&gt;3500&lt;/Threshold&gt;</MonitorConfig>
+        <MonitorConfig>&lt;InstanceURL&gt;$Target/Property[Type="CookdownCommunity.ServiceNow.Monitoring.ServiceNowInstance"]/URL$&lt;/InstanceURL&gt;&lt;Object&gt;Connection&lt;/Object&gt;&lt;Counter&gt;Fetch Time (MS)&lt;/Counter&gt;&lt;NodeId&gt;NONE&lt;/NodeId&gt;&lt;Threshold&gt;3500&lt;/Threshold&gt;&lt;ProxyUsername&gt;$Config/ProxyUsername$&lt;/ProxyUsername&gt;&lt;ProxyPassword&gt;$Config/ProxyPassword$&lt;/ProxyPassword&gt;</MonitorConfig>
         <MonitorOperationalStates>
           <OperationalState>
             <OperationalStateId>UnderThreshold</OperationalStateId>
@@ -39,7 +39,7 @@
     <Instance ID="Instance1d9d977e8e774305953c6941ba39ed3c" Type="Microsoft.SystemCenter.Authoring.CodeGeneration.Monitoring.UnitMonitor" Version="1.0.0.0">
       <UnitMonitorConfig xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
         <MonitorType>CookdownCommunity.ServiceNow.Monitoring.PerformanceThreshold</MonitorType>
-        <MonitorConfig>&lt;InstanceURL&gt;$Target/Host/Property[Type="CookdownCommunity.ServiceNow.Monitoring.ServiceNowInstance"]/URL$&lt;/InstanceURL&gt;&lt;Object&gt;Memory&lt;/Object&gt;&lt;Counter&gt;Percent Free&lt;/Counter&gt;&lt;NodeId&gt;$Target/Property[Type="CookdownCommunity.ServiceNow.Monitoring.ServiceNowNode"]/NodeId$&lt;/NodeId&gt;&lt;Threshold&gt;90&lt;/Threshold&gt;</MonitorConfig>
+        <MonitorConfig>&lt;InstanceURL&gt;$Target/Host/Property[Type="CookdownCommunity.ServiceNow.Monitoring.ServiceNowInstance"]/URL$&lt;/InstanceURL&gt;&lt;Object&gt;Memory&lt;/Object&gt;&lt;Counter&gt;Percent Free&lt;/Counter&gt;&lt;NodeId&gt;$Target/Property[Type="CookdownCommunity.ServiceNow.Monitoring.ServiceNowNode"]/NodeId$&lt;/NodeId&gt;&lt;Threshold&gt;90&lt;/Threshold&gt;&lt;ProxyUsername&gt;$Config/ProxyUsername$&lt;/ProxyUsername&gt;&lt;ProxyPassword&gt;$Config/ProxyPassword$&lt;/ProxyPassword&gt;</MonitorConfig>
         <MonitorOperationalStates>
           <OperationalState>
             <OperationalStateId>UnderThreshold</OperationalStateId>
@@ -76,7 +76,7 @@
     <Instance ID="Instance831895d1fa9045e99ff7868e05adc94f" Type="Microsoft.SystemCenter.Authoring.CodeGeneration.Monitoring.UnitMonitor" Version="1.0.0.0">
       <UnitMonitorConfig xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
         <MonitorType>CookdownCommunity.ServiceNow.Monitoring.PerformanceThreshold</MonitorType>
-        <MonitorConfig>&lt;InstanceURL&gt;$Target/Host/Property[Type="CookdownCommunity.ServiceNow.Monitoring.ServiceNowInstance"]/URL$&lt;/InstanceURL&gt;&lt;Object&gt;Scheduler&lt;/Object&gt;&lt;Counter&gt;Queue Length&lt;/Counter&gt;&lt;NodeId&gt;$Target/Property[Type="CookdownCommunity.ServiceNow.Monitoring.ServiceNowNode"]/NodeId$&lt;/NodeId&gt;&lt;Threshold&gt;3&lt;/Threshold&gt;</MonitorConfig>
+        <MonitorConfig>&lt;InstanceURL&gt;$Target/Host/Property[Type="CookdownCommunity.ServiceNow.Monitoring.ServiceNowInstance"]/URL$&lt;/InstanceURL&gt;&lt;Object&gt;Scheduler&lt;/Object&gt;&lt;Counter&gt;Queue Length&lt;/Counter&gt;&lt;NodeId&gt;$Target/Property[Type="CookdownCommunity.ServiceNow.Monitoring.ServiceNowNode"]/NodeId$&lt;/NodeId&gt;&lt;Threshold&gt;3&lt;/Threshold&gt;&lt;ProxyUsername&gt;$Config/ProxyUsername$&lt;/ProxyUsername&gt;&lt;ProxyPassword&gt;$Config/ProxyPassword$&lt;/ProxyPassword&gt;</MonitorConfig>
         <MonitorOperationalStates>
           <OperationalState>
             <OperationalStateId>UnderThreshold</OperationalStateId>
@@ -110,7 +110,7 @@
       </UnitMonitorConfig>
     </Instance>
     <Instance ID="Instance146bc686bb4c4828a485d3c539e6b420" Type="Microsoft.SystemCenter.Authoring.CodeGeneration.Monitoring.UnitMonitor" Version="1.0.0.0">
-      <UnitMonitorConfig xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+      <UnitMonitorConfig xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
         <MonitorType>CookdownCommunity.ServiceNow.Monitoring.HttpsTCPPortTest.ConnectionTimeMonitor</MonitorType>
         <MonitorConfig>&lt;DegradedThresholdMS&gt;.150&lt;/DegradedThresholdMS&gt;&lt;UnacceptableThresholdMS&gt;.300&lt;/UnacceptableThresholdMS&gt;</MonitorConfig>
         <MonitorOperationalStates>
@@ -151,7 +151,7 @@
       </UnitMonitorConfig>
     </Instance>
     <Instance ID="Instanceb75b55b286d14d7ba2b1c967dc5daa48" Type="Microsoft.SystemCenter.Authoring.CodeGeneration.Monitoring.UnitMonitor" Version="1.0.0.0">
-      <UnitMonitorConfig xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+      <UnitMonitorConfig xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
         <MonitorType>Windows!Microsoft.Windows.2SingleEventLog2StateMonitorType</MonitorType>
         <MonitorConfig>&lt;FirstComputerName&gt;.&lt;/FirstComputerName&gt;&lt;FirstLogName&gt;Operations Manager&lt;/FirstLogName&gt;&lt;FirstExpression&gt;&lt;And&gt;&lt;Expression&gt;&lt;SimpleExpression&gt;&lt;ValueExpression&gt;&lt;XPathQuery Type="UnsignedInteger"&gt;EventDisplayNumber&lt;/XPathQuery&gt;&lt;/ValueExpression&gt;&lt;Operator&gt;Equal&lt;/Operator&gt;&lt;ValueExpression&gt;&lt;Value Type="UnsignedInteger"&gt;1052&lt;/Value&gt;&lt;/ValueExpression&gt;&lt;/SimpleExpression&gt;&lt;/Expression&gt;&lt;Expression&gt;&lt;SimpleExpression&gt;&lt;ValueExpression&gt;&lt;XPathQuery Type="String"&gt;PublisherName&lt;/XPathQuery&gt;&lt;/ValueExpression&gt;&lt;Operator&gt;Equal&lt;/Operator&gt;&lt;ValueExpression&gt;&lt;Value Type="String"&gt;Health Service Script&lt;/Value&gt;&lt;/ValueExpression&gt;&lt;/SimpleExpression&gt;&lt;/Expression&gt;&lt;/And&gt;&lt;/FirstExpression&gt;&lt;SecondComputerName&gt;.&lt;/SecondComputerName&gt;&lt;SecondLogName&gt;Operations Manager&lt;/SecondLogName&gt;&lt;SecondExpression&gt;&lt;And&gt;&lt;Expression&gt;&lt;SimpleExpression&gt;&lt;ValueExpression&gt;&lt;XPathQuery Type="UnsignedInteger"&gt;EventDisplayNumber&lt;/XPathQuery&gt;&lt;/ValueExpression&gt;&lt;Operator&gt;Equal&lt;/Operator&gt;&lt;ValueExpression&gt;&lt;Value Type="UnsignedInteger"&gt;1055&lt;/Value&gt;&lt;/ValueExpression&gt;&lt;/SimpleExpression&gt;&lt;/Expression&gt;&lt;Expression&gt;&lt;SimpleExpression&gt;&lt;ValueExpression&gt;&lt;XPathQuery Type="String"&gt;PublisherName&lt;/XPathQuery&gt;&lt;/ValueExpression&gt;&lt;Operator&gt;Equal&lt;/Operator&gt;&lt;ValueExpression&gt;&lt;Value Type="String"&gt;Health Service Script&lt;/Value&gt;&lt;/ValueExpression&gt;&lt;/SimpleExpression&gt;&lt;/Expression&gt;&lt;/And&gt;&lt;/SecondExpression&gt;</MonitorConfig>
         <MonitorOperationalStates>
@@ -192,7 +192,7 @@ $Data/Context/EventDescription$</AlertDescription>
       </UnitMonitorConfig>
     </Instance>
     <Instance ID="Instance0f8c85e8c8d04225b634ec024203f427" Type="Microsoft.SystemCenter.Authoring.CodeGeneration.Monitoring.UnitMonitor" Version="1.0.0.0">
-      <UnitMonitorConfig xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+      <UnitMonitorConfig xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
         <MonitorType>Windows!Microsoft.Windows.2SingleEventLog2StateMonitorType</MonitorType>
         <MonitorConfig>&lt;FirstComputerName&gt;.&lt;/FirstComputerName&gt;&lt;FirstLogName&gt;Operations Manager&lt;/FirstLogName&gt;&lt;FirstExpression&gt;&lt;And&gt;&lt;Expression&gt;&lt;SimpleExpression&gt;&lt;ValueExpression&gt;&lt;XPathQuery Type="UnsignedInteger"&gt;EventDisplayNumber&lt;/XPathQuery&gt;&lt;/ValueExpression&gt;&lt;Operator&gt;Equal&lt;/Operator&gt;&lt;ValueExpression&gt;&lt;Value Type="UnsignedInteger"&gt;1012&lt;/Value&gt;&lt;/ValueExpression&gt;&lt;/SimpleExpression&gt;&lt;/Expression&gt;&lt;Expression&gt;&lt;SimpleExpression&gt;&lt;ValueExpression&gt;&lt;XPathQuery Type="String"&gt;PublisherName&lt;/XPathQuery&gt;&lt;/ValueExpression&gt;&lt;Operator&gt;Equal&lt;/Operator&gt;&lt;ValueExpression&gt;&lt;Value Type="String"&gt;Health Service Script&lt;/Value&gt;&lt;/ValueExpression&gt;&lt;/SimpleExpression&gt;&lt;/Expression&gt;&lt;/And&gt;&lt;/FirstExpression&gt;&lt;SecondComputerName&gt;.&lt;/SecondComputerName&gt;&lt;SecondLogName&gt;Operations Manager&lt;/SecondLogName&gt;&lt;SecondExpression&gt;&lt;And&gt;&lt;Expression&gt;&lt;SimpleExpression&gt;&lt;ValueExpression&gt;&lt;XPathQuery Type="UnsignedInteger"&gt;EventDisplayNumber&lt;/XPathQuery&gt;&lt;/ValueExpression&gt;&lt;Operator&gt;Equal&lt;/Operator&gt;&lt;ValueExpression&gt;&lt;Value Type="UnsignedInteger"&gt;1015&lt;/Value&gt;&lt;/ValueExpression&gt;&lt;/SimpleExpression&gt;&lt;/Expression&gt;&lt;Expression&gt;&lt;SimpleExpression&gt;&lt;ValueExpression&gt;&lt;XPathQuery Type="String"&gt;PublisherName&lt;/XPathQuery&gt;&lt;/ValueExpression&gt;&lt;Operator&gt;Equal&lt;/Operator&gt;&lt;ValueExpression&gt;&lt;Value Type="String"&gt;Health Service Script&lt;/Value&gt;&lt;/ValueExpression&gt;&lt;/SimpleExpression&gt;&lt;/Expression&gt;&lt;/And&gt;&lt;/SecondExpression&gt;</MonitorConfig>
         <MonitorOperationalStates>
