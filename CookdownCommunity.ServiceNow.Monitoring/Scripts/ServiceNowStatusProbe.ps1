@@ -149,6 +149,12 @@ try
 		$KeyProperties = Get-ItemProperty "HKCU:\$RegPath" -ErrorAction Continue
 	}
 
+	If ($KeyProperties.DebugProbe) {
+		$debugProbe = $True
+		DebugProbe 'DebugProbe set to true via registry'
+		DebugProbe 'Registry Key Properties' $($KeyProperties | Out-String)
+	}
+
 	$Splat = @{
 		Headers = (CreateHeaders -username $snowUserName -password $snowPassword)
 		Method = 'Get'
