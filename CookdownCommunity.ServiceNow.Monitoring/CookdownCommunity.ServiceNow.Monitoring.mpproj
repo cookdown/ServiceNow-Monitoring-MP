@@ -17,7 +17,7 @@
     <Company>Cookdown Ltd.</Company>
     <Copyright>Copyright (c) Cookdown All rights reserved.</Copyright>
     <DelaySigning>False</DelaySigning>
-    <AssemblyOriginatorKeyFile>C:\Users\DaveLewis\OneDrive - SquaredUp\Documents\Cookdown.ManagementPacks.snk</AssemblyOriginatorKeyFile>
+    <AssemblyOriginatorKeyFile>.\CookdownCommunity.ManagementPacks.snk</AssemblyOriginatorKeyFile>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
     <DebugSymbols>false</DebugSymbols>
@@ -26,7 +26,7 @@
     <Company>Cookdown Ltd.</Company>
     <Copyright>Copyright (c) Cookdown All rights reserved.</Copyright>
     <DelaySign>false</DelaySign>
-    <AssemblyOriginatorKeyFile>C:\Users\DaveLewis\Cookdown\Engineering - Documents\Security\Signing Certs\CookdownCommunity.ManagementPacks.snk</AssemblyOriginatorKeyFile>
+    <AssemblyOriginatorKeyFile>.\CookdownCommunity.ManagementPacks.snk</AssemblyOriginatorKeyFile>
     <GenerateSealed>True</GenerateSealed>
   </PropertyGroup>
   <ItemGroup>
