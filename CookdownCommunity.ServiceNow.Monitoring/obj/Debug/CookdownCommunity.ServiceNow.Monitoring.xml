@@ -114,18 +114,20 @@
                 <ScriptBody><![CDATA[#Bring in our parameters
 param($sourceID, $managedEntityID, $location, $instanceUrls, $computerName, $debugDiscovery, $snowUserName, $snowPassword)
 
-Function CreateHeaders
-{
-	param($username, $password)
-	# Build auth header
-	$base64AuthInfo = [Convert]::ToBase64String([Text.Encoding]::ASCII.GetBytes(("{0}:{1}" -f $username, $password)))
+                  # Set proper headers
+                  $headers = New-Object "System.Collections.Generic.Dictionary[[String],[String]]"
+                  $headers.Add('Authorization',('Basic {0}' -f $base64AuthInfo))
+                  $headers.Add('Accept','application/json')
+                  $headers
+                  }
 
-	# Set proper headers
-	$headers = New-Object "System.Collections.Generic.Dictionary[[String],[String]]"
-	$headers.Add('Authorization',('Basic {0}' -f $base64AuthInfo))
-	$headers.Add('Accept','application/json')
-	$headers
-}
+                  Function GetClusterStatusFromServiceNow
+                  {
+                  param($instanceURL)
+                  $statsEndpoint = $instanceURL + "api/now/table/sys_cluster_state"
+                  $results = Invoke-RESTMethod -Uri $statsEndpoint -Headers $headers -Method GET -ErrorAction Stop
+                  $results.result
+                  }
 
 Function GetClusterStatusFromServiceNow
 {
@@ -137,9 +139,20 @@ Function GetClusterStatusFromServiceNow
     $results.result
 }
 
-Function CreateInstanceObject
-{
-    param($sourceNode,$sourceURL)
+                  $stats = [xml]$sourceNode.stats
+                  $instance = $discoveryData.CreateClassInstance("$MPElement[Name='CookdownCommunity.ServiceNow.Monitoring.ServiceNowInstance']$")
+                  $instance.AddProperty("$MPElement[Name='CookdownCommunity.ServiceNow.Monitoring.ServiceNowInstance']/URL$", $sourceURL)
+                  $instance.AddProperty("$MPElement[Name='CookdownCommunity.ServiceNow.Monitoring.ServiceNowInstance']/Name$", $Stats.xmlstats.instance_name)
+                  $instance.AddProperty("$MPElement[Name='CookdownCommunity.ServiceNow.Monitoring.ServiceNowInstance']/Type$", $Stats.xmlstats.instance_type)
+                  $instance.AddProperty("$MPElement[Name='CookdownCommunity.ServiceNow.Monitoring.ServiceNowInstance']/Version$", $Stats.xmlstats.'glide.build.name')
+                  $instance.AddProperty("$MPElement[Name='CookdownCommunity.ServiceNow.Monitoring.ServiceNowInstance']/Build$", $Stats.xmlstats.'glide.build.tag')
+                  $instance.AddProperty("$MPElement[Name='CookdownCommunity.ServiceNow.Monitoring.ServiceNowInstance']/DatabaseVersion$", $stats.xmlstats.'db.product_version')
+                  $instance.AddProperty("$MPElement[Name='CookdownCommunity.ServiceNow.Monitoring.ServiceNowInstance']/Offering$", $Stats.xmlstats.'glide.offering')
+                  $instance.AddProperty("$MPElement[Name='CookdownCommunity.ServiceNow.Monitoring.ServiceNowInstance']/POPStatus$", $stats.xmlstats.'glide.pop3.status'.InnerText)
+                  $instance.AddProperty("$MPElement[Name='CookdownCommunity.ServiceNow.Monitoring.ServiceNowInstance']/SMTPStatus$", $stats.xmlstats.'glide.smtp.status'.InnerText)
+                  $instance.AddProperty("$MPElement[Name='System!System.Entity']/DisplayName$", $Stats.xmlstats.instance_name)
+                  $instance
+                  }
 
 	If ($sourceNode | Get-Member -name 'node_stats') {
         $stats = [xml](Invoke-RestMethod -Uri $sourceNode.'node_stats'.link -Headers $headers -Method GET -ErrorAction Stop).Result.stats
@@ -187,9 +200,17 @@ Function CreateInstanceObject
 	$instance
 }
 
-Function CreateNodeObject
-{
-    param($sourceNode,$sourceURL)
+                  $stats = [xml]$sourceNode.stats
+                  $node = $discoveryData.CreateClassInstance("$MPElement[Name='CookdownCommunity.ServiceNow.Monitoring.ServiceNowNode']$")
+                  $node.AddProperty("$MPElement[Name='CookdownCommunity.ServiceNow.Monitoring.ServiceNowInstance']/URL$", $sourceURL)
+                  $node.AddProperty("$MPElement[Name='CookdownCommunity.ServiceNow.Monitoring.ServiceNowNode']/NodeId$", $sourceNode.node_id)
+                  $node.AddProperty("$MPElement[Name='CookdownCommunity.ServiceNow.Monitoring.ServiceNowNode']/SystemId$", $sourceNode.system_id)
+                  $node.AddProperty("$MPElement[Name='CookdownCommunity.ServiceNow.Monitoring.ServiceNowNode']/CreatedOn$", $sourceNode.sys_created_on)
+                  $node.AddProperty("$MPElement[Name='CookdownCommunity.ServiceNow.Monitoring.ServiceNowNode']/AllowInbound$", $sourceNode.allow_inbound)
+                  $node.AddProperty("$MPElement[Name='CookdownCommunity.ServiceNow.Monitoring.ServiceNowNode']/ReadyToFailover$", $sourceNode.ready_to_failover)
+                  $node.AddProperty("$MPElement[Name='System!System.Entity']/DisplayName$", $sourceNode.system_id)
+                  $node
+                  }
 
     $node = $discoveryData.CreateClassInstance("$MPElement[Name='CookdownCommunity.ServiceNow.Monitoring.ServiceNowNode']$")
 
@@ -433,18 +454,18 @@ catch
                 <ScriptBody><![CDATA[#Bring in our parameters
 param($instanceURL, $SnowUsername, $SnowPassword, $debugProbe)
 
-Function CreateHeaders
-{
-	param($username, $password)
-	# Build auth header
-	$base64AuthInfo = [Convert]::ToBase64String([Text.Encoding]::ASCII.GetBytes(("{0}:{1}" -f $username, $password)))
+                  Function CreateHeaders
+                  {
+                  param($username, $password)
+                  # Build auth header
+                  $base64AuthInfo = [Convert]::ToBase64String([Text.Encoding]::ASCII.GetBytes(("{0}:{1}" -f $username, $password)))
 
-	# Set proper headers
-	$headers = New-Object "System.Collections.Generic.Dictionary[[String],[String]]"
-	$headers.Add('Authorization',('Basic {0}' -f $base64AuthInfo))
-	$headers.Add('Accept','application/json')
-	$headers
-}
+                  # Set proper headers
+                  $headers = New-Object "System.Collections.Generic.Dictionary[[String],[String]]"
+                  $headers.Add('Authorization',('Basic {0}' -f $base64AuthInfo))
+                  $headers.Add('Accept','application/json')
+                  $headers
+                  }
 
 Function MakeAddPerfPropertyBag
 {
@@ -477,12 +498,22 @@ Function MakeAddPerfPropertyBag
   }
 }
 
-Function MakeMonitoringStatusPropertyBag
-{
-	param(
-		[string] $InstanceURL,
-		[bool] $Success
-	)
+                  if ($Value -ne $null)
+                  {
+                  if ($Value -ne '')
+                  {
+                  $perfBag = $oAPI.CreatePropertyBag()
+                  $perfBag.AddValue("Type","Performance")
+                  $perfBag.AddValue("InstanceURL",$InstanceURL)
+                  $perfBag.AddValue("NodeId",$NodeId)
+                  $perfBag.AddValue("Object",$Object)
+                  $perfBag.AddValue("Instance",$Instance)
+                  $perfBag.AddValue("Counter",$Counter)
+                  $perfBag.AddValue("Value",$Value)
+                  $perfBag
+                  }
+                  }
+                  }
 
 		$perfBag = $oAPI.CreatePropertyBag()
 		$perfBag.AddValue("Type","Monitoring")
@@ -494,13 +525,12 @@ Function MakeMonitoringStatusPropertyBag
 		DebugProbe "Creating status property bag" $debugString
 }
 
-Function GetClusterStatusFromServiceNow
-{
-    param($instanceURL)
-    $statsEndpoint = $instanceURL + "api/now/table/sys_cluster_state"
-    $results = Invoke-RESTMethod -Uri $statsEndpoint -Headers $headers -Method GET
-    $results.result
-}
+                  $perfBag = $oAPI.CreatePropertyBag()
+                  $perfBag.AddValue("Type","Monitoring")
+                  $perfBag.AddValue("InstanceURL",$InstanceURL)
+                  $perfBag.AddValue("Success",$Success.ToString())
+                  $perfBag
+                  }
 
 Function CreatePerformancePropertyBags
 {
@@ -508,10 +538,7 @@ Function CreatePerformancePropertyBags
 
 	$glidePool = $ioStats.xmlstats.iostats.pool | ? {$_.name -eq 'glide'}
 
-	MakeAddPerfPropertyBag -InstanceUrl $instance -NodeId $node.node_id -Object "Memory" -Counter "Total" -Instance $node.system_id -Value $stats.xmlstats.'system.memory.total'
-	MakeAddPerfPropertyBag -InstanceUrl $instance -NodeId $node.node_id -Object "Memory" -Counter "In Use" -Instance $node.system_id -Value $stats.xmlstats.'system.memory.in.use'
-	MakeAddPerfPropertyBag -InstanceUrl $instance -NodeId $node.node_id -Object "Memory" -Counter "Percent Free" -Instance $node.system_id -Value $stats.xmlstats.'system.memory.pct.free'
-	MakeAddPerfPropertyBag -InstanceUrl $instance -NodeId $node.node_id -Object "Memory" -Counter "Max" -Instance $node.system_id -Value $stats.xmlstats.'system.memory.max'.InnerText
+                  $glidePool = $ioStats.xmlstats.iostats.pool | ? {$_.name -eq 'glide'}
 
 	MakeAddPerfPropertyBag -InstanceUrl $instance -NodeId $node.node_id -Object "Servlet" -Counter "Cache Flushes" -Instance $node.system_id -Value $stats.xmlstats.'servlet.cache.flushes'
 	MakeAddPerfPropertyBag -InstanceUrl $instance -NodeId $node.node_id -Object "Servlet" -Counter "Uptime" -Instance $node.system_id -Value $stats.xmlstats.'servlet.uptime'
@@ -527,20 +554,26 @@ Function CreatePerformancePropertyBags
 	MakeAddPerfPropertyBag -InstanceUrl $instance -NodeId $node.node_id -Object "Scheduler" -Counter "Total Jobs" -Instance $node.system_id -Value $stats.xmlstats.'scheduler.total.jobs'
 	MakeAddPerfPropertyBag -InstanceUrl $instance -NodeId $node.node_id -Object "Scheduler" -Counter "Total Burst Workers" -Instance $node.system_id -Value $stats.xmlstats.'scheduler.total.burst.workers'
 
-	MakeAddPerfPropertyBag -InstanceUrl $instance -NodeId $node.node_id -Object "Glide Pool DB" -Counter "Selects" -Instance $node.system_id -Value $glidePool.select
-	MakeAddPerfPropertyBag -InstanceUrl $instance -NodeId $node.node_id -Object "Glide Pool DB" -Counter "Selects (Over 1 Second)" -Instance $node.system_id -Value $glidePool.select_onesec
-	MakeAddPerfPropertyBag -InstanceUrl $instance -NodeId $node.node_id -Object "Glide Pool DB" -Counter "Selects (Over 10 Sec)" -Instance $node.system_id -Value $glidePool.select_tensec
-	MakeAddPerfPropertyBag -InstanceUrl $instance -NodeId $node.node_id -Object "Glide Pool DB" -Counter "Deletes" -Instance $node.system_id -Value $glidePool.delete
-	MakeAddPerfPropertyBag -InstanceUrl $instance -NodeId $node.node_id -Object "Glide Pool DB" -Counter "Inserts" -Instance $node.system_id -Value $glidePool.insert
-	MakeAddPerfPropertyBag -InstanceUrl $instance -NodeId $node.node_id -Object "Glide Pool DB" -Counter "Updates" -Instance $node.system_id -Value $glidePool.update
+                  MakeAddPerfPropertyBag -InstanceUrl $instance -NodeId $node.node_id -Object "Servlet" -Counter "Cache Flushes" -Instance $node.system_id -Value $stats.xmlstats.'servlet.cache.flushes'
+                  MakeAddPerfPropertyBag -InstanceUrl $instance -NodeId $node.node_id -Object "Servlet" -Counter "Uptime" -Instance $node.system_id -Value $stats.xmlstats.'servlet.uptime'
+                  MakeAddPerfPropertyBag -InstanceUrl $instance -NodeId $node.node_id -Object "Servlet" -Counter "Transactions" -Instance $node.system_id -Value $stats.xmlstats.'servlet.transactions'
+                  MakeAddPerfPropertyBag -InstanceUrl $instance -NodeId $node.node_id -Object "Servlet" -Counter "Errors Handled" -Instance $node.system_id -Value $stats.xmlstats.'servlet.errors.handled'
+                  MakeAddPerfPropertyBag -InstanceUrl $instance -NodeId $node.node_id -Object "Servlet" -Counter "Processor Transactions" -Instance $node.system_id -Value $stats.xmlstats.'servlet.processor.transactions'
+                  MakeAddPerfPropertyBag -InstanceUrl $instance -NodeId $node.node_id -Object "Servlet" -Counter "Cancelled Transactions" -Instance $node.system_id -Value $stats.xmlstats.'servlet.cancelled.transactions'
+                  MakeAddPerfPropertyBag -InstanceUrl $instance -NodeId $node.node_id -Object "Servlet" -Counter "Active Sessions" -Instance $node.system_id -Value $stats.xmlstats.'servlet.active.sessions'
 
-	MakeAddPerfPropertyBag -InstanceUrl $instance -NodeId $node.node_id -Object "JVM" -Counter "Classes Loaded" -Instance $node.system_id -Value $stats.xmlstats.'jvm.classes.loaded'
-	MakeAddPerfPropertyBag -InstanceUrl $instance -NodeId $node.node_id -Object "JVM" -Counter "Classes Unloaded" -Instance $node.system_id -Value $stats.xmlstats.'jvm.classes.unloaded'
+                  MakeAddPerfPropertyBag -InstanceUrl $instance -NodeId $node.node_id -Object "Scheduler" -Counter "Worker Count" -Instance $node.system_id -Value $stats.xmlstats.'scheduler.worker.count'
+                  MakeAddPerfPropertyBag -InstanceUrl $instance -NodeId $node.node_id -Object "Scheduler" -Counter "Queue Length" -Instance $node.system_id -Value $stats.xmlstats.'scheduler.queue.length'
+                  MakeAddPerfPropertyBag -InstanceUrl $instance -NodeId $node.node_id -Object "Scheduler" -Counter "Mean Queue Age" -Instance $node.system_id -Value $stats.xmlstats.'scheduler.mean.queue.age'
+                  MakeAddPerfPropertyBag -InstanceUrl $instance -NodeId $node.node_id -Object "Scheduler" -Counter "Total Jobs" -Instance $node.system_id -Value $stats.xmlstats.'scheduler.total.jobs'
+                  MakeAddPerfPropertyBag -InstanceUrl $instance -NodeId $node.node_id -Object "Scheduler" -Counter "Total Burst Workers" -Instance $node.system_id -Value $stats.xmlstats.'scheduler.total.burst.workers'
 
-	MakeAddPerfPropertyBag -InstanceUrl $instance -NodeId $node.node_id -Object "Users" -Counter "End Users" -Instance $node.system_id -Value $stats.xmlstats.sessionsummary.end_user
-	MakeAddPerfPropertyBag -InstanceUrl $instance -NodeId $node.node_id -Object "Users" -Counter "Logged In" -Instance $node.system_id -Value $stats.xmlstats.sessionsummary.logged_in
-	MakeAddPerfPropertyBag -InstanceUrl $instance -NodeId $node.node_id -Object "Users" -Counter "Total" -Instance $node.system_id -Value $stats.xmlstats.sessionsummary.total
-}
+                  MakeAddPerfPropertyBag -InstanceUrl $instance -NodeId $node.node_id -Object "Glide Pool DB" -Counter "Selects" -Instance $node.system_id -Value $glidePool.select
+                  MakeAddPerfPropertyBag -InstanceUrl $instance -NodeId $node.node_id -Object "Glide Pool DB" -Counter "Selects (Over 1 Second)" -Instance $node.system_id -Value $glidePool.select_onesec
+                  MakeAddPerfPropertyBag -InstanceUrl $instance -NodeId $node.node_id -Object "Glide Pool DB" -Counter "Selects (Over 10 Sec)" -Instance $node.system_id -Value $glidePool.select_tensec
+                  MakeAddPerfPropertyBag -InstanceUrl $instance -NodeId $node.node_id -Object "Glide Pool DB" -Counter "Deletes" -Instance $node.system_id -Value $glidePool.delete
+                  MakeAddPerfPropertyBag -InstanceUrl $instance -NodeId $node.node_id -Object "Glide Pool DB" -Counter "Inserts" -Instance $node.system_id -Value $glidePool.insert
+                  MakeAddPerfPropertyBag -InstanceUrl $instance -NodeId $node.node_id -Object "Glide Pool DB" -Counter "Updates" -Instance $node.system_id -Value $glidePool.update
 
 Function DebugProbe
 {
@@ -576,16 +609,13 @@ try
 
 	MakeAddPerfPropertyBag -InstanceUrl $instanceURL -NodeId "NONE" -Object "Connection" -Counter "Fetch Time (MS)" -Instance "Total" -Value $fetchTime.TotalMilliseconds
 
-	# Setup our roll-up Performance
-	$instanceTotal_select = 0
-	$instanceTotal_select_onesec = 0
-	$instanceTotal_select_tensec = 0
-	$instanceTotal_delete = 0
-	$instanceTotal_insert = 0
-	$instanceTotal_update = 0
-	$instanceTotal_end_user = 0
-	$instanceTotal_logged_in = 0
-	$instanceTotal_total = 0
+                  try
+                  {
+                  $oAPI = New-Object -comObject 'MOM.ScriptAPI'
+                  $oAPI.LogScriptEvent("SNOW Performance", 1050, 4, $("Collecting performance for {0}" -f $InstanceURL))
+                  [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
+                  $headers = CreateHeaders -username $SnowUsername -password $SnowPassword
+                  $fetchTime = Measure-Command {$clusterNodes = GetClusterStatusFromServiceNow -instanceURL $instanceURL}
 
     foreach($snowNode in $clusterNodes)
     {
@@ -1722,7 +1752,7 @@ catch
       </Rule>
     </Rules>
     <Monitors>
-      <UnitMonitor ID="CookdownCommunity.ServiceNow.Monitoring.InstanceFetchTime" Accessibility="Internal" Enabled="true" Target="CookdownCommunity.ServiceNow.Monitoring.ServiceNowInstance" ParentMonitorID="Health!System.Health.PerformanceState" Remotable="true" Priority="Normal" TypeID="CookdownCommunity.ServiceNow.Monitoring.PerformanceThreshold" ConfirmDelivery="false">
+      <UnitMonitor ID="CookdownCommunity.ServiceNow.Monitoring.InstanceFetchTime" Accessibility="Public" Enabled="true" Target="CookdownCommunity.ServiceNow.Monitoring.ServiceNowInstance" ParentMonitorID="Health!System.Health.PerformanceState" Remotable="true" Priority="Normal" TypeID="CookdownCommunity.ServiceNow.Monitoring.PerformanceThreshold" ConfirmDelivery="false">
         <Category>AvailabilityHealth</Category>
         <OperationalStates>
           <OperationalState ID="UnderThreshold" MonitorTypeStateID="UnderThreshold" HealthState="Success" />
@@ -1736,7 +1766,7 @@ catch
           <Threshold>3500</Threshold>
         </Configuration>
       </UnitMonitor>
-      <UnitMonitor ID="CookdownCommunity.ServiceNow.Monitoring.NodeMemoryUtilization" Accessibility="Internal" Enabled="true" Target="CookdownCommunity.ServiceNow.Monitoring.ServiceNowNode" ParentMonitorID="Health!System.Health.PerformanceState" Remotable="true" Priority="Normal" TypeID="CookdownCommunity.ServiceNow.Monitoring.PerformanceThreshold" ConfirmDelivery="false">
+      <UnitMonitor ID="CookdownCommunity.ServiceNow.Monitoring.NodeMemoryUtilization" Accessibility="Public" Enabled="true" Target="CookdownCommunity.ServiceNow.Monitoring.ServiceNowNode" ParentMonitorID="Health!System.Health.PerformanceState" Remotable="true" Priority="Normal" TypeID="CookdownCommunity.ServiceNow.Monitoring.PerformanceThreshold" ConfirmDelivery="false">
         <Category>AvailabilityHealth</Category>
         <AlertSettings AlertMessage="CookdownCommunity.ServiceNow.Monitoring.NodeMemoryUtilization.AlertMessage">
           <AlertOnState>Error</AlertOnState>
@@ -1756,7 +1786,7 @@ catch
           <Threshold>90</Threshold>
         </Configuration>
       </UnitMonitor>
-      <UnitMonitor ID="CookdownCommunity.ServiceNow.Monitoring.NodeScheduleQueue" Accessibility="Internal" Enabled="true" Target="CookdownCommunity.ServiceNow.Monitoring.ServiceNowNode" ParentMonitorID="Health!System.Health.PerformanceState" Remotable="true" Priority="Normal" TypeID="CookdownCommunity.ServiceNow.Monitoring.PerformanceThreshold" ConfirmDelivery="false">
+      <UnitMonitor ID="CookdownCommunity.ServiceNow.Monitoring.NodeScheduleQueue" Accessibility="Public" Enabled="true" Target="CookdownCommunity.ServiceNow.Monitoring.ServiceNowNode" ParentMonitorID="Health!System.Health.PerformanceState" Remotable="true" Priority="Normal" TypeID="CookdownCommunity.ServiceNow.Monitoring.PerformanceThreshold" ConfirmDelivery="false">
         <Category>AvailabilityHealth</Category>
         <OperationalStates>
           <OperationalState ID="UnderThreshold" MonitorTypeStateID="UnderThreshold" HealthState="Success" />

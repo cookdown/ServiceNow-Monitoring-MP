@@ -1,4 +1,4 @@
-﻿<ManagementPackFragment SchemaVersion="2.0" xmlns:xsd="http://www.w3.org/2001/XMLSchema"><TypeDefinitions>
+<ManagementPackFragment SchemaVersion="2.0" xmlns:xsd="http://www.w3.org/2001/XMLSchema"><TypeDefinitions>
     <EntityTypes>
       <ClassTypes>
         <ClassType ID="CookdownCommunity.ServiceNow.Monitoring.WatcherNode" Accessibility="Public" Abstract="false" Base="System!System.Perspective" Hosted="true" Singleton="false" Extension="false">
@@ -31,3 +31,4 @@
       </DisplayStrings>
     </LanguagePack>
   </LanguagePacks></ManagementPackFragment>
+  
