@@ -1,4 +1,4 @@
-﻿<ManagementPackFragment SchemaVersion="2.0" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+<ManagementPackFragment SchemaVersion="2.0" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
   <TypeDefinitions>
     <ModuleTypes>
       <DataSourceModuleType ID="CookdownCommunity.ServiceNow.Monitoring.SnowPerformanceDataSource" Accessibility="Internal" Batching="false">
@@ -7,6 +7,8 @@
           <xsd:element name="Object" type="xsd:string" xmlns:xsd="http://www.w3.org/2001/XMLSchema" />
           <xsd:element name="Counter" type="xsd:string" xmlns:xsd="http://www.w3.org/2001/XMLSchema" />
           <xsd:element name="NodeId" type="xsd:string" xmlns:xsd="http://www.w3.org/2001/XMLSchema" />
+          <xsd:element name="ProxyUsername" type="xsd:string" xmlns:xsd="http://www.w3.org/2001/XMLSchema" />
+          <xsd:element name="ProxyPassword" type="xsd:string" xmlns:xsd="http://www.w3.org/2001/XMLSchema" />
         </Configuration>
         <ModuleImplementation Isolation="Any">
           <Composite>
@@ -16,6 +18,8 @@
                 <SnowUsername>$RunAs[Name="CookdownCommunity.ServiceNow.Monitoring.APIProbeAccount"]/UserName$</SnowUsername>
                 <SnowPassword>$RunAs[Name="CookdownCommunity.ServiceNow.Monitoring.APIProbeAccount"]/Password$</SnowPassword>
                 <DebugProbe>false</DebugProbe>
+                <ProxyUsername>$RunAs[Name="CookdownCommunity.ServiceNow.Monitoring.ProxyAccount"]/UserName$</ProxyUsername>
+                <ProxyPassword>$RunAs[Name="CookdownCommunity.ServiceNow.Monitoring.ProxyAccount"]/Password$</ProxyPassword>
               </DataSource>
               <ConditionDetection ID="Filter" TypeID="System!System.ExpressionFilter">
                 <Expression>

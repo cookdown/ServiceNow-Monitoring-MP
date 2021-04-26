@@ -1,4 +1,4 @@
-﻿<ManagementPackFragment SchemaVersion="2.0" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+<ManagementPackFragment SchemaVersion="2.0" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
   <Monitoring>
     <Rules>
       <Rule ID="CookdownCommunity.ServiceNow.Monitoring.Performance.InstanceTotal.GlidePoolDB_Selects" Target="CookdownCommunity.ServiceNow.Monitoring.ServiceNowInstance" Enabled="true" ConfirmDelivery="false" Remotable="true" Priority="Normal" DiscardLevel="100">
@@ -9,6 +9,8 @@
             <Object>Glide Pool DB</Object>
             <Counter>Selects</Counter>
             <NodeId>NONE</NodeId>
+            <ProxyUsername>$Config/ProxyUsername$</ProxyUsername>
+            <ProxyPassword>$Config/ProxyPassword$</ProxyPassword>
           </DataSource>
         </DataSources>
         <WriteActions>
@@ -24,6 +26,8 @@
             <Object>Glide Pool DB</Object>
             <Counter>Selects (Over 1 Second)</Counter>
             <NodeId>NONE</NodeId>
+            <ProxyUsername>$Config/ProxyUsername$</ProxyUsername>
+            <ProxyPassword>$Config/ProxyPassword$</ProxyPassword>
           </DataSource>
         </DataSources>
         <WriteActions>
@@ -39,6 +43,8 @@
             <Object>Connection</Object>
             <Counter>Fetch Time (MS)</Counter>
             <NodeId>NONE</NodeId>
+            <ProxyUsername>$Config/ProxyUsername$</ProxyUsername>
+            <ProxyPassword>$Config/ProxyPassword$</ProxyPassword>
           </DataSource>
         </DataSources>
         <WriteActions>
@@ -54,6 +60,8 @@
             <Object>Glide Pool DB</Object>
             <Counter>Selects (Over 10 Sec)</Counter>
             <NodeId>NONE</NodeId>
+            <ProxyUsername>$Config/ProxyUsername$</ProxyUsername>
+            <ProxyPassword>$Config/ProxyPassword$</ProxyPassword>
           </DataSource>
         </DataSources>
         <WriteActions>
@@ -69,6 +77,8 @@
             <Object>Glide Pool DB</Object>
             <Counter>Deletes</Counter>
             <NodeId>NONE</NodeId>
+            <ProxyUsername>$Config/ProxyUsername$</ProxyUsername>
+            <ProxyPassword>$Config/ProxyPassword$</ProxyPassword>
           </DataSource>
         </DataSources>
         <WriteActions>
@@ -84,6 +94,8 @@
             <Object>Glide Pool DB</Object>
             <Counter>Inserts</Counter>
             <NodeId>NONE</NodeId>
+            <ProxyUsername>$Config/ProxyUsername$</ProxyUsername>
+            <ProxyPassword>$Config/ProxyPassword$</ProxyPassword>
           </DataSource>
         </DataSources>
         <WriteActions>
@@ -99,6 +111,8 @@
             <Object>Glide Pool DB</Object>
             <Counter>Updates</Counter>
             <NodeId>NONE</NodeId>
+            <ProxyUsername>$Config/ProxyUsername$</ProxyUsername>
+            <ProxyPassword>$Config/ProxyPassword$</ProxyPassword>
           </DataSource>
         </DataSources>
         <WriteActions>
@@ -114,6 +128,8 @@
             <Object>Users</Object>
             <Counter>End Users</Counter>
             <NodeId>NONE</NodeId>
+            <ProxyUsername>$Config/ProxyUsername$</ProxyUsername>
+            <ProxyPassword>$Config/ProxyPassword$</ProxyPassword>
           </DataSource>
         </DataSources>
         <WriteActions>
@@ -129,6 +145,8 @@
             <Object>Users</Object>
             <Counter>Logged In</Counter>
             <NodeId>NONE</NodeId>
+            <ProxyUsername>$Config/ProxyUsername$</ProxyUsername>
+            <ProxyPassword>$Config/ProxyPassword$</ProxyPassword>
           </DataSource>
         </DataSources>
         <WriteActions>
@@ -144,6 +162,8 @@
             <Object>Users</Object>
             <Counter>Total</Counter>
             <NodeId>NONE</NodeId>
+            <ProxyUsername>$Config/ProxyUsername$</ProxyUsername>
+            <ProxyPassword>$Config/ProxyPassword$</ProxyPassword>
           </DataSource>
         </DataSources>
         <WriteActions>

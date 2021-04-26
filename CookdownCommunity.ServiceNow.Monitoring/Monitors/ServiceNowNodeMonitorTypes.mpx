@@ -1,4 +1,4 @@
-﻿<ManagementPackFragment SchemaVersion="2.0" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+<ManagementPackFragment SchemaVersion="2.0" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
   <TypeDefinitions>
     <MonitorTypes>
       <UnitMonitorType ID="CookdownCommunity.ServiceNow.Monitoring.PerformanceThreshold" Accessibility="Internal">
@@ -12,6 +12,8 @@
           <xsd:element name="Counter" type="xsd:string" xmlns:xsd="http://www.w3.org/2001/XMLSchema"/>
           <xsd:element name="NodeId" type="xsd:string" xmlns:xsd="http://www.w3.org/2001/XMLSchema"/>
           <xsd:element name="Threshold" type="xsd:string" xmlns:xsd="http://www.w3.org/2001/XMLSchema"/>
+          <xsd:element name="ProxyUsername" type="xsd:string" xmlns:xsd="http://www.w3.org/2001/XMLSchema"/>
+          <xsd:element name="ProxyPassword" type="xsd:string" xmlns:xsd="http://www.w3.org/2001/XMLSchema"/>
         </Configuration>
         <OverrideableParameters>
           <OverrideableParameter ID="Threshold" Selector="$Config/Threshold$" ParameterType="string" />
@@ -23,6 +25,8 @@
               <Object>$Config/Object$</Object>
               <Counter>$Config/Counter$</Counter>
               <NodeId>$Config/NodeId$</NodeId>
+              <ProxyUsername>$Config/ProxyUsername$</ProxyUsername>
+              <ProxyPassword>$Config/ProxyPassword$</ProxyPassword>
             </DataSource>
           <ConditionDetection ID="UnderThresholdFilter" TypeID="System!System.ExpressionFilter">
             <Expression>

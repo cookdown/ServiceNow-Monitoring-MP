@@ -1,4 +1,4 @@
-﻿<ManagementPackFragment SchemaVersion="2.0" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+<ManagementPackFragment SchemaVersion="2.0" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
   <TypeDefinitions>
     <ModuleTypes>
       <DataSourceModuleType ID="CookdownCommunity.ServiceNow.Monitoring.FetchStatusDataSource" Accessibility="Internal" Batching="false">
@@ -7,6 +7,8 @@
           <xsd:element name="SnowUsername" type="xsd:string" xmlns:xsd="http://www.w3.org/2001/XMLSchema" />
           <xsd:element name="SnowPassword" type="xsd:string" xmlns:xsd="http://www.w3.org/2001/XMLSchema" />
           <xsd:element name="DebugProbe" type="xsd:boolean" xmlns:xsd="http://www.w3.org/2001/XMLSchema" />
+          <xsd:element name="ProxyUsername" type="xsd:string" xmlns:xsd="http://www.w3.org/2001/XMLSchema" />
+          <xsd:element name="ProxyPassword" type="xsd:string" xmlns:xsd="http://www.w3.org/2001/XMLSchema" />
         </Configuration>
         <OverrideableParameters>
           <OverrideableParameter ID="DebugProbe" Selector="$Config/DebugProbe$" ParameterType="bool" />
@@ -37,6 +39,14 @@
                   <Parameter>
                     <Name>debugProbe</Name>
                     <Value>$Config/DebugProbe$</Value>
+                  </Parameter>
+                  <Parameter>
+                    <Name>ProxyUserName</Name>
+                    <Value>$Config/ProxyUsername$</Value>
+                  </Parameter>
+                  <Parameter>
+                    <Name>ProxyPassword</Name>
+                    <Value>$Config/ProxyPassword$</Value>
                   </Parameter>
                 </Parameters>
                 <TimeoutSeconds>120</TimeoutSeconds>

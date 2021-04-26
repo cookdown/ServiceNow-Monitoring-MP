@@ -5,7 +5,7 @@
     <RootNamespace>CookdownCommunity.ServiceNow.Monitoring</RootNamespace>
     <Name>CookdownCommunity.ServiceNow.Monitoring</Name>
     <ManagementPackName>CookdownCommunity.ServiceNow.Monitoring</ManagementPackName>
-    <Version>1.1.0.200</Version>
+    <Version>1.1.0.432</Version>
     <MpFrameworkVersion>v7.0.2</MpFrameworkVersion>
     <MpFrameworkProfile>OM</MpFrameworkProfile>
     <ProductVersion>1.1.0.0</ProductVersion>
@@ -13,11 +13,11 @@
   <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
     <DebugSymbols>true</DebugSymbols>
     <OutputPath>bin\Debug\</OutputPath>
-    <GenerateSealed>False</GenerateSealed>
+    <GenerateSealed>True</GenerateSealed>
     <Company>Cookdown Ltd.</Company>
     <Copyright>Copyright (c) Cookdown All rights reserved.</Copyright>
     <DelaySigning>False</DelaySigning>
-    <AssemblyOriginatorKeyFile>..\CookdownCommunity.ManagementPacks.snk</AssemblyOriginatorKeyFile>
+    <AssemblyOriginatorKeyFile>.\CookdownCommunity.ManagementPacks.snk</AssemblyOriginatorKeyFile>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
     <DebugSymbols>false</DebugSymbols>
@@ -26,7 +26,7 @@
     <Company>Cookdown Ltd.</Company>
     <Copyright>Copyright (c) Cookdown All rights reserved.</Copyright>
     <DelaySign>false</DelaySign>
-    <AssemblyOriginatorKeyFile>..\CookdownCommunity.ManagementPacks.snk</AssemblyOriginatorKeyFile>
+    <AssemblyOriginatorKeyFile>.\CookdownCommunity.ManagementPacks.snk</AssemblyOriginatorKeyFile>
     <GenerateSealed>True</GenerateSealed>
   </PropertyGroup>
   <ItemGroup>
@@ -101,9 +101,9 @@
     <Compile Include="Monitors\InstanceDependencyMonitors.mpx">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Monitors\PerformanceMonitors.mptg.mpx">
+    <Compile Include="Monitors\Monitors.mptg.mpx">
       <SubType>Code</SubType>
-      <DependentUpon>Monitors\PerformanceMonitors.mptg</DependentUpon>
+      <DependentUpon>Monitors\Monitors.mptg</DependentUpon>
     </Compile>
     <Compile Include="Monitors\ServiceNowNodeMonitorTypes.mpx">
       <SubType>Code</SubType>
@@ -168,7 +168,7 @@
     <EmbeddedResource Include="Scripts\ServiceNowStatusProbe.ps1" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Monitors\PerformanceMonitors.mptg">
+    <Content Include="Monitors\Monitors.mptg">
       <SubType>Content</SubType>
       <Generator>FragmentGenerator</Generator>
     </Content>
