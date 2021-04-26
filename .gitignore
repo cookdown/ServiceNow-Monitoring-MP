@@ -3,3 +3,6 @@
 *.user
 *.cache
 .vs/Cookdown.ServiceNow.Monitoring/v15/Server/sqlite3/
+CookdownCommunity.ServiceNow.Monitoring/bin/
+CookdownCommunity.ServiceNow.Monitoring/obj/
+CookdownCommunity.ServiceNow.Monitoring/MPResources.resources

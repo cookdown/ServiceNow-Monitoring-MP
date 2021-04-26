@@ -5,7 +5,7 @@
     <RootNamespace>CookdownCommunity.ServiceNow.Monitoring</RootNamespace>
     <Name>CookdownCommunity.ServiceNow.Monitoring</Name>
     <ManagementPackName>CookdownCommunity.ServiceNow.Monitoring</ManagementPackName>
-    <Version>1.1.0.20</Version>
+    <Version>1.1.0.426</Version>
     <MpFrameworkVersion>v7.0.2</MpFrameworkVersion>
     <MpFrameworkProfile>OM</MpFrameworkProfile>
     <ProductVersion>1.1.0.0</ProductVersion>
@@ -101,9 +101,9 @@
     <Compile Include="Monitors\InstanceDependencyMonitors.mpx">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Monitors\PerformanceMonitors.mptg.mpx">
+    <Compile Include="Monitors\Monitors.mptg.mpx">
       <SubType>Code</SubType>
-      <DependentUpon>Monitors\PerformanceMonitors.mptg</DependentUpon>
+      <DependentUpon>Monitors\Monitors.mptg</DependentUpon>
     </Compile>
     <Compile Include="Monitors\ServiceNowNodeMonitorTypes.mpx">
       <SubType>Code</SubType>
@@ -168,7 +168,7 @@
     <EmbeddedResource Include="Scripts\ServiceNowStatusProbe.ps1" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Monitors\PerformanceMonitors.mptg">
+    <Content Include="Monitors\Monitors.mptg">
       <SubType>Content</SubType>
       <Generator>FragmentGenerator</Generator>
     </Content>
